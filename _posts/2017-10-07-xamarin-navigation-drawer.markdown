@@ -3,6 +3,7 @@ layout: post
 title:  "Xamarin Navigation Drawer"
 date:   2017-10-07 14:00:40 +0200
 categories: xamarin android c#
+description: Last week I was trying for the first time to write a simple app using Xamarin. I wanted a "material design" menu which after some research I understood to be a navigation drawer
 ---
 
 ## The problem
