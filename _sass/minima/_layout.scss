@@ -106,8 +106,22 @@
  * Site footer
  */
 .site-footer {
+  box-sizing: border-box;
   border-top: 1px solid $grey-color-light;
   padding: $spacing-unit 0;
+  height: $footer-height;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: $footer-height;
 }
 
 .footer-heading {
