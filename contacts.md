@@ -6,4 +6,4 @@ permalink: /contacts/
 
 # Contacts
 
-Trying to be nice
+Just drop me an email for everything you want :)
