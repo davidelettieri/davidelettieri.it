@@ -74,9 +74,7 @@ Then I copied all the resources files to my Xamarin Project into the folder:
 * menu
 * values: didn't ovveride String.xml, just updated it
 
-### TIP
-
-When you have compilation errors in your xamarin project close all editor windows and rebuild, sometimes there are no actual errors!
+**TIP** When you have compilation errors in your xamarin project close all editor windows and rebuild, sometimes there are no actual errors!
 
 Just modifying the MainActivity.cs to the following code will make the app running. I tested on my Moto G3 (Lollipop) and on a Samsung S7 (Nougat)
 
