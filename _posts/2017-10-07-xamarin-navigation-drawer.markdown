@@ -203,98 +203,98 @@ The "translation" is pretty easy and I throwed in a bunch of var since the type 
 {% highlight c# %}
 
 [Activity(Label = "Xamarin.NavigationDrawer", MainLauncher = true, Theme = "@style/AppTheme.NoActionBar")]
-    public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
+public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
+{
+    protected override void OnCreate(Bundle savedInstanceState)
     {
-        protected override void OnCreate(Bundle savedInstanceState)
+        base.OnCreate(savedInstanceState);
+
+        // Set our view from the "main" layout resource
+        SetContentView(Resource.Layout.activity_main);
+
+        var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+        SetSupportActionBar(toolbar);
+
+        var fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
+
+        fab.SetOnClickListener(new FabClickListener());
+
+        var drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+        var toggle = new ActionBarDrawerToggle(this, drawer, toolbar, Resource.String.navigation_drawer_open, Resource.String.navigation_drawer_close);
+
+        // this is deprecated, don't know how to fix this yet
+        drawer.SetDrawerListener(toggle);
+
+        toggle.SyncState();
+
+        NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
+        navigationView.SetNavigationItemSelectedListener(this);
+    }
+
+    public bool OnNavigationItemSelected(IMenuItem menuItem)
+    {
+        int id = menuItem.ItemId;
+
+        if (id == Resource.Id.nav_camera)
         {
-            base.OnCreate(savedInstanceState);
+            // Handle the camera action
+        }
+        else if (id == Resource.Id.nav_gallery)
+        {
 
-            // Set our view from the "main" layout resource
-            SetContentView(Resource.Layout.activity_main);
+        }
+        else if (id == Resource.Id.nav_slideshow)
+        {
 
-            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
-            SetSupportActionBar(toolbar);
+        }
+        else if (id == Resource.Id.nav_manage)
+        {
 
-            var fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
+        }
+        else if (id == Resource.Id.nav_share)
+        {
 
-            fab.SetOnClickListener(new FabClickListener());
+        }
+        else if (id == Resource.Id.nav_send)
+        {
 
-            var drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
-            var toggle = new ActionBarDrawerToggle(this, drawer, toolbar, Resource.String.navigation_drawer_open, Resource.String.navigation_drawer_close);
-
-            // this is deprecated, don't know how to fix this yet
-            drawer.SetDrawerListener(toggle);
-
-            toggle.SyncState();
-
-            NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
-            navigationView.SetNavigationItemSelectedListener(this);
         }
 
-        public bool OnNavigationItemSelected(IMenuItem menuItem)
+        DrawerLayout drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+        drawer.CloseDrawer(GravityCompat.Start);
+        return true;
+    }
+
+    public override void OnBackPressed()
+    {
+        var drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+
+        if (drawer.IsDrawerOpen(GravityCompat.Start))
         {
-            int id = menuItem.ItemId;
-
-            if (id == Resource.Id.nav_camera)
-            {
-                // Handle the camera action
-            }
-            else if (id == Resource.Id.nav_gallery)
-            {
-
-            }
-            else if (id == Resource.Id.nav_slideshow)
-            {
-
-            }
-            else if (id == Resource.Id.nav_manage)
-            {
-
-            }
-            else if (id == Resource.Id.nav_share)
-            {
-
-            }
-            else if (id == Resource.Id.nav_send)
-            {
-
-            }
-
-            DrawerLayout drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             drawer.CloseDrawer(GravityCompat.Start);
-            return true;
         }
-
-        public override void OnBackPressed()
+        else
         {
-            var drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
-
-            if (drawer.IsDrawerOpen(GravityCompat.Start))
-            {
-                drawer.CloseDrawer(GravityCompat.Start);
-            }
-            else
-            {
-                base.OnBackPressed();
-            }
-        }
-
-        public override bool OnCreateOptionsMenu(IMenu menu)
-        {
-            MenuInflater.Inflate(Resource.Menu.main, menu);
-            return true;
-        }
-
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-
-            if(item.ItemId == Resource.Id.action_settings)
-            {
-                return true;
-            }
-
-            return base.OnOptionsItemSelected(item);
+            base.OnBackPressed();
         }
     }
+
+    public override bool OnCreateOptionsMenu(IMenu menu)
+    {
+        MenuInflater.Inflate(Resource.Menu.main, menu);
+        return true;
+    }
+
+    public override bool OnOptionsItemSelected(IMenuItem item)
+    {
+
+        if(item.ItemId == Resource.Id.action_settings)
+        {
+            return true;
+        }
+
+        return base.OnOptionsItemSelected(item);
+    }
+}
 
 {% endhighlight %}
