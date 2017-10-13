@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Xamarin Bottom Navigation"
-date:   2017-10-07 14:00:40 +0200
+date:   2017-10-13 21:00:07 +0200
 categories: xamarin android c#
 description: The bottom navigation is a very simple and easy template from Android Studio
 ---
