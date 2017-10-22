@@ -130,5 +130,22 @@ public class Close
 
 {% endhighlight %}
 
-## Caveats
+### Caveats
 The solution is not perfect because it depends on the Argument validation in order to work.
+
+## Closing
+Our program now is ugly but we have to follow the correct order.
+
+{% highlight c# %}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var initResult = Init.Execute();
+        var workResult = Work.Execute(initResult);
+        Close.Execute(workResult);
+    }
+}
+    
+{% endhighlight %}
