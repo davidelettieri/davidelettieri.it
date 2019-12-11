@@ -53,3 +53,16 @@ $on-laptop:        800px !default;
   "minima/syntax-highlighting"
 ;
 
+table {
+  width: 100%;
+}
+
+table thead {
+  background-color: #2B3D41;
+  color: white;
+}
+
+td, th {
+  padding: 5px;
+  border: 0 0 0 0;
+}
