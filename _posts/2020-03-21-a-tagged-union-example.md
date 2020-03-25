@@ -58,7 +58,7 @@ Ok, I cheated a bit, I used a Union of three types instead of two but now our do
 - There is no way to pay a paid order, the compiler won't allow it. There is no way to add or remove items to a paid order, again the compiler won't allow it. Before I had to remember what was right to do inside an order, know I know I can't be wrong.
 - When I ask for an order I have to handle all three cases since the Union type contains one of them but I don't know which one.
 
-As last remark, you don't need to implement all union type for the n different types you need just use this https://www.nuget.org/packages/OneOf/.
+As last remark, you don't need to implement all union type for the n different types you need just use this [nuget package](https://www.nuget.org/packages/OneOf/.)
 
 I hope you found this useful, if you have any comment or request drop me a line!
 
