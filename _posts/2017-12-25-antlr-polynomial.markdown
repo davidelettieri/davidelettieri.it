@@ -7,6 +7,8 @@ description: In the last couple of months I've been reading and studying about c
 ---
 ## Antlr4
 
+**Update April 2020, hey! I updated this article and the corresponding repo check it out [here](/c%23/antlr/polynomial/2020/04/18/antlr-polynomial-2020-update.html)**
+
 In the last couple of months I've been reading and studying about compilers and languages and for everyone doing something like that it's very easy to meet Antlr at a certain point. What is antlr?
 
 >Antlr4 is a powerful parser generator for reading, processing, executing, or translating structured text or binary files. It's widely used to build languages, tools, and frameworks. From a grammar, ANTLR generates a parser that can build and walk parse trees.
