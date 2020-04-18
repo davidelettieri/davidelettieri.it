@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Antlr4 polynomial grammar - 2020 update"
-date:   2020-04-18 10:00:00 +0200
+date:   2020-04-18 08:00:00 +0200
 categories: c# antlr polynomial
 description: A few years back I was playing with Antlr to build a polynomial evaluator. The result was working but not very sofisticated o particularly good, just a minimal working example. In these days of quarantine in Italy, I decided to get back a that project and try to make something better.
 ---
