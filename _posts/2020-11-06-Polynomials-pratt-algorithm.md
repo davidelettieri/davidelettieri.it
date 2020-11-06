@@ -12,6 +12,7 @@ x=1
 y=1
 print (x*2+y^2+1)
 ```
+For the full source code see [here](https://github.com/davidelettieri/Polynomials-pratt-algorithm.html) 
 
 The Pratt algorithm allows to create a "general purpose parser" in which is possible to plug in all the parser rules needed for your language or grammar. In my implementation I decided to build a parsed with fixed parsing rules by adding them into the constructors. But as you can see in the Java example (see references) it's easy to create a generic parser and plug the rules by subclassing it. 
 
