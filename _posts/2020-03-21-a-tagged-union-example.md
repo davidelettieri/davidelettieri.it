@@ -14,15 +14,15 @@ Quoting wikipedia
 
 > In computer science, a tagged union, also called a variant, variant record, choice type, discriminated union, disjoint union, sum type or coproduct, is a data structure used to hold a value that could take on several different, but fixed, types.
 
-For example let's fix two types `A` and `B` then there is a type `Union<A,B>`, that could hold a value of type `A` or a value of type `B`, when `Union<A,B>` we do not know which type it currently holds so we have to handle both cases. Tagged union type are not available in C# type system right now, let's see a simple implementation for a union of 2 types:
+For example let's fix two types `A` and `B` then there is a type `Union<A,B>`, that could hold a value of type `A` or a value of type `B`, when we have an instance of `Union<A,B>` we do not know which type it currently holds so we have to handle both cases. Tagged union type are not available in C# type system right now, let's a viable implementation for a union of 2 types:
 
 <script src="https://gist.github.com/davidelettieri/4329bf51a249d78492f02423433f1ad0.js"></script>
 
-It's easy to see that our class can contains a value of `TOne` or `TOther` but using the code as it is we cannot do very much with the value itself. In order to go forward let's understand how we can use the tagged union type to obtain an improved version of `int?`. A nullable int it's a type that can contains and int value or nothing, we could test if the value exists using the `HasValue` property however nothing stop us to access the value even if it does not exists. For example:
+An instance of our class could contain a value of `TOne` or `TOther` but using the code as it is we cannot do very much with the value itself. In order to go forward let's understand how we can use the tagged union type to obtain an improved version of `int?`. A nullable int it's a type that can contains and int value or nothing, we could test if the value exists using the `HasValue` property however nothing stop us to access the value even if it does not exists. For example:
 
 <script src="https://gist.github.com/davidelettieri/0084e654be07bf56f06d07e0673e74f9.js"></script>
 
-We want to use the generic type `Union<A,B>` to represent a nullable int, with the possibility to use the value only if it exists. To have an instance of `Union<A,B>` we need two types: the first one is `int`, the second one should be a value representing the absence of a value. Let's call it `None` and define it as `public class None {}`, our better representation for a nullable int will be `Union<int,None>`. Our `Union<A,B>` type needs a way to use the value it contains, let's update the class with two methods:
+We want to use the generic type `Union<A,B>` to represent a nullable int, with the further restriction that we can use the value only if it exists. To have an instance of `Union<A,B>` we need two types: the first one is `int`, the second one should be a value representing the *absence* of a value. Let's call it `None` and define it as `public class None {}`, our better representation for a nullable int will be `Union<int,None>`. We need a way to use the value inside an instance of `Union<A,B>`, let's update the class with two methods:
 
 - `Switch` which will apply an action on the value inside `Union<A,B>`
 - `Match` which will compute something using the value inside `Union<A,B>`
@@ -37,9 +37,9 @@ Let's see how we can use our new generic type for the nullable int example:
 
 # How to use it
 
-The nullable int example maybe it's cool and easy to understand and get a grasp of comprehension of what a tagged union type is. How do we use it in real world code? I think a very useful way to use the union type is returning values and errors from methods. 
+The nullable int example is a specific case of an _option type_ and should help us get a grasp of comprehension of what a tagged union type is. How do we use it in real world code? I think a very useful way to use the union type is returning values and errors from methods. 
 
-In our simple domain we need to manage customer orders, retrieve, let the customer pay it and so on. A starting point could be:
+In our simple domain we need to retrieve and manage customer orders, let the customer pay it and so on. A starting point could be:
 
 <script src="https://gist.github.com/davidelettieri/0e204323a16d4abc520c3516fc86ccfe.js"></script>
 
