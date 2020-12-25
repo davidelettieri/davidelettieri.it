@@ -26,4 +26,3 @@ If you want to work with Flutter but necessarily need Crashlytics vote [here](ht
 
 [Here the listing](https://play.google.com/store/apps/details?id=it.davidelettieri.attesabusatac "Attesa Bus play store page") :)
 Source code is in the [attesa_bus repo](https://github.com/davidelettieri/attesa_bus)
-

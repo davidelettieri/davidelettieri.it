@@ -61,6 +61,3 @@ Ok, I cheated a bit, I used a Union of three types instead of two but now our do
 As last remark, you don't need to implement all union type for the n different types you need just use this [nuget package](https://www.nuget.org/packages/OneOf/.)
 
 I hope you found this useful, if you have any comment or request drop me a line!
-
-
-

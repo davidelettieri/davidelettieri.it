@@ -64,10 +64,3 @@ Both type of functions can be plugged into the pipeline using `ToSwitchFunction`
 <script src="https://gist.github.com/davidelettieri/a5b3918ec1ffbe863b88ac0eec874abf.js"></script>
 
 I created a [repository](https://github.com/davidelettieri/ROP) with all the code and some tests to showcase how to use the functions. I strongly suggest to go to the original source and take a look at the F# code and the slides. They're very helpful and better than my own C# recap. There are other cases and improvements that are worth reading.
-
-
-
-
-
-
-
