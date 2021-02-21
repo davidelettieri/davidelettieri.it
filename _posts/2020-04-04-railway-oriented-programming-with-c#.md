@@ -32,7 +32,7 @@ This will force the user of ValidateEmail to handle both cases using the swith/m
 - the success track that runs the code to the end
 - the failure track, which is a fast exit we get each time we find an error.
 
-These are the "railways" of the ROP and the main idea is to compose several functions, any of which can follow the success track or swith on the error track. I'm going to translate to C# what Scott Wlaschin has done in his ROP talk and slides, which anyone should definitively check out at [ROP](https://fsharpforfunandprofit.com/rop/).
+These are the "railways" of the ROP and the main idea is to compose several functions, any of which can follow the success track or switch on the error track. I'm going to translate to C# what Scott Wlaschin has done in his ROP talk and slides, which anyone should definitively check out at [ROP](https://fsharpforfunandprofit.com/rop/).
 
 F# has a more powerful type system and type inference than C# so we are probably going to write code that's more verbose and ugly than the equivalent F#. In order to compose our functions we need to update their signature and we are going to use some helper functions, as described in the ROP article, to help us in this task and to make the composition work. Practically we want to be able to do something like this 
 

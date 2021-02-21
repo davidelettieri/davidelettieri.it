@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="602.01923"
+   height="109.11353"
+   viewBox="0 0 454.91657 81.83515"
+   version="1.1"
+   id="svg318"
+   sodipodi:docname="workflow.svg"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)">
+  <metadata
+     id="metadata324">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs322" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     id="namedview320"
+     showgrid="false"
+     inkscape:zoom="1.4327234"
+     inkscape:cx="462.97883"
+     inkscape:cy="136.71064"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg318" />
+  <g
+     id="graph0"
+     class="graph"
+     transform="matrix(0.55070648,0,0,0.55070648,2.2028259,79.460601)">
+    <title
+       id="title194">finite_state_machine</title>
+    <polygon
+       fill="#ffffff"
+       stroke="transparent"
+       points="822.06,4 -4,4 -4,-145.72 822.06,-145.72 "
+       id="polygon196" />
+    <!-- LR_0 -->
+    <g
+       id="node1"
+       class="node">
+      <title
+         id="title198">Start</title>
+      <circle
+         fill="none"
+         stroke="#000000"
+         cx="29.27"
+         cy="-37.860001"
+         id="ellipse200"
+         r="29.049999" />
+      <text
+         text-anchor="middle"
+         x="29.27"
+         y="-33.66"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text202">Start</text>
+    </g>
+    <!-- LR_2 -->
+    <g
+       id="node2"
+       class="node">
+      <title
+         id="title205">Step_1</title>
+      <circle
+         fill="none"
+         stroke="#000000"
+         cx="132.41"
+         cy="-37.860001"
+         id="ellipse207"
+         r="37.720001" />
+      <text
+         text-anchor="middle"
+         x="132.41"
+         y="-33.66"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text209">Step_1</text>
+    </g>
+    <!-- LR_0&#45;&gt;LR_2 -->
+    <g
+       id="edge1"
+       class="edge">
+      <title
+         id="title212">Start-&gt;Step_1</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 58.71,-37.86 c 7.98,0 16.88,0 25.63,0"
+         id="path214" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="84.49,-41.36 94.49,-37.86 84.49,-34.36 "
+         id="polygon216" />
+    </g>
+    <!-- LR_1 -->
+    <g
+       id="node3"
+       class="node">
+      <title
+         id="title219">Step_2</title>
+      <circle
+         fill="none"
+         stroke="#000000"
+         cx="244.13"
+         cy="-70.860001"
+         id="ellipse221"
+         r="37.720001" />
+      <text
+         text-anchor="middle"
+         x="244.13"
+         y="-66.660004"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text223">Step_2</text>
+    </g>
+    <!-- LR_0&#45;&gt;LR_1 -->
+    <g
+       id="edge2"
+       class="edge">
+      <title
+         id="title226">Step_1-&gt;Step_2</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 169.03,-48.57 c 9.2,-2.77 19.22,-5.78 28.83,-8.68"
+         id="path228" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="197.1,-60.67 207.68,-60.2 199.12,-53.97 "
+         id="polygon230" />
+    </g>
+    <!-- LR_3 -->
+    <!-- LR_4 -->
+    <g
+       id="node4"
+       class="node">
+      <title
+         id="title233">Step_3</title>
+      <circle
+         fill="none"
+         stroke="#000000"
+         cx="355.85001"
+         cy="-70.860001"
+         id="ellipse235"
+         r="37.720001" />
+      <text
+         text-anchor="middle"
+         x="355.85001"
+         y="-66.660004"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text237">Step_3</text>
+    </g>
+    <g
+       id="edge3"
+       class="edge">
+      <title
+         id="title240">Step_2-&gt;Step_3</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 282.28,-70.86 c 8.13,0 16.84,0 25.31,0"
+         id="path242" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="307.74,-74.36 317.74,-70.86 307.74,-67.36 "
+         id="polygon244" />
+    </g>
+    <g
+       id="edge8"
+       class="edge">
+      <title
+         id="title247">Step_1-&gt;Step_5</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 169.48,-29.04 c 67.56,14.9 217.07,40.2 335.95,5.18 12.54,-3.69 24.95,-10.28 35.87,-17.38"
+         id="path249" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="539.5,-44.25 549.73,-47 543.45,-38.47 "
+         id="polygon251" />
+    </g>
+    <!-- LR_8 -->
+    <!-- LR_6 -->
+    <g
+       id="edge4"
+       class="edge">
+      <title
+         id="title254">Step_3-&gt;Step_4</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 394,-70.86 c 8.13,0 16.84,0 25.31,0"
+         id="path256" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="419.46,-74.36 429.46,-70.86 419.46,-67.36 "
+         id="polygon258" />
+    </g>
+    <!-- LR_8&#45;&gt;LR_6 -->
+    <g
+       id="node5"
+       class="node">
+      <title
+         id="title261">Step_4</title>
+      <circle
+         fill="none"
+         stroke="#000000"
+         cx="467.57001"
+         cy="-70.860001"
+         id="ellipse263"
+         r="37.720001" />
+      <text
+         text-anchor="middle"
+         x="467.57001"
+         y="-66.660004"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text265">Step_4</text>
+    </g>
+    <!-- LR_5 -->
+    <!-- LR_8&#45;&gt;LR_5 -->
+    <g
+       id="edge5"
+       class="edge">
+      <title
+         id="title268">Step_4-&gt;Step_5</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 505.72,-70.86 c 8.13,0 16.85,0 25.31,0"
+         id="path270" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="531.18,-74.36 541.18,-70.86 531.18,-67.36 "
+         id="polygon272" />
+    </g>
+    <!-- LR_2&#45;&gt;LR_4 -->
+    <g
+       id="node6"
+       class="node">
+      <title
+         id="title275">Step_5</title>
+      <circle
+         fill="none"
+         stroke="#000000"
+         cx="579.28998"
+         cy="-70.860001"
+         id="ellipse277"
+         r="37.720001" />
+      <text
+         text-anchor="middle"
+         x="579.28998"
+         y="-66.660004"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text279">Step_5</text>
+    </g>
+    <g
+       id="edge9"
+       class="edge">
+      <title
+         id="title282">Step_3-&gt;Step_6</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 385.42,-94.72 c 12.72,-9.13 28.41,-18.46 44.29,-23.14 72.65,-21.4 161.55,-8.84 214.41,2.43"
+         id="path284" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="645.19,-118.78 654.2,-113.21 643.68,-111.95 "
+         id="polygon286" />
+    </g>
+    <!-- LR_2&#45;&gt;LR_6 -->
+    <!-- End -->
+    <g
+       id="node8"
+       class="node">
+      <title
+         id="title289">End</title>
+      <circle
+         fill="none"
+         stroke="#000000"
+         cx="791.46997"
+         cy="-103.86"
+         id="ellipse291"
+         r="26.690001" />
+      <text
+         text-anchor="middle"
+         x="791.46997"
+         y="-99.660004"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text293">End</text>
+    </g>
+    <!-- LR_6&#45;&gt;LR_7 -->
+    <g
+       id="edge6"
+       class="edge">
+      <title
+         id="title296">Step_5-&gt;Step_6</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 615.92,-81.57 c 9.19,-2.77 19.21,-5.78 28.83,-8.68"
+         id="path298" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="643.98,-93.67 654.57,-93.2 646,-86.97 "
+         id="polygon300" />
+    </g>
+    <g
+       id="edge7"
+       class="edge">
+      <title
+         id="title303">Step_6-&gt;End</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 728.95,-103.86 c 8.37,0 17.24,0 25.56,0"
+         id="path305" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="754.68,-107.36 764.68,-103.86 754.68,-100.36 "
+         id="polygon307" />
+    </g>
+    <g
+       id="node7"
+       class="node">
+      <title
+         id="title310">Step_6</title>
+      <circle
+         fill="none"
+         stroke="#000000"
+         cx="691.01001"
+         cy="-103.86"
+         id="ellipse312"
+         r="37.720001" />
+      <text
+         text-anchor="middle"
+         x="691.01001"
+         y="-99.660004"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text314">Step_6</text>
+    </g>
+    <!-- S -->
+  </g>
+</svg>
