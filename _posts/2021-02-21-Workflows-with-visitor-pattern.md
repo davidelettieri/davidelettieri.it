@@ -8,15 +8,15 @@ description: As a software developer I develop, most of the times, LOB applicati
 
 ## Workflows
 
-As a software developer I develop, most of the times, LOB applications that support some kind of process or workflow for a specific company. That means that there are some entities, such as customers or orders or support tickets, and that they _evolve_ in the application. For example we could have a CRM with a lead entity that evolves into a customer or we could track the state of a ticket: open -> analysis -> work -> deploy.
+As a software developer I work, most of the times, on LOB applications that support some kind of process or workflow for a specific company. That means that there are some entities, such as customers, orders or support tickets, and that they _evolve_ during the lifecycle of the application. For example we could have a CRM with a lead entity that evolves into a customer or we could track the state of a ticket: open -> analysis -> work -> deploy.
 
-Moreover workflows can be easily represented with a graph we can show to the business stakeholders. Knowledge can be shared and validated. In code we can implement a [finite state machine](https://en.wikipedia.org/wiki/Finite-state_machine) (FSM) to represent our workflow with its states and transitions. In any programming language you can find a library that simplify the process of defining a FSM.
+Moreover workflows can be easily represented with a graph we can show to the business stakeholders, so that knowledge can be shared and validated. In code we can implement a [finite state machine](https://en.wikipedia.org/wiki/Finite-state_machine) (FSM) to represent our workflow with its states and transitions. And it's pretty easy to find in any programming language a library that can simplify the process of defining a FSM.
 
 ### Scenario
 
-Today I need to implement this scenario for the company I work for: we handle insurance claims on behalf of insurance companies. We have an internal workflow made of several steps, such as recovering photos and documents, making estimates, contacting the injured party. Our clients can opt for the full workflow or for a subset of all the steps. 
+Today I need to implement this scenario for the company I work for: we handle insurance claims on behalf of insurance companies. We have an internal workflow made of several steps such as taking pictures of the insured goods, recover documents, making estimates, contacting the injured part and so on. Our clients can opt for the full workflow or for a subset of all the steps. 
 
-We end up with a main workflow and several subsets of it, note that not all subsets make sense but I won't go into the details of the business process. A subset of the workflow means not all steps and not all triggers between the steps are included. We only required that the first step and the last one will always be included since they represent the start and the end of the process. Our main entity is the *claim* and each claim, as soon as it enters our systems, is linked to a workflow.
+We end up with a main workflow and several subsets of it. A subset of the workflow means not all steps and not all triggers between the steps are included. We only required that the first step and the last one will always be included since they represent the start and the end of the process. Our main entity is the *claim* and each claim, as soon as it enters our systems, is linked to a workflow.
 
 
 #### Just a sample workflow
@@ -40,9 +40,9 @@ We define *t_n_m* to be the transition between *Step_n* and *Step_m*, *t_start* 
 For our workflow implementation we want to:
 
 1. Support simple change of state, there could be a validation before changing state. 
-2. Support complex change of state. Our workflow is changing state and something should happen i.e. send an email, call some external APIs.
+2. Support complex change of state. Our workflow is changing state and something should happen i.e. send an email, call some external APIs, or any other kind of side effects.
 3. Support workflow specific change of state. Our object is changing state and something should happen that is workflow specific
-4. Support change of state actions that depends on the informations we have in the entities connected to the specific workflow. For example send an email only if we have an email.
+4. Support context dependant side effects. We need change of state actions that depends on the informations we have in the entities connected to the specific workflow. For example send an email only if we have an email.
 5. Have a simple API for the frontend
 6. Avoid spaghetti code solution
 
@@ -268,9 +268,9 @@ public class TransitionResolver
 ```
 
 ### What's missing?
-A lot of stuff! First of all, we didn't talk about the current step of the `Claim`. We could need a proper class as in the `Transition` case or just an enum if we don't need any step specific behavior. Our transition types don't actually contains code, we could need DI to actually performs something e.g. passing a db connection or a logger. This would complicate our `TransitionResolver` class. We need to keep in sync the transitions with the corresponding enum, maybe something automated could be a good idea, depending on how frequently we need new transition and who is going to work on it. A new hire could miss the point of having some kind of duplication or simply she could not know.
+A lot of stuff! First of all, we didn't define our FSM in any of our workflows. Which transitions are allowed? Then we didn't talk about the current step of the `Claim`. We could need a proper class as in the `Transition` case or just an enum if we don't need any step specific behavior. Our transition types don't actually contains code, we could need DI to actually performs something e.g. passing a db connection or a logger. This would complicate our `TransitionResolver` class. We need to keep in sync the transitions with the corresponding enum, maybe something automated could be a good idea, depending on how frequently we need new transition and who is going to work on it. A new hire could miss the point of having some kind of duplication or simply she could not know.
 
-I think that is a pretty good solution, not over-engineered and simple to modify and extend. We a nice base implementation in `Transition` we could also remove the abstract keyword and using just that type for simple transition that do not need specific code. E.g.
+I think that is a pretty good solution, not over-engineered and simple to modify and extend. If we have a nice base implementation in `Transition` we could also remove the abstract keyword and using just that type for simple transition that do not need specific code. E.g.
 
 ```csharp
 public class TransitionResolver
@@ -291,4 +291,6 @@ public class TransitionResolver
 }
 ```
 
-The code is [here](https://gist.github.com/davidelettieri/ac7025e62bbf0f417e00b002da3f90a9), let me know what you think!
+The code is [here](https://gist.github.com/davidelettieri/ac7025e62bbf0f417e00b002da3f90a9), let me know what you think! 
+
+Last but not least I would like to thank [Marcello](https://www.linkedin.com/in/marcello-santambrogio/) for working with me on the first implementation of the workflow system and for kindly reviewing this post.
