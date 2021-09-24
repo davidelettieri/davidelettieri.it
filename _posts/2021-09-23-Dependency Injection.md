@@ -48,11 +48,11 @@ We need to register the two class in the IOC, we have 9 possibilities:
 | Transient   | Scoped        | Yes |
 | Transient   | Transient        | Yes |
 
-Three of the nine possibilities cannot work or will behave strangely at very least. Why? If `Foo` is a singleton, the IOC Container is going to build at most one instance. Then it will build `Bar` which is a registered as a scoped dependency but since `Foo` is built only once, his particular instance of `Bar` is built only once making it effectively a singleton instance. 
+Three of the nine possibilities cannot work or will behave strangely at very least. Why? If `Foo` is a singleton, the IOC Container is going to build at most one instance. It needs `Bar` which is a registered as a scoped dependency but since `Foo` is built only once, his particular instance of `Bar` is built only once making it effectively a singleton instance. 
 
 The rules is very simple "a class cannot depend on objects with a larger scope". We have a 66% of chance of getting it right just by luck but still 33% to have a potential bug. 
 
-When you implement a class with some dependencies and you're using interfaces, for decoupling and DI to not have to create an instance of a class, if you stride to have maximum compatibility you have to code your class to be a transient dependency. In this way it can accept any kind of dependency. Of course you cannot force in any way to register your class as transient since its construction is concern of another component of the application. 
+When you implement a class with some dependencies and you're using interfaces or classes, if you want to have maximum compatibility you have to code your class to be a transient dependency. In this way it can accept any kind of dependency. Of course you cannot force in any way to register your class as transient since its construction is concern of another component of the application. 
 
 If you need to implement a singleton dependency, it's probably best to avoid dependency injection at all. The only way to be sure that only singletons are injected into your class is to not depend on external objects.
 
