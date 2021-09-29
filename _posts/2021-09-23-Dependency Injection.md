@@ -19,9 +19,10 @@ Another presumed benefit of the dependency injections is
 As the [Microsoft docs](https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles#dependency-inversion) puts it (bold is mine).   
 
 I think that the sentence in bold is a lie. Let's start with ASP.NET Core, the default IOC Container offers three types of lifetime:
-* Scoped
-* Transient
-* Singleton
+* Transient -> this is the narrower lifetime. Each time we request an istance, a new one will be created.
+* Scoped -> this is in the middle. For each request, we have at most one istance.
+* Singleton -> We have only one istance for the lifetime of the application.
+  
 Now let's pretend we have
 
 ```csharp
@@ -34,7 +35,7 @@ class Foo {
 }
 ```
 
-We need to register the two class in the IOC, we have 9 possibilities:
+This a simple case of constructor injection. We need to register the two class in the IOC, we have 9 possibilities:
 
 | Foo      | Bar | Does it make sense? |
 | ----------- | ----------- | ------|
