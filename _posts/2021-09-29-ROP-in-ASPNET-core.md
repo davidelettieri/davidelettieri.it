@@ -8,8 +8,8 @@ description: In a previous post I talked about ROP in C#, now I want to explore 
 
 In a previous post I talked about ROP in C#, now I want to explore how to use it in a ASP.NET Core web api project. If you haven't I suggest to take a look at my previous posts since I won't go into the details of union types and my custom `Result<T>` type:
 
-1. [A tagged union example](2020-03-21-a-tagged-union-example.md)
-2. [Railway oriented programming with C#](2020-04-04-railway-oriented-programming-with-c#.md)
+1. [A tagged union example](/tagged/union/2020/03/25/a-tagged-union-example.html)
+2. [Railway oriented programming with C#](/rop/'tagged/union'/'railway/oriented/programming'/c%23/2020/04/04/railway-oriented-programming-with-c.html)
 
 I have a few requirements:
 
