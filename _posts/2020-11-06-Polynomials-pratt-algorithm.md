@@ -18,22 +18,22 @@ The Pratt algorithm allows to create a "general purpose parser" in which is poss
 
 The important stuff happens in the ParseExpression method. The first time it is called with `precedence = 0` and let's see how it works with the polynomial `x+y*z`:
 1. advance to the next token, which is `x`
-2. retrieve the corresponding prefix parselet `VarParselet`. The prefix parselet cannot be null if the polynomial expressions is correct since we are at the beginning of the expression so the only valid tokens are exactly the ones associated with a prefix parselet, for example a polynomial cannot start with a '*'.
-3. use the parselet to parse the token, `VarParselet` return a `VariableExpr`. Remember that a parselet *can* call ParseExpression, so here we have a kind of recursion.
-4. we check if the next token `+` as an higher precedence with respect of the current precedence parameters. Since the precedence of the `BinaryOperatorParselet ` of `+` is `1` we enter the while
+2. retrieve the corresponding prefix denotation `VarDenotation`. The prefix denotation cannot be null if the polynomial expressions is correct since we are at the beginning of the expression so the only valid tokens are exactly the ones associated with a prefix denotation, for example a polynomial cannot start with a '*'.
+3. use the denotation to parse the token, `VarDenotation` return a `VariableExpr`. Remember that a denotation *can* call ParseExpression, so here we have a kind of recursion.
+4. we check if the next token `+` as an higher precedence with respect of the current precedence parameters. Since the precedence of the `BinaryOperatorDenotation ` of `+` is `1` we enter the while
 5. advance to `+`
-6. get the infix parselet 
-7. use the parselet to parse the token. The `parse` method on an infix parselet needs the previous expression, the token and the parser to call `ParseExpression` again. It's easy to see the in order to parse an `AddExpr` we need the expression before the `+` and the expression after. 
-8. the `BinaryOperatorParselet` will call the `ParseExpression` method with `precedence=1`
+6. get the infix denotation 
+7. use the denotation to parse the token. The `parse` method on an infix denotation needs the previous expression, the token and the parser to call `ParseExpression` again. It's easy to see the in order to parse an `AddExpr` we need the expression before the `+` and the expression after. 
+8. the `BinaryOperatorDenotation` will call the `ParseExpression` method with `precedence=1`
 9. advance to `y`
-10. retrieve `VarParselet`
+10. retrieve `VarDenotation`
 11. parse `y` to a `VariableExpr`
-12. `PeekPrecedence()` will return the precedence related to the `BinaryOperatorParselet` of '*' which is `2` so we enter again the while again. This reflects the fact that `*` has a higher precedence of `+` and entering the while means that the `VariableExpr` of `y` will be a parameter of the `*` instead of `+` as one would expect.
+12. `PeekPrecedence()` will return the precedence related to the `BinaryOperatorDenotation` of '*' which is `2` so we enter again the while again. This reflects the fact that `*` has a higher precedence of `+` and entering the while means that the `VariableExpr` of `y` will be a parameter of the `*` instead of `+` as one would expect.
 13. advance to `*`
-14. get the infix parselet
+14. get the infix denotation
 15. the parse of the `*` call parse with `precedence=2`.
 16. (we're almost over) advance to `z`
-17. parse the `VarParselet`
+17. parse the `VarDenotation`
 18. `PeekPrecedence()` returns `0` since we are at the end of the expression
 19. we skip the while and returns the `z` parselect
 20. we're back in the binary operator related to `*` which returns the `ProductExpr` representing `y*z`
@@ -45,7 +45,7 @@ The important stuff happens in the ParseExpression method. The first time it is 
 public IExpr ParseExpression(int precedence = 0)
 {
     var token = Advance();
-    var prefix = GetPrefixParselet(token.Type);
+    var prefix = GetPrefixDenotation(token.Type);
 
     if (prefix is null) throw new ParseError($"Could not parse \"{token.Lexeme}\" at column {token.Column}");
 
@@ -55,7 +55,7 @@ public IExpr ParseExpression(int precedence = 0)
     {
         token = Advance();
 
-        var infix = GetInfixParselet(token.Type);
+        var infix = GetInfixDenotation(token.Type);
         left = infix.Parse(this, left, token);
     }
 
