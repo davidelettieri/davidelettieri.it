@@ -16,7 +16,7 @@ Here you can see the code running the Mandelbrot example
 
 <script id="asciicast-9UTdB0BVPfZemqMVjm0429YJb" src="https://asciinema.org/a/9UTdB0BVPfZemqMVjm0429YJb.js" async></script>
 
-I'm going to point out things that I found out there we're obvious for me and did confuse me along the road.
+I'm going to point out things that I found out there weren't obvious for me and did confuse me along the road.
 
 First, how do we use LLVM in C# code? There is a [nuget package](https://www.nuget.org/packages/LLVMSharp) from Microsoft, source [here](https://github.com/microsoft/LLVMSharp), I suggest to use the 11.0.0-beta since the last non beta version uses LLVM 5. The library contains bindings for the C api of LLVM, when you have some issue look for the actual C code that is being called and google it, it's easier than finding the corresponding C# method/type. I did find something useful looking in projects using the nuget itself so look for them on [github](https://github.com/microsoft/LLVMSharp/network/dependents?package_id=UGFja2FnZS0xNTY3NzI0NTk%3D), some of the projects are incomplete.
 
