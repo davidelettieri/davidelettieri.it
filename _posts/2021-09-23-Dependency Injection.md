@@ -19,9 +19,9 @@ Another presumed benefit of the dependency injections is
 As the [Microsoft docs](https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles#dependency-inversion) puts it (bold is mine).   
 
 I think that the sentence in bold is a lie. Let's start with ASP.NET Core, the default IOC Container offers three types of lifetime:
-* Transient -> this is the narrower lifetime. Each time we request an istance, a new one will be created.
-* Scoped -> this is in the middle. For each request, we have at most one istance.
-* Singleton -> We have only one istance for the lifetime of the application.
+* Transient -> this is the narrower lifetime. Each time we request an instance, a new one will be created.
+* Scoped -> this is in the middle. For each request, we have at most one instance.
+* Singleton -> We have only one instance for the lifetime of the application.
   
 Now let's pretend we have
 
@@ -57,7 +57,7 @@ When you implement a class with some dependencies and you're using interfaces or
 
 If you need to implement a singleton dependency, it's probably best to avoid dependency injection at all. The only way to be sure that only singletons are injected into your class is to not depend on external objects.
 
-I really don't feel to say that **different implementations of these interfaces can easily be plugged in**. It can be true if we know the lifetime of all the implementation of our interfaces. Since we could plug a new implementation later in time, we cannot know right now that it will be registered with the right lifetime. When we code we cannot code against a few interfaces, we are also coding with an expected lifetime for our classes.
+I really don't feel to say that **different implementations of these interfaces can easily be plugged in**. It can be true if we know the lifetime of all the implementation of our interfaces. Since we could plug a new implementation later in time, we cannot know right now that it will be registered with the right lifetime. When we code we cannot just code against a few interfaces, we are also coding with an expected lifetime for our classes.
 
 I always use DI but it's best to remember its downsides:
 * A class cannot enforce its lifetime but it can depends on a specific lifetime. For example a DbContext from EF Core cannot be a singleton.
