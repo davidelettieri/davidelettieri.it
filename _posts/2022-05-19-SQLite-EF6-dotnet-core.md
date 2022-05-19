@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Using EF6 with SQLite on dotnet core"
-date:   2022-05-19 18:00:00 +0200
+date:   2022-05-19 19:00:00 +0200
 categories: EF6 SQLite 'C#' '.NET Core'
 description: In this post we will see how to use EF6 (not EF Core) in a .NET Core application with SQLite
 ---
