@@ -97,7 +97,7 @@ Expression = Addition
 
 ### The parsing
 
-Let's start with analyzing the type of our parser, we start with a string such as `x+y` or `x-1` and we want an istance of `Expression`. We cannot be sure that the input string will be a correct polynomial expression, for example we could feed into the parser `++` which is not a polynomial. A possible type for our parser is `string -> Expression option`. This is too far away from the type that FParsec uses for the parser which is 
+Let's start with analyzing the type of our parser, we start with a string such as `x+y` or `x-1` and we want an instance of `Expression`. We cannot be sure that the input string will be a correct polynomial expression, for example we could feed into the parser `++` which is not a polynomial. A possible type for our parser is `string -> Expression option`. This is too far away from the type that FParsec uses for the parser which is 
 
 ```fsharp
 type Parser<'TResult, 'TUserState> = CharStream<'TUserState> -> Reply<'TResult>

@@ -12,7 +12,7 @@ Anyone that could manage some bash commands and edit text files on the command l
 ## Prerequisites
 
 * If you are on a windows machine you need to install the linux subsystem for windows and a distro of your choice from the windows store. I installed ubuntu and it served me well.
-* A CentOS server somewhere. I created a 'droplet', which is their name for a virtual machine, on DigitalOcean. The smallest one is at 5$ at month, it's a very reasonable price for playing with a cloud linux istance. **I will describe briefly what I had to do**
+* A CentOS server somewhere. I created a 'droplet', which is their name for a virtual machine, on DigitalOcean. The smallest one is at 5$ at month, it's a very reasonable price for playing with a cloud linux instance. **I will describe briefly what I had to do**
 * A working aspnet core web app. I suggest to install vs code with the latest aspnet core sdk on your working machine. We will not develop on our server. **We will see together what steps are needed to build for linux on a windows machine**
 
 ## CentOS
