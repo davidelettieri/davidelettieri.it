@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Creating a new racket language"
+title:  "Creating a new Racket language"
 date:   2023-02-25 15:50:00 +0100
 categories: racket programming-languages parsers
 description: If you're interested in creating new programming languages or domain specific languages and also in scheme or LISP
