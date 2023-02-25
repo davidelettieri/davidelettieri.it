@@ -10,10 +10,10 @@
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}"
     href="{{ "/feed.xml" | relative_url }}">
   {% if jekyll.environment == 'production' %}
-  <script async src="https://cdn.panelbear.com/analytics.js?site=8bk4JR1cDcX"></script>
+  <script async src="https://rum.cronitor.io/script.js"></script>
   <script>
-    window.panelbear = window.panelbear || function () { (window.panelbear.q = window.panelbear.q || []).push(arguments); };
-    panelbear('config', { site: '8bk4JR1cDcX' });
+      window.cronitor = window.cronitor || function() { (window.cronitor.q = window.cronitor.q || []).push(arguments); };
+      cronitor('config', { clientKey: 'a25af587d3b8a479fb2d61e11d2c4d4a' });
   </script>
   {% endif %}
 
