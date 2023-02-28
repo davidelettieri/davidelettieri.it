@@ -62,3 +62,5 @@ I really don't feel to say that **different implementations of these interfaces 
 I always use DI but it's best to remember its downsides:
 * A class cannot enforce its lifetime but it can depends on a specific lifetime. For example a DbContext from EF Core cannot be a singleton.
 * A class registered lifetime must be larger than the registered lifetimes of its dependencies.
+
+As a positive note, the dotnet host check for us that the dependencies lifetimes' make sense and will throw otherwise. That was not true for `Autofac` at least not the version I was using.
