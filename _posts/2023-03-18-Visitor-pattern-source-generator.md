@@ -136,6 +136,6 @@ public partial class MyNode
 
 Two different visitor interfaces are added to the project, one with void `Visit` methods and one with a generic `T` return type. The last one can be used also to implement async `Visit` methods by choosing `T` as:
 - `Task`
-- `Task<U>` some some `U`.
+- `Task<U>` for some `U`.
 
 The source code for the visitor generator with a sample project is hosted [here](https://github.com/davidelettieri/visitor-generator). I'm publishing this as a nuget package on github (not on Nuget!). To use the github registry look at the [official docs](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry).
