@@ -91,17 +91,17 @@ The tree-sitter library has a set of predefined grammars, the get started projec
 
 ### Some options are broken with the current ClangSharpPInvokeGenerator release
 
-With the configuration I used it was necessary to use the `generate-helper-types` option to have some additional types in the generated output. However this was not working so I removed the option and copied the files from the ClangSharp repo. In addition to that I had a class generated twice, I'm not sure why and I might did into this a bit deeper in the future but for the sake of the experiment it was good enough to clean up manually the duplicate class.
+With the configuration I used it was necessary to use the `generate-helper-types` option to have some additional types in the generated output. However this was not working so I removed the option and copied the files from the ClangSharp repo. In addition to that I had a class generated twice, I'm not sure why and I might did into this a bit deeper in the future but for the sake of the experiment it was good enough to clean up manually the duplicated class.
 
 ## Packaging the bindings library
 
-I want to be able to share and use without too much hussle the bindings I generated. This requires:
+I want to be able to share and use without too much hassle the bindings I generated. This requires:
 1. Package the project with the generated bindings
 2. Distribute the compiled tree-sitter library
 
 Point 1 is easy and I've done it several times, I'm publishing on github nuget registry since I find it very convenient to test packages. Point 2 is a bit tricky, since the compiled tree-sitter library is depending on the combination of os and architecture.
 
-Again the ClangSharp and the LLVMSharp projects already faced the same problem and they solved even if not completely mostly because a lack of tooling and support in the nuget infrastructure.
+Again the ClangSharp and the LLVMSharp projects already faced the same problem and they solved it somehow, even if not completely due to lack of tooling and support in the nuget infrastructure.
 
 Since I wanted to make this a one-day experiment (more or less!) I decided to settle on supporting only one architecture: `linux-x64` which was the one I was using.
 
