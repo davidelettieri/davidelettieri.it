@@ -16,8 +16,8 @@ I aim to provide a recap on how to deploy all of this with links to the relevant
 
 # Objective and key steps
 
-We aim to:
-- Have an AKS cluster deployed with workload identity enabled
+We aim to have:
+- An AKS cluster deployed with workload identity enabled
 - A managed identity with a federated credential
 - A key vault to store the encryption key, an encryption key and access policy to allow the managed identity to encrypt using the key
 - A github repo to be our source of truth for k8s deployment
@@ -192,7 +192,7 @@ In the `gitops` folder of the repo, the `setup-flux.sh` script I used to setup f
 
 Please update the script to refer to your github account or check Flux documentation for additional providers.
 
-If you will use GitHub then you will be prompted for a personal access token, create one with repo access. A short expiration date is fine, Flux with add a deploy key to the repo to access it in the future.
+If you will use GitHub then you will be prompted for a personal access token, create one with repo access. A short expiration date is fine, Flux will add a deploy key to the repo to access it in the future.
 
 When the command is complete the `aks` folder is populated with a `flux-system` sub-folder.
 
@@ -248,7 +248,7 @@ metadata:
 ```
 
 Now commit all the changes and push. It will take a few minutes to complete the deployment.
-You can check the status using.
+You can check the status using:
 
 ```bash
 flux get all -A
