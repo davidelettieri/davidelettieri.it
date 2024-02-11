@@ -1,12 +1,12 @@
 ---
 layout: post
 title:  "Fedora, switch audio channels with pipewire"
-date:   2024-02-04 16:00:00 +0100
+date:   2024-02-11 18:00:00 +0100
 categories: linux fedora pipewire wireplumber
 description: I bought a pair <a target="_blank" href="https://www.amazon.it/dp/B09HGXDLX2?&_encoding=UTF8&tag=davidelettier-21&linkCode=ur2&linkId=a704b01f634642a6eaf02f1d538ef5e4&camp=3414&creative=21718">Creative Pebble V3</a> and given my desk setup and the cables of the 2 speakes, I needed to switch left and right audio channels
 ---
 
-I bought a pair <a target="_blank" href="https://www.amazon.it/dp/B09HGXDLX2?&_encoding=UTF8&tag=davidelettier-21&linkCode=ur2&linkId=a704b01f634642a6eaf02f1d538ef5e4&camp=3414&creative=21718">Creative Pebble V3</a> and given my desk setup and the cables of the 2 speakers, I needed to switch left and right audio channels in order to setup correctly the speakers.
+I bought a pair <a target="_blank" href="https://www.amazon.it/dp/B09HGXDLX2?&_encoding=UTF8&tag=davidelettier-21&linkCode=ur2&linkId=a704b01f634642a6eaf02f1d538ef5e4&camp=3414&creative=21718">Creative Pebble V3</a>[^1] and given my desk setup and the cables of the 2 speakers, I needed to switch left and right audio channels in order to setup correctly the speakers.
 
 Now, I'm running Fedora Workstation and I never had to troubleshoot, manage, or change any audio settings besides adjusting volume when needed. I found out this task is not as easy as it seems, probably for a mixture of lack of documentation and lack of skills on my side.
 
@@ -54,7 +54,7 @@ Audio
 ...
 ```
 
-I tried this on a new VM running Fedora 39 Workstation image and it is working out of the box. The part that we are most interested in, is the `Sinks` part. In my case it was the `Pebble V3 Analog Stereo` sink, the one I want to customize.
+I tried this on a new VM running Fedora 39 Workstation image and it is working out of the box. The part that we are most interested in is the `Sinks` part. In my case it was the `Pebble V3 Analog Stereo` sink, the one I want to customize.
 
 Let's use the ID to get more details:
 
@@ -112,3 +112,28 @@ id 43, type PipeWire:Interface:Node
 ```
 
 There are two parts that we care about: `node.name` and `audio.position`. The first one is needed as an identifier, the ID is not stable so we can forget about it, while `audio.position` which has `FR,FL` value is the one we want to change to `FL,FR` to switch the channels.
+
+```lua
+rule = {
+    matches = {
+      {
+        { "node.name", "equals", "alsa_output.usb-ACTIONS_Pebble_V3-00.analog-stereo" },
+      },
+    },
+    apply_properties = {
+      ["audio.position"] = "FR,FL",
+    },
+  }
+  
+table.insert(alsa_monitor.rules, rule)
+```
+
+I saved this file as `.config/wireplumber/main.lua.d/51-change-channels.lua` (I got this filename checking samples and post online, not sure what the initial number is referring to and I suspect it's not that relevant unless you have multiple scripts in the folder) and run 
+
+```bash
+systemctl --user restart wireplumber pipewire pipewire-pulse
+```
+
+That should be enough to have your audio channel switched. If it is not working, double check that the file has the correct format and run `systemctl --user status pipewire*` to check for errors.
+
+[^1]: this is an affiliate link, I genuinely like Creative products and bought their stuff since my first pc 25+ years ago when I got my Sound Blaster Live 1024. I'm thinking if I should invest more time in the blog and this is part of this experiment.
