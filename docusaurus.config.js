@@ -15,12 +15,6 @@ const config = {
   // Set the production url of your site here
   url: 'https://davidelettieri.it',
   baseUrl: '/',
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'davidelettieri', // Usually your GitHub org/user name.
-  projectName: 'davidelettieri.it', // Usually your repo name.
-
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
@@ -55,15 +49,20 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'My Site',
+        title: 'Davide Lettieri',
         logo: {
           alt: 'My Site Logo',
           src: 'img/logo.svg',
         },
         items: [
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/davidelettieri',
             label: 'GitHub',
+            position: 'right',
+          },  
+          {
+            href: 'https://www.linkedin.com/in/davide-lettieri/',
+            label: 'Linkedin',
             position: 'right',
           },
         ],
@@ -72,30 +71,14 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Community',
-            items: [
-              {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
-              },
-            ],
-          },
+            href: 'https://github.com/davidelettieri',
+            label: 'GitHub',
+            position: 'right',
+          },  
           {
-            title: 'More',
-            items: [
-              {
-                label: 'GitHub',
-                href: 'https://github.com/davidelettieri',
-              },
-            ],
+            href: 'https://www.linkedin.com/in/davide-lettieri/',
+            label: 'Linkedin',
+            position: 'right',
           },
         ],
         copyright: `Copyright © ${new Date().getFullYear()} Davide Lettieri, Inc. Built with Docusaurus.`,
