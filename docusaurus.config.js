@@ -4,7 +4,7 @@
 // There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
-import {themes as prismThemes} from 'prism-react-renderer';
+import { themes as prismThemes } from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -50,20 +50,21 @@ const config = {
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
         title: 'Davide Lettieri',
-        logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
-        },
         items: [
+          {
+            href: '/about',
+            label: 'About me',
+            position: 'left',
+          },
           {
             href: 'https://github.com/davidelettieri',
             label: 'GitHub',
-            position: 'right',
-          },  
+            position: 'left',
+          },
           {
             href: 'https://www.linkedin.com/in/davide-lettieri/',
             label: 'Linkedin',
-            position: 'right',
+            position: 'left',
           },
         ],
       },
@@ -74,7 +75,7 @@ const config = {
             href: 'https://github.com/davidelettieri',
             label: 'GitHub',
             position: 'right',
-          },  
+          },
           {
             href: 'https://www.linkedin.com/in/davide-lettieri/',
             label: 'Linkedin',
@@ -86,6 +87,7 @@ const config = {
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
+        additionalLanguages: ['powershell','csharp','bicep','bash','lua'],
       },
     }),
 };
