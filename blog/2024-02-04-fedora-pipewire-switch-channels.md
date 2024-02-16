@@ -10,6 +10,8 @@ I bought a pair <a target="_blank" href="https://www.amazon.it/dp/B09HGXDLX2?&_e
 
 Now, I'm running Fedora Workstation and I never had to troubleshoot, manage, or change any audio settings besides adjusting volume when needed. I found out this task is not as easy as it seems, probably for a mixture of lack of documentation and lack of skills on my side.
 
+<!-- truncate -->
+
 At first I tried some promising GUI tools:
 - EasyEffects -> with this one I was able to visually obtain what I wanted, ie switch channels, however I was not able to apply the changes anyhow.
 - qpwgraph -> with this one I just got some background noise in my speakers and quickly gave up after successfully reverting the changes I made.
@@ -18,13 +20,13 @@ After this I found the `wireplumber` tool and that indeed worked. This [Archlinu
 
 First off, be sure that wireplumber is installed and enabled in your system:
 
-```bash
+```bash title="command"
 wpctl status
 ```
 
 You should get an output similar to this:
 
-```bash
+```bash title="sample output"
 PipeWire 'pipewire-0' [1.0.1, davide@home, cookie:3084944151]
  └─ Clients:
         31. uresourced                          [1.0.1, davide@home, pid:2636]
@@ -48,6 +50,7 @@ Audio
  │      42. Starship/Matisse HD Audio Controller [alsa]
  │  
  ├─ Sinks:
+ # highlight-next-line
  │  *   43. Pebble V3 Analog Stereo             [vol: 1.00]
  │      44. Starship/Matisse HD Audio Controller Analog Stereo [vol: 1.00]
 
@@ -58,13 +61,13 @@ I tried this on a new VM running Fedora 39 Workstation image and it is working o
 
 Let's use the ID to get more details:
 
-```bash
+```bash title="command"
 wpctl inspect 43
 ```
 
 Expect something like this:
 
-```bash
+```bash title="sample output"
 id 43, type PipeWire:Interface:Node
     alsa.card = "0"
     alsa.card_name = "Pebble V3"
@@ -85,6 +88,7 @@ id 43, type PipeWire:Interface:Node
     api.alsa.pcm.stream = "playback"
     audio.adapt.follower = ""
     audio.channels = "2"
+    # highlight-next-line
     audio.position = "FR,FL"
     card.profile.device = "1"
   * client.id = "33"
@@ -102,6 +106,7 @@ id 43, type PipeWire:Interface:Node
   * media.class = "Audio/Sink"
   * node.description = "Pebble V3 Analog Stereo"
     node.driver = "true"
+  # highlight-next-line
   * node.name = "alsa_output.usb-ACTIONS_Pebble_V3-00.analog-stereo"
   * node.nick = "Pebble V3"
     node.pause-on-idle = "false"
@@ -113,7 +118,7 @@ id 43, type PipeWire:Interface:Node
 
 There are two parts that we care about: `node.name` and `audio.position`. The first one is needed as an identifier, the ID is not stable so we can forget about it, while `audio.position` which has `FR,FL` value is the one we want to change to `FL,FR` to switch the channels.
 
-```lua
+```lua title=".config/wireplumber/main.lua.d/51-change-channels.lua"
 rule = {
     matches = {
       {
@@ -130,7 +135,7 @@ table.insert(alsa_monitor.rules, rule)
 
 I saved this file as `.config/wireplumber/main.lua.d/51-change-channels.lua` (I got this filename checking samples and post online, not sure what the initial number is referring to and I suspect it's not that relevant unless you have multiple scripts in the folder) and run 
 
-```bash
+```bash title="command"
 systemctl --user restart wireplumber pipewire pipewire-pulse
 ```
 
