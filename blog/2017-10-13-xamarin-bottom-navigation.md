@@ -12,7 +12,7 @@ The bottom navigation is a very simple and easy template from Android Studio, th
 
 ## The solution
 
-Ported from the Android Studio template, quick and easy the [Navigation Drawer](/xamarin/android/c%23/2017/10/07/xamarin-navigation-drawer.html "Navigation Drawer porting from Android Studio") was way harder than this.
+Ported from the Android Studio template, quick and easy the [Navigation Drawer](2017-10-07-xamarin-navigation-drawer.md "Navigation Drawer porting from Android Studio") was way harder than this.
 
 ### tl;dr
 
