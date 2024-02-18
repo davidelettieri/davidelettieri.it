@@ -21,7 +21,7 @@ The [getting started guide](https://github.com/antlr/antlr4/blob/master/doc/gett
 
 A possible useful guide is the one written by Tomassetti at [The ANTLR mega tutorial](https://tomassetti.me/category/language-engineering/antlr/ "Antlr tutorial").
 
-At a very basic level Antlr allows to parse a text and build a tree representing the parsed text. This tree is the perfect source for a compilation or interpretation of the text, here I'm thinking about code. It's very similar to the role of the [System.Linq.Expressions](System.Linq.Expressions "System.Linq.Expressions documentation") namespace in .NET, the lambdas representing the query are organized in a tree in order to translate it to a different provider such as SQL. 
+At a very basic level Antlr allows to parse a text and build a tree representing the parsed text. This tree is the perfect source for a compilation or interpretation of the text, here I'm thinking about code. It's very similar to the role of the [System.Linq.Expressions]([System.Linq.Expressions](https://learn.microsoft.com/en-us/dotnet/api/system.linq.expressions?view=net-8.0) "System.Linq.Expressions documentation") namespace in .NET, the lambdas representing the query are organized in a tree in order to translate it to a different provider such as SQL. 
 
 The project is at [Antlr4 Polynomial](https://github.com/davidelettieri/Antlr4.Polynomials), I won't go into the details of the creation of the grammar since it was a trial and error process.
 
