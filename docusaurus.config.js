@@ -57,6 +57,11 @@ const config = {
             position: 'left',
           },
           {
+            href: '/talk-with-me',
+            label: 'Talk with me',
+            position: 'left',
+          },
+          {
             href: 'https://github.com/davidelettieri',
             label: 'GitHub',
             position: 'left',
