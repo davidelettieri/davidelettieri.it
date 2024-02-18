@@ -4,6 +4,96 @@
             "route": "/linux/fedora/pipewire/wireplumber/2024/02/11/fedora-pipewire-switch-channels.html",
             "redirect": "/2024/02/04/fedora-pipewire-switch-channels",
             "statusCode": 301
+        },
+        {
+            "route": "/c%23/'tree/sitter'/'dotnet/bindings'/'c%23/sitter/ruby'/html'/embedded/template'/2023/11/18/Tree-sitter-C-bindings-new-languages.html",
+            "redirect": "/2023/11/18/Tree-sitter-C-sharp-bindings-new-languages",
+            "statusCode": 301
+        },
+        {
+            "route": "/kubernetes/aks/azure/flux/sops/gitops/2023/11/01/flux-and-sops-on-aks-with-workload-identity.html",
+            "redirect": "/2023/11/01/flux-and-sops-on-aks-with-workload-identity",
+            "statusCode": 301
+        },
+        {
+            "route": "/c%23/visitor-pattern/minimal-api/2023/06/16/Implementing-apis-with-the-visitor-pattern.html",
+            "redirect" : "/2023/06/24/Implementing-apis-with-the-visitor-pattern",
+            "statusCode": 301
+        },
+        {
+            "route": "/c%23/'tree/sitter'/'dotnet/bindings'/'c%23/2023/04/09/Tree-sitter-C-bindings.html",
+            "redirect" : "/2023/04/09/Tree-sitter-C-sharp-bindings",
+            "statusCode": 301
+        },
+        {
+            "route": "/c%23/'visitor/pattern'/'source/generators'/cqrs/'event/sourcing'/2023/03/19/Visitor-pattern-source-generator.html",
+            "redirect" : "/2023/03/18/Visitor-pattern-source-generator",
+            "statusCode": 301
+        },
+        {
+            "route": "/racket/programming-languages/parsers/2023/02/25/Creating-a-new-racket-language.html",
+            "redirect" : "/2023/02/25/Creating-a-new-racket-language",
+            "statusCode": 301
+        },
+        {
+            "route": "/ef6/sqlite/'c%23'/'.net/core'/2022/05/19/SQLite-EF6-dotnet-core.html",
+            "redirect" : "/2022/05/19/SQLite-EF6-dotnet-core",
+            "statusCode": 301
+        },
+        {
+            "route": "/rop/'railway/oriented/programming'/c%23/2021/09/29/ROP-in-ASPNET-core.html",
+            "redirect" : "/2021/09/29/ROP-in-ASPNET-core",
+            "statusCode": 301
+        },
+        {
+            "route": "/patterns/2021/09/23/Dependency-Injection.html",
+            "redirect" : "/2021/09/23/Dependency%20Injection",
+            "statusCode": 301
+        },
+        {
+            "route": "/c%23/llvm/kaleidoscope/2021/04/09/LLVM-Kaleidoscope-.NET.html",
+            "redirect" : "/2021/04/09/LLVM%20Kaleidoscope%20.NET",
+            "statusCode": 301
+        },
+        {
+            "route": "c%23/'visitor/pattern'/workflows/2021/02/21/Workflows-with-visitor-pattern.html",
+            "redirect" : "/2021/02/21/Workflows-with-visitor-pattern",
+            "statusCode": 301
+        },
+        {
+            "route": "/f%23/fparsec/parsing/polynomials/2020/12/25/parsing-polynomials-with-fparsec.html",
+            "redirect" : "/2020/12/25/parsing-polynomials-with-fparsec",
+            "statusCode": 301
+        },
+        {
+            "route": "/c%23/pratt/polynomial/2020/11/06/Polynomials-pratt-algorithm.html",
+            "redirect" : "/2020/11/06/Polynomials-pratt-algorithm",
+            "statusCode": 301
+        },
+        {
+            "route": "/c%23/antlr/polynomial/2020/04/18/antlr-polynomial-2020-update.html",
+            "redirect" : "/asdsaadssa",
+            "statusCode": 301
+        },
+        {
+            "route": "/dsasdasdadsa",
+            "redirect" : "/asdsaadssa",
+            "statusCode": 301
+        },
+        {
+            "route": "/dsasdasdadsa",
+            "redirect" : "/asdsaadssa",
+            "statusCode": 301
+        },
+        {
+            "route": "/dsasdasdadsa",
+            "redirect" : "/asdsaadssa",
+            "statusCode": 301
+        },
+        {
+            "route": "/dsasdasdadsa",
+            "redirect" : "/asdsaadssa",
+            "statusCode": 301
         }
     ]
 }

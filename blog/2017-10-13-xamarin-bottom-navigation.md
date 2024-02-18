@@ -27,8 +27,7 @@ My IDE is VS2017 and I created a "Blank App (Android)" project. I decided for:
 
 All the NuGet packages installed, be aware that I only choose a couple of them, the other are dependencies.
 
-{% highlight xml %}
-
+```xml
 <packages>
   <package id="Xamarin.Android.Support.Animated.Vector.Drawable" version="25.4.0.2" targetFramework="monoandroid71" />
   <package id="Xamarin.Android.Support.Annotations" version="25.4.0.2" targetFramework="monoandroid71" />
@@ -43,8 +42,7 @@ All the NuGet packages installed, be aware that I only choose a couple of them, 
   <package id="Xamarin.Android.Support.v7.RecyclerView" version="25.4.0.2" targetFramework="monoandroid71" />
   <package id="Xamarin.Android.Support.Vector.Drawable" version="25.4.0.2" targetFramework="monoandroid71" />
 </packages>
-
-{% endhighlight %}
+```
 
 **TIP** Always look at the Android Manifest for the theme of the app, in Xamarin I opted for the Theme Attribute on the Activity. Don't know if there are other options.
 
@@ -52,8 +50,7 @@ All the NuGet packages installed, be aware that I only choose a couple of them, 
 
 The java source code
 
-{% highlight java %}
-
+```java
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -97,13 +94,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
-
-{% endhighlight %}
+```
 
 The C# version, I think that the C# properties give a better readability to the code.
 
-{% highlight c# %}
-
+```csharp
 using Android.App;
 using Android.Widget;
 using Android.OS;
@@ -149,7 +144,6 @@ namespace Xamarin.BottomNavigation
         }
     }
 }
-
-{% endhighlight %}
+```
 
 That's it :)
