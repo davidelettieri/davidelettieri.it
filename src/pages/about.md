@@ -4,7 +4,7 @@ title: About
 
 ## Current job
 
-I'm working at [getpaid](https://www.getpaid.io/) as a software engineer. Wy work is focused on .NET backend services and on setting up our Azure infrastructure. I use daily several Azure products such us CosmosDb, Service Bus, Blob Storage and AKS. 
+I'm working at [getpaid](https://www.getpaid.io/) as a software engineer. My work is focused on .NET backend services and on setting up our Azure infrastructure. I use daily several Azure products such us CosmosDb, Service Bus, Blob Storage and AKS. 
 
 ## Education
 I have a "Laurea Specialistica in Matematica" which corresponds to a Master's Degree in Math. I also did a couple of years of a PHD course in Math but I found out it was not the right career path for me. However I was able to land a couple of publications in Numerical Analysis. Learning is one of my strongest skills, one which I constantly train.  
