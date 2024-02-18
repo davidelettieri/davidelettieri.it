@@ -7,7 +7,7 @@ description: In the last couple of months I've been reading and studying about c
 ---
 ## Antlr4
 
-**Update April 2020, hey! I updated this article and the corresponding repo check it out [here](/c%23/antlr/polynomial/2020/04/18/antlr-polynomial-2020-update.html)**
+**Update April 2020, hey! I updated this article and the corresponding repo check it out [here](2020-04-18-antlr-polynomial-2020-update.md)**
 
 In the last couple of months I've been reading and studying about compilers and languages and for everyone doing something like that it's very easy to meet Antlr at a certain point. What is antlr?
 
@@ -59,7 +59,7 @@ After writing my grammar a ran antlr with the visitor flag, targeting c#. This o
 
 My aim is to use the visitor to take a string representation of a polynomial and to create an object that allow us to evaluate the polynomial for any value of the variable. The result is:
 
-{% highlight c# %}
+```csharp
 public class Evaluator
 {
     private Func<double, double> PolynomialFunc;
@@ -145,6 +145,6 @@ public class Evaluator
     }
 
 }
-{% endhighlight %}
+```
 
-In my visitor implementation, thanks to the label I assigned when defining my grammar, it's easy to manage the only three cases my parser will found. The base visitor is a generic class and I chose the Func<double,double> type in order to create a function that will represent my polynomial. After the work is done in the constructor of Evaluator, I can compute the function every time I want.
+In my visitor implementation, thanks to the label I assigned when defining my grammar, it's easy to manage the only three cases my parser will found. The base visitor is a generic class and I chose the Func\<double,double\> type in order to create a function that will represent my polynomial. After the work is done in the constructor of Evaluator, I can compute the function every time I want.

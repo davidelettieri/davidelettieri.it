@@ -1,9 +1,7 @@
 ---
-layout: post
 title:  "Antlr4 polynomial grammar - 2020 update"
 date:   2020-04-18 08:00:00 +0200
 categories: c# antlr polynomial
-description: A few years back I was playing with Antlr to build a polynomial evaluator. The result was working but not very sofisticated o particularly good, just a minimal working example. In these days of quarantine in Italy, I decided to get back a that project and try to make something better.
 ---
 ## Antlr4
 
@@ -36,7 +34,7 @@ Each node has an eval method that accepts a `Dictionary<char,double>`, one value
 
 In a similar way I defined the other node types. It's easy but cumbersome to use the nodes type to manually build the polynomial `x^2+5x+1` from the example
 
-```
+```csharp
 var p = new AddNode(AddNode(PowerNode(new VariableNode(x),new ConstNode(2)),ProductNode(new ConstNode(5),new VariableNode(x))),new ConstNode(1));
 ```
 

@@ -28,8 +28,7 @@ My IDE is VS2017 and I created a "Blank App (Android)" project. I decided for:
 
  From the import of the java project:
 
-{% highlight java %}
-
+```java
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -42,13 +41,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
-{% endhighlight %}
+```
 
 I decided which NuGet packages to install:
 
-{% highlight xml %}
-
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <packages>
   <package id="Xamarin.Android.Support.Animated.Vector.Drawable" version="25.4.0.2" targetFramework="monoandroid71" />
@@ -65,8 +62,7 @@ I decided which NuGet packages to install:
   <package id="Xamarin.Android.Support.v7.RecyclerView" version="25.4.0.2" targetFramework="monoandroid71" />
   <package id="Xamarin.Android.Support.Vector.Drawable" version="25.4.0.2" targetFramework="monoandroid71" />
 </packages>
-
-{% endhighlight %}
+```
 
 Then I copied all the resources files to my Xamarin Project into the folder:
 * drawable
@@ -78,8 +74,7 @@ Then I copied all the resources files to my Xamarin Project into the folder:
 
 Just modifying the MainActivity.cs to the following code will make the app running. I tested on my Moto G3 (Lollipop) and on a Samsung S7 (Nougat)
 
-{% highlight c# %}
-
+```csharp
 using Android.App;
 using Android.OS;
 using Android.Support.V7.App;
@@ -98,15 +93,13 @@ namespace Xamarin.NavigationDrawer
         }
     }
 }
-
-{% endhighlight %}
+```
 
 Now we have to translate all the java code to the magnificient C# equivalent.
 
 The java bits 
 
-{% highlight java %}
-
+```java
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -193,13 +186,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 }
-
-{% endhighlight %}
+```
 
 The "translation" is pretty easy and I throwed in a bunch of var since the type are easy to understand. So here it is.
 
-{% highlight c# %}
-
+```csharp
 [Activity(Label = "Xamarin.NavigationDrawer", MainLauncher = true, Theme = "@style/AppTheme.NoActionBar")]
 public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
 {
@@ -294,5 +285,4 @@ public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemS
         return base.OnOptionsItemSelected(item);
     }
 }
-
-{% endhighlight %}
+```
