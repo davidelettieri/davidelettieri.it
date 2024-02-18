@@ -116,7 +116,7 @@
             "statusCode": 301
         },
         {
-            "route": "/xamarin/android/c%23/2017/10/13/xamarin-bottom-navigation.html",
+            "route": "xamarin/android/c%23/2017/10/07/xamarin-navigation-drawer.html",
             "redirect" : "/2017/10/07/xamarin-navigation-drawer",
             "statusCode": 301
         },
