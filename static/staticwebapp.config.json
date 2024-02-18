@@ -72,27 +72,57 @@
         },
         {
             "route": "/c%23/antlr/polynomial/2020/04/18/antlr-polynomial-2020-update.html",
-            "redirect" : "/asdsaadssa",
+            "redirect" : "/2020/04/18/antlr-polynomial-2020-update",
             "statusCode": 301
         },
         {
-            "route": "/dsasdasdadsa",
-            "redirect" : "/asdsaadssa",
+            "route": "/rop/'tagged/union'/'railway/oriented/programming'/c%23/2020/04/04/railway-oriented-programming-with-c.html",
+            "redirect" : "/2020/04/04/railway-oriented-programming-with-c-sharp",
             "statusCode": 301
         },
         {
-            "route": "/dsasdasdadsa",
-            "redirect" : "/asdsaadssa",
+            "route": "/tagged/union/2020/03/25/a-tagged-union-example.html",
+            "redirect" : "/2020/03/21/a-tagged-union-example",
             "statusCode": 301
         },
         {
-            "route": "/dsasdasdadsa",
-            "redirect" : "/asdsaadssa",
+            "route": "/.net/visualstudio/'code/generation'/2019/12/11/auto-tostring.html",
+            "redirect" : "/2019/12/11/auto-tostring",
             "statusCode": 301
         },
         {
-            "route": "/dsasdasdadsa",
-            "redirect" : "/asdsaadssa",
+            "route": "/android/dart/flux/app/2018/11/04/attesa-bus-android-app.html",
+            "redirect" : "/2018/11/04/attesa-bus-android-app",
+            "statusCode": 301
+        },
+        {
+            "route": "/aspnet-core/linux/centos/digitalocean/2018/04/01/aspnet-core-on-centos.html",
+            "redirect" : "/2018/04/01/aspnet-core-on-centos",
+            "statusCode": 301
+        },
+        {
+            "route": "/log4net/nuget/2018/02/26/log4net-sample-config-nuget-packages.html",
+            "redirect" : "/2018/02/26/log4net-sample-config-nuget-packages",
+            "statusCode": 301
+        },
+        {
+            "route": "/c%23/antlr/polynomial/2017/12/25/antlr-polynomial.html",
+            "redirect" : "/2017/12/25/antlr-polynomial",
+            "statusCode": 301
+        },
+        {
+            "route": "/xamarin/android/c%23/2017/10/13/xamarin-bottom-navigation.html",
+            "redirect" : "/2017/10/13/xamarin-bottom-navigation",
+            "statusCode": 301
+        },
+        {
+            "route": "/xamarin/android/c%23/2017/10/13/xamarin-bottom-navigation.html",
+            "redirect" : "/2017/10/07/xamarin-navigation-drawer",
+            "statusCode": 301
+        },
+        {
+            "route": "blog/info/2017/10/07/welcome-to-my-blog.html",
+            "redirect" : "2017/10/07/welcome-to-my-blog",
             "statusCode": 301
         }
     ]
