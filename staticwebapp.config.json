@@ -1,0 +1,9 @@
+{
+    "routes": [
+        {
+            "route": "/linux/fedora/pipewire/wireplumber/2024/02/11/fedora-pipewire-switch-channels.html",
+            "redirect": "/2024/02/04/fedora-pipewire-switch-channels",
+            "statusCode": 301
+        }
+    ]
+}
