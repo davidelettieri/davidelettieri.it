@@ -16,7 +16,7 @@
             "statusCode": 301
         },
         {
-            "route": "/c%23/visitor-pattern/minimal-api/2023/06/16/Implementing-apis-with-the-visitor-pattern.html",
+            "route": "/c#/visitor-pattern/minimal-api/2023/06/16/Implementing-apis-with-the-visitor-pattern.html",
             "redirect" : "/2023/06/24/Implementing-apis-with-the-visitor-pattern",
             "statusCode": 301
         },
