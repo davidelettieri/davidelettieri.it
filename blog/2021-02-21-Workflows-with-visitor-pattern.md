@@ -21,7 +21,7 @@ We end up with a main workflow and several subsets of it. A subset of the workfl
 
 #### Just a sample workflow
 
-<img style={{ margin:'0 auto', display:'block' }} src="/images/workflow.svg" /> 
+<img style={{ margin:'0 auto', display:'block' }} src="/img/workflow.svg" /> 
 
 This image could represent a FSM where in *Step_1* we have two transitions, one to *Step_2* and one to *Step_5*. However we know from the beginning which path we will take so they are two different workflows that share a few steps. Following this line of reasoning the image display three different workflows:
 
