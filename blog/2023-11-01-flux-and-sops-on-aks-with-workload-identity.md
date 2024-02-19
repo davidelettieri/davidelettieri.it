@@ -58,7 +58,7 @@ The OIDC Issuer URL is required to set up the federated credentials on the manag
 
 This is my sample deployment.
 
-```bicep
+```bicep title="aks.bicep"
 param location string
 
 resource aks 'Microsoft.ContainerService/managedClusters@2023-08-01' = {
@@ -108,7 +108,7 @@ The managed identity is going to be used by the `kustomize-controller` to get ac
 
 We will use the principal id to allow the managed identity to access the encryption key.
 
-```bicep
+```bicep title="mi.bicep"
 param location string
 
 param aksIssuerURL string
@@ -138,7 +138,7 @@ output objectId string = managedIdentity.properties.principalId
 
 Deploy a key vault with bicep, adding an encryption key and relevant access policies.
 
-```bicep
+```bicep title="kv.bicep"
 param location string
 
 param managedIdentityObjectId string
