@@ -26,7 +26,7 @@ In order to properly parse and evaluate a polynomial, we have to represent it fi
 
 This is how we will represent in memory a simple polynomial:
 
-<img src="/images/polynomial tree.png" alt="tree representation of x^2+5x+1" />
+<img src="/img/polynomial tree.png" alt="tree representation of x^2+5x+1" />
 
 Each node has an eval method that accepts a `Dictionary<char,double>`, one value for each variable in the polynomial. Let's see the INode interface and the AddNode class
 
