@@ -61,7 +61,7 @@
             "statusCode": 301
         },
         {
-            "route": "/f%23/fparsec/parsing/polynomials/2020/12/25/parsing-polynomials-with-fparsec.html",
+            "route": "/f#/fparsec/parsing/polynomials/2020/12/25/parsing-polynomials-with-fparsec.html",
             "redirect" : "/2020/12/25/parsing-polynomials-with-fparsec",
             "statusCode": 301
         },
