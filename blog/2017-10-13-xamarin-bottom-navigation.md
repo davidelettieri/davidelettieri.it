@@ -1,7 +1,7 @@
 ---
 title:  "Xamarin Bottom Navigation"
 date:   2017-10-13 21:00:07 +0200
-tags: [xamarin android c#]
+tags: [xamarin, android, c#]
 ---
 
 ## The problem

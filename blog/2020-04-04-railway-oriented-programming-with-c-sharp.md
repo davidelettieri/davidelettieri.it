@@ -1,7 +1,7 @@
 ---
 title:  "Railway oriented programming with C#"
 date:   2020-04-04 17:00:00 +0100
-tags: [ROP 'Tagged union' 'Railway oriented programming' C#]
+tags: [rop, railway-oriented-programming, c#]
 ---
 
 **2021-09-29** I added an example on how to use ROP in an ASP.NET Core project [here](https://davidelettieri.it/rop/'railway/oriented/programming'/c%23/2021/09/29/ROP-in-ASPNET-core.html)

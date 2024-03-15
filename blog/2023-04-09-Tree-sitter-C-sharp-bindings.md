@@ -1,7 +1,7 @@
 ---
 title: TreeSitter C# bindings
 date: 2023-04-09 10:00:00 +0200
-tags: [c# tree-sitter dotnet-bindings c#-bindings]
+tags: [c#, tree-sitter, dotnet-bindings, c#-bindings]
 ---
 
 In a previous experiment I made I used the LLVMSharp library and I was quite curious on how the bindings are made. In the readme is it stated they are generated using che ClangSharp library, this one auto-generate hitself from the headers of Clang C header.

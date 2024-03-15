@@ -1,7 +1,7 @@
 ---
 title:  "Antlr4 polynomial grammar - 2020 update"
 date:   2020-04-18 08:00:00 +0200
-tags: [c# antlr polynomial]
+tags: [c#, antlr, polynomial]
 ---
 ## Antlr4
 

@@ -1,7 +1,7 @@
 ---
 title:  "Creating a new Racket language"
 date:   2023-02-25 15:50:00 +0100
-tags: [racket programming-languages parsers]
+tags: [racket, programming-languages, parsers]
 ---
 
 If you're interested in creating new programming languages or domain specific languages and also in scheme or LISP you will definitively encounter Racket at some point. Which is described on the official website as "the Language-Oriented Programming Language" so it is something to look into it.
