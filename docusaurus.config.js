@@ -16,7 +16,7 @@ const config = {
   url: 'https://davidelettieri.it',
   baseUrl: '/',
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenMarkdownLinks: 'throw',
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -33,6 +33,8 @@ const config = {
       ({
         docs: false,
         blog: {
+          blogTitle: 'Davide Lettieri\'s blog',
+          blogSidebarTitle: 'Latests posts',
           routeBasePath: '/',
           showReadingTime: true,
         },
