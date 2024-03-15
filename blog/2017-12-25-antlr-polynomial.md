@@ -1,9 +1,7 @@
 ---
-layout: post
 title:  "Antlr4 polynomial grammar"
 date:   2017-12-25 19:42:00 +0200
-categories: c# antlr polynomial
-description: In the last couple of months I've been reading and studying about compilers and languages and for everyone doing something like that it's very easy to meet Antlr at a certain point
+tags: [c# antlr polynomial]
 ---
 ## Antlr4
 

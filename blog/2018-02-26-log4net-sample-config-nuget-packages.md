@@ -1,9 +1,7 @@
 ---
-layout: post
 title:  "Sample log4net config nuget packages"
 date:   2018-02-26 21:30:00 +0200
-categories: log4net nuget
-description: Everytime I install the log4net nuget package I have to looku,p on the internet or on my other project, how to modify the app.config
+tags: [log4net nuget]
 ---
 ## Sample log4net config nuget packages
 Everytime I install the log4net nuget package I have to lookup, on the internet or on my other project, how to modify the app.config or the web.config in order to make log4net work.

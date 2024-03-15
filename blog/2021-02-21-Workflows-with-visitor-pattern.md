@@ -1,9 +1,7 @@
 ---
-layout: post
 title:  "Workflows with the visitor pattern"
 date:   2021-02-21 11:00:00 +0100
-categories: C# 'visitor pattern' workflows
-description: As a software developer I develop, most of the times, LOB applications that support some kind of process or workflow for a specific company.
+tags: [C# 'visitor pattern' workflows]
 ---
 
 ## Workflows

@@ -1,9 +1,7 @@
 ---
-layout: post
 title:  "Downsides of Dependency Injection"
 date:   2021-09-23 23:15:00 +0200
-categories: patterns
-description: What problems does DI solve? I really like what wikipedia says "The intent behind dependency injection is to achieve separation of concerns of construction and use of objects."
+tags: [patterns]
 ---
 
 What problems does DI solve? I really like what wikipedia says

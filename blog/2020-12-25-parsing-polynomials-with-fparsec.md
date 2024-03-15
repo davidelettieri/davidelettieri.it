@@ -1,9 +1,7 @@
 ---
-layout: post
 title:  "Parsing polynomials with F# and FParsec"
 date:   2020-12-25 20:00:00 +0100
-categories: f# fparsec parsing polynomials
-description: Parsing a polynomial expression is a simple but interesting example of parsing. We need to handle operator precedence and associativity, for example <code>*</code> has a higher precedence than <code>+</code> and the exponentiation is right associative <code>x^y^z=x^(y^z)</code>.
+tags: [f# fparsec parsing polynomials]
 ---
 
 ## Parsing polynomials with F# and FParsec

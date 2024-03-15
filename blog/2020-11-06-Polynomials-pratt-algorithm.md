@@ -1,9 +1,7 @@
 ---
-layout: post
 title:  "Parsing polynomials with the Pratt algorithm"
 date:   2020-11-06 18:00:00 +0100
-categories: c# pratt polynomial
-description: Using a Pratt parser I aim to parse expressions like this <code>x^2+y^2-1, x=1, y=1</code> and <code>xy, x=2, y=3</code>. Parsing mathematical expressions it's not hard but it already contains some interesting behaviour such as associativity between operators <code>x+y*z</code> is equal to <code>x+(y*z)</code> and not <code>(x+y)*z</code>.
+tags: [c# pratt polynomial]
 ---
 ## polynomials-pratt-algorithm
 Using a Pratt parser I aim to parse expressions like this `x^2+y^2-1, x=1, y=1` and `xy, x=2, y=3`. Parsing mathematical expressions it's not hard but it already contains some interesting behaviour such as associativity between operators `x+y*z` is equal to `x+(y*z)` and not `(x+y)*z`. For no particular reason I decided to put the variable assignments after the polynomial. The expression `x^2+y^2-1, x=1, y=1` is to be interpreted as you would with this pseudo code

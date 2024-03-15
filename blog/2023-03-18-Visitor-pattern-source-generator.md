@@ -1,9 +1,7 @@
 ---
-layout: post
 title:  "Visitor pattern source generator"
 date:   2023-03-19 18:30:00 +0100
-categories: c# 'visitor pattern' 'source generators' CQRS 'event sourcing' 
-description: I am a big fan of the visitor pattern, I think it is a very good approach for adding behaviors to a group of classes without modifying all of them. 
+tags: [c# 'visitor pattern' 'source generators' CQRS 'event sourcing']
 ---
 
 I am a big fan of the visitor pattern, I think it is a very good approach for adding behaviors to a group of classes without modifying all of them. 

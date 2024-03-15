@@ -1,9 +1,7 @@
 ---
-layout: post
 title:  "Railway oriented programming in ASP.NET Core"
 date:   2021-09-29 06:15:00 +0200
-categories: ROP 'Railway oriented programming' C#
-description: In a previous post I talked about ROP in C#, now I want to explore how to use it in a ASP.NET Core web api project.
+tags: [ROP 'Railway oriented programming' C#]
 ---
 
 In a previous post I talked about ROP in C#, now I want to explore how to use it in a ASP.NET Core web api project. If you haven't I suggest to take a look at my previous posts since I won't go into the details of union types and my custom `Result<T>` type:

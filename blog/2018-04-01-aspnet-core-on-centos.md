@@ -1,9 +1,7 @@
 ---
-layout: post
 title:  "ASPNET Core on CentOS"
 date:   2018-04-01 13:50:00 +0200
-categories: aspnet-core linux centos digitalocean
-description: Today I experimented with the DigitalOcean Cloud and the aspnet core deploy on a linux server. Specifically I wanted to deploy a sample .net core web app on a CentOS 7 server using nginx as a web server.
+tags: [aspnet-core linux centos digitalocean]
 ---
 Today I experimented with the DigitalOcean Cloud and the aspnet core deploy on a linux server. Specifically I wanted to deploy a sample .net core web app on a CentOS 7 server using nginx as a web server. I have no experience in managing a linux server or using nginx or deploying aspnet core to linux in general, however I do have some experience with the bash and the linux environment. 
 
