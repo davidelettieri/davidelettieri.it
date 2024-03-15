@@ -10,6 +10,8 @@ description: As a software developer I develop, most of the times, LOB applicati
 
 As a software developer I work, most of the times, on LOB applications that support some kind of process or workflow for a specific company. That means that there are some entities, such as customers, orders or support tickets, and that they _evolve_ during the lifecycle of the application. For example we could have a CRM with a lead entity that evolves into a customer or we could track the state of a ticket: open -> analysis -> work -> deploy.
 
+<!-- truncate -->
+
 Moreover workflows can be easily represented with a graph we can show to the business stakeholders, so that knowledge can be shared and validated. In code we can implement a [finite state machine](https://en.wikipedia.org/wiki/Finite-state_machine) (FSM) to represent our workflow with its states and transitions. And it's pretty easy to find in any programming language a library that can simplify the process of defining a FSM.
 
 ### Scenario

@@ -1,14 +1,14 @@
 ---
-layout: post
-title:  "TreeSitter C# bindings"
-date:   2023-04-09 10:00:00 +0200
-categories: c# 'tree sitter' 'dotnet bindings' 'C# bindings'
-description: In a previous experiment I made I used the LLVMSharp library and I was quite curious on how the bindings are made.
+title: TreeSitter C# bindings
+date: 2023-04-09 10:00:00 +0200
+tags: [c# tree-sitter dotnet-bindings c#-bindings]
 ---
 
 In a previous experiment I made I used the LLVMSharp library and I was quite curious on how the bindings are made. In the readme is it stated they are generated using che ClangSharp library, this one auto-generate hitself from the headers of Clang C header.
 
 This functionality is exposed through a dotnet tool: ClangSharpPInvokeGenerator. So I wanted to try and hack my way into parsing the tree-sitter headers and use the generated code to run a very small sample using C#, in particular I was aiming for the one that's in the getting started section of the docs
+
+<!-- truncate -->
 
 ```c
 // Filename - test-json-parser.c

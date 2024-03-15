@@ -12,6 +12,8 @@ First of all, we need to install two packages in our project:
 - System.Data.SQLite.EF6
 - System.Data.SQLite
 
+<!-- truncate -->
+
 I needed both of them and they need to have matching versions. Then we need to configure our DbContext. In a full framework application we would need to update the `app.config` or `web.config` with the appropriate sections for EF6. In a .NET Core project we won't have these files but we can configure EF6 directly in the code.
 
 ```csharp

@@ -5,8 +5,11 @@ date:   2020-12-25 20:00:00 +0100
 categories: f# fparsec parsing polynomials
 description: Parsing a polynomial expression is a simple but interesting example of parsing. We need to handle operator precedence and associativity, for example <code>*</code> has a higher precedence than <code>+</code> and the exponentiation is right associative <code>x^y^z=x^(y^z)</code>.
 ---
+
 ## Parsing polynomials with F# and FParsec
 Parsing a polynomial expression is a simple but interesting example of parsing. We need to handle operator precedence and associativity, for example `*` has a higher precedence than `+` and the exponentiation is right associative `x^y^z=x^(y^z)` while subtraction is left associative `x-y-z=(x-y)-z`. Moreover a straighforward definition of the grammar is left recursive and a recursive descent parser does not allow to parse such grammar. We need to _arrange_ our grammar in order to avoid the left recursion.
+
+<!-- truncate -->
 
 In this post we will build a console app that:
 * Ask the user for a polynomial expression such as `x+1` or `2*(x-y)^2`.

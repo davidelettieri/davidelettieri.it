@@ -1,9 +1,7 @@
 ---
-layout: post
-title:  "Flux and SOPS on AKS with workload identity"
-date:   2023-11-01 7:00:00 +0200
-categories: kubernetes aks azure flux sops gitops
-description: Setting up sops with flux and workload identity on AKS is not a complex procedure however there is a lack of proper documentation for some steps. 
+title: Flux and SOPS on AKS with workload identity
+date: 2023-11-01 7:00:00 +0200
+tags: [kubernetes aks azure flux sops gitops]
 ---
 
 Setting up sops with flux and workload identity on AKS is not a complex procedure however there is a lack of proper documentation for some steps. 
@@ -13,6 +11,8 @@ I was working on setting this up on Azure Kubernetes Service and getting stuck a
 The key point to understand is that the application responsible for decrypting the secrets is the `kustomize-controller`. We aim then to have a managed identity assigned to the `service-account` of the `kustomize-controller` deployed by flux and to enable workload identity on both the service account and the pods. This requires some azure specific labels and annotations to be added to the k8s resources.
 
 I aim to provide a recap on how to deploy all of this with links to the relevant documentation and add the sample yaml needed to assign and use the identity. 
+
+<!-- truncate -->
 
 # Objective and key steps
 

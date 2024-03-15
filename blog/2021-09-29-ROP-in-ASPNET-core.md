@@ -11,6 +11,8 @@ In a previous post I talked about ROP in C#, now I want to explore how to use it
 1. [A tagged union example](2020-03-21-a-tagged-union-example.md)
 2. [Railway oriented programming with C#](2020-04-04-railway-oriented-programming-with-c-sharp.md)
 
+<!-- truncate -->
+
 I have a few requirements:
 
 1. Good json serialization for our frontend

@@ -1,10 +1,7 @@
 ---
-layout: post
-title:  "Implementing APIs with the visitor pattern"
-date:   2023-06-16 10:00:00 +0200
-categories: c# visitor-pattern minimal-api
-description: I want to leverage my visitor pattern source generator to implement a simple minimal api.
-
+title: Implementing APIs with the visitor pattern
+date: 2023-06-16 10:00:00 +0200
+tags: [c# visitor-pattern minimal-api]
 ---
 
 I want to leverage my [visitor pattern source generator](https://github.com/davidelettieri/visitor-generator) to implement a simple minimal api.
@@ -12,11 +9,13 @@ I want to leverage my [visitor pattern source generator](https://github.com/davi
 I aim to:
 - Have a request and a request handler for my endpoint. I will not use mediatr or any similar library and I will not use any real storage, only some in memory data structure to showcase the visitor pattern approach.
 - The request handler `Handle` method returns an interface, every subtype represents a different type of result, a success, and one type for each error (provided) emitted by the handled.
-- For each subtype we want to be able to return a possibly different http response
+- For each subtype we want to be able to return a possibly different http response.
 
-To do this it is not required to leverage the visitor pattern and we can make just we pattern matching. However the pattern matching approach, with its current capabilities, will not check for exaustiveness and if we add a new result type we will in the best case get an error during testing or worse at runtime. 
+<!-- truncate -->
 
-Moreover is we have multiple places where we are using pattern matching we have to remember to update all of them. The visitor pattern can be more easily updatable because once the interface of the visitor is updated, the build will be broken signaling where a change is needed. If the interface is auto-generated this is even simpler since you cannot forget to update the visitor interface.
+To do this it is not required to leverage the visitor pattern and we can make it just with pattern matching. However the pattern matching approach, with its current capabilities, will not check for exaustiveness and if we add a new result type we will in the best case get an error during testing or worse at runtime. 
+
+Moreover if we have multiple places where we are using pattern matching we have to remember to update all of them. The visitor pattern can be more easily updatable because once the interface of the visitor is updated, the build will be broken, signaling where a change is needed. If the interface is auto-generated this is even simpler since you cannot forget to update the visitor interface.
 
 I won't provide a full repo, code listing is just one file with everything inside it. 
 

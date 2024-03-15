@@ -12,6 +12,8 @@ What problems does DI solve? I really like what wikipedia says
 
 If class A needs to use class B, it does not need to create an instance of it. This will give A too much responsibility since beside its actual requirements it has to manage the lifetime of the instance of B.
 
+<!-- truncate -->
+
 Another presumed benefit of the dependency injections is
 
 >Applying the dependency inversion principle allows A to call methods on an abstraction that B implements, making it possible for A to call B at runtime, but for B to depend on an interface controlled by A at compile time (thus, inverting the typical compile-time dependency). At run time, the flow of program execution remains unchanged, **but the introduction of interfaces means that different implementations of these interfaces can easily be plugged in**.

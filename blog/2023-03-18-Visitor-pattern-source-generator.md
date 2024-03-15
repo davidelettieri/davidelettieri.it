@@ -12,6 +12,8 @@ For example if we are building a compiler we may have an abstract syntax tree th
 - a type checker 
 - a code emitter
 
+<!-- truncate -->
+
 ## CQRS and event sourcing
 
 I think I used this pattern successfully a few times and I also documented [here](2021-02-21-Workflows-with-visitor-pattern.md) one of these cases. 
