@@ -1,9 +1,7 @@
 ---
-layout: post
 title:  "LLVM Kaleidoscope .NET"
 date:   2021-04-09 19:00:00 +0100
-categories: C# LLVM Kaleidoscope
-description: If you're reading and learning about compilers in these days you will at some point find something about LLVM. I did and I tried to implement the Kaleidoscope tutorial from the official documentation using C#.
+tags: [C# LLVM Kaleidoscope]
 ---
 
 ## LLVM Kaleidoscope .NET

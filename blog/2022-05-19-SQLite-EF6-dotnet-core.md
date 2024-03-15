@@ -1,9 +1,7 @@
 ---
-layout: post
 title:  "Using EF6 with SQLite on dotnet core"
 date:   2022-05-19 19:00:00 +0200
-categories: EF6 SQLite 'C#' '.NET Core'
-description: In this post we will see how to use EF6 (not EF Core) in a .NET Core application with SQLite
+tags: [EF6 SQLite 'C#' '.NET Core']
 ---
 
 In this post we will see how to use EF6 (not EF Core) in a .NET Core application with SQLite. Why we would like to do this? Maybe we are migrating a project from the full framework to .NET Core but we are not ready to migrate also EF6 to EF Core. I will not show how to work with migrations.
