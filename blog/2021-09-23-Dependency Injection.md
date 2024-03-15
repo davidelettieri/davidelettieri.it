@@ -1,7 +1,7 @@
 ---
 title:  "Downsides of Dependency Injection"
 date:   2021-09-23 23:15:00 +0200
-tags: [patterns]
+tags: [patterns, di]
 ---
 
 What problems does DI solve? I really like what wikipedia says

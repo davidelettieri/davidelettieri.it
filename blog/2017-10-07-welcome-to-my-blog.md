@@ -1,7 +1,7 @@
 ---
 title: Welcome to my Blog!
 authors: davide
-tags: [hello, info]
+date: 2017-10-07 14:00:00 +0200
 ---
 
 ## Hello! I'm Davide

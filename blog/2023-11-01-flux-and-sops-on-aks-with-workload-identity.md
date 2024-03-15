@@ -1,7 +1,7 @@
 ---
 title: Flux and SOPS on AKS with workload identity
 date: 2023-11-01 7:00:00 +0200
-tags: [kubernetes aks azure flux sops gitops]
+tags: [kubernetes, aks, azure, flux, sops, gitops]
 ---
 
 Setting up sops with flux and workload identity on AKS is not a complex procedure however there is a lack of proper documentation for some steps. 

@@ -1,7 +1,6 @@
 ---
 title:  "A tagged union example"
 date:   2020-03-25 23:47:00 +0100
-tags: ['Tagged union']
 ---
 
 We will talk about [tagged union types](https://en.wikipedia.org/wiki/Tagged_union), how to implement them in C# and how to use them effectively in modeling our domain. Tagged union types will improve your code expressiveness and ability to model all kinds of software domains. They have been extensively used in functional languages, F# itself support out of the box tagged union types under the name "discriminated unions". 

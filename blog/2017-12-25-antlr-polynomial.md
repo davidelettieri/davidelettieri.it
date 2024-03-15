@@ -1,7 +1,7 @@
 ---
 title:  "Antlr4 polynomial grammar"
 date:   2017-12-25 19:42:00 +0200
-tags: [c# antlr polynomial]
+tags: [c#, antlr, polynomials]
 ---
 ## Antlr4
 

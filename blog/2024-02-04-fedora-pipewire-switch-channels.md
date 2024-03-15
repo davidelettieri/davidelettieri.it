@@ -1,7 +1,7 @@
 ---
 title:  Fedora, switch audio channels with pipewire
 date: 2024-02-11 18:00:00 +0100
-tags: [linux fedora pipewire wireplumber]
+tags: [linux, fedora, pipewire, wireplumber]
 ---
 
 I bought a pair <a target="_blank" href="https://www.amazon.it/dp/B09HGXDLX2?&_encoding=UTF8&tag=davidelettier-21&linkCode=ur2&linkId=a704b01f634642a6eaf02f1d538ef5e4&camp=3414&creative=21718">Creative Pebble V3</a>[^1] and given my desk setup and the cables of the 2 speakers, I needed to switch left and right audio channels in order to setup correctly the speakers.
