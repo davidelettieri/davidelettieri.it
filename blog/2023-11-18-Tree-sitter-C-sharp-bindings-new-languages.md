@@ -1,9 +1,7 @@
 ---
-layout: post
-title:  "TreeSitter C# bindings - new languages"
-date:   2023-11-18 17:30:00 +0100
-categories: c# 'tree sitter' 'dotnet bindings' 'C# bindings' 'tree sitter ruby' 'tree sitter html' 'tree sitter embedded template'
-description: I updated my TreeSitter.Bindings packages to support additional languages.
+title: TreeSitter C# bindings - new languages
+date: 2023-11-18 17:30:00 +0100
+tags: [c# tree-sitter dotnet-bindings c#-bindings tree-sitter-ruby tree-sitter-html tree-sitter-embedded template]
 ---
 
 I updated my [`TreeSitter.Bindings`](https://www.nuget.org/packages/TreeSitter.Bindings/0.0.2) packages to support additional languages. I wanted to check how solid the bindings were and if I could implement a more complex sample with the respect to the json one I started with.

@@ -10,6 +10,8 @@ description: If you're reading and learning about compilers in these days you wi
 
 If you're reading and learning about compilers in these days you will at some point find something about LLVM. I did and I tried to implement the Kaleidoscope tutorial from the official documentation using C#. I won't write a full blown tutorial and in the end I didn't actually follow the official tutorial as it was pretty hard for me to read C++ code. 
 
+<!-- truncate -->
+
 However I did implement the interpreter, with some bumps on the road and some changes to the syntax. [Here](https://github.com/davidelettieri/Kaleidoscope) you'll find all the code I wrote, roughly equivalent to Chapter 6 & 7 of the official tutorial.
 
 Here you can see the code running the Mandelbrot example
