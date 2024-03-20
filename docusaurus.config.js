@@ -102,7 +102,7 @@ const config = {
         darkTheme: prismThemes.dracula,
         additionalLanguages: ['powershell','csharp','bicep','bash','lua','java','fsharp'],
       },
-    }),
+    })
 };
 
 export default config;

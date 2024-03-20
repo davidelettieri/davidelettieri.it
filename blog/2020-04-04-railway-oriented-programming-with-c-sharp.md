@@ -7,6 +7,7 @@ tags: [rop, railway-oriented-programming, c#]
 **2021-09-29** I added an example on how to use ROP in an ASP.NET Core project [here](https://davidelettieri.it/rop/'railway/oriented/programming'/c%23/2021/09/29/ROP-in-ASPNET-core.html)
 
 A few days back I was reading about [Railway oriented programming](https://fsharpforfunandprofit.com/rop/) (ROP) on the awesome fsharpforfunandprofit website. Scott Wlaschin (SW) describe a functional approach to error handling not regarding only exceptions but in general how to handle *deviations* from the happy path. I really liked his approach and I tried to translate the F# code to C# and in this post I'll briefly recap what I've learned.
+<!-- truncate -->
 
 Let's apply the ROP to the following scenario: 
 

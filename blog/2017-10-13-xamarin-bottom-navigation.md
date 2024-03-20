@@ -7,6 +7,7 @@ tags: [xamarin, android, c#]
 ## The problem
 
 The bottom navigation is a very simple and easy template from Android Studio, the porting took 15 minutes at most and the result is quite appealing.
+<!-- truncate -->
 
 ## The solution
 
