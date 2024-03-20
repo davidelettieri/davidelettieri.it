@@ -8,6 +8,7 @@ tags: [c#, antlr, polynomials]
 **Update April 2020, hey! I updated this article and the corresponding repo check it out [here](2020-04-18-antlr-polynomial-2020-update.md)**
 
 In the last couple of months I've been reading and studying about compilers and languages and for everyone doing something like that it's very easy to meet Antlr at a certain point. What is antlr?
+<!-- truncate -->
 
 >Antlr4 is a powerful parser generator for reading, processing, executing, or translating structured text or binary files. It's widely used to build languages, tools, and frameworks. From a grammar, ANTLR generates a parser that can build and walk parse trees.
 > 

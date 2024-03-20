@@ -1,11 +1,10 @@
 ---
 title: Talk with me
 ---
+import Calendly from '@site/src/components/Calendly';
 
 ## Do you want to talk to me?
 
-Book an hour call with me if you want to discuss any topic addresses in our of my blog post. Please remember two important things:
-- this is not for recruiting purposes .
-- I'll not speak with anyone in the payments industry.
+Book an hour call with me if you want to discuss any technical topic. Please remember I can discuss tecnical matters but I won't go into any details that it is sensitive or in violation of IP policies with my current employer.
 
-https://calendly.com/talk-with-davide-lettieri/60min
+<Calendly></Calendly>

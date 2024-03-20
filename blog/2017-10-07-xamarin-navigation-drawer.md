@@ -1,7 +1,7 @@
 ---
 title: Xamarin Navigation Drawer
 tags: [xamarin, android, c#]
-date:   2017-10-07 14:00:40 +0200
+date: 2017-10-07 14:00:40 +0200
 ---
 
 ## The problem

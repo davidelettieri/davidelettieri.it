@@ -1,6 +1,5 @@
 ---
 title: Welcome to my Blog!
-authors: davide
 date: 2017-10-07 14:00:00 +0200
 ---
 
