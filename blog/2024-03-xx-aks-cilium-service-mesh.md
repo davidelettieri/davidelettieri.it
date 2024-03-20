@@ -6,11 +6,11 @@ tags: [aks, cilium, gateway-api, k8s]
 
 Azure BYOCNI configuration allows the use of [cilium](https://cilium.io/) as CNI, in addition it is possible to configure [cilium service mesh](https://docs.cilium.io/en/stable/network/servicemesh/#servicemesh-root).
 
-<!-- truncate -->
-
 Cilium service mesh has several functionalities such as ingress controller, gateway api, mtls etc... my objective here is to use [k8s gateway api](https://gateway-api.sigs.k8s.io/). In order to do so we need to enable the kube proxy configuration feature on aks, which is currently in preview.
 
-Cilium supports gateway api v1 from version 1.15, which is the one that I'm installing today. In particular I will install gateway api v1 experimental channel. This will allow to configure the underlying infrastructure (the azure load balancer) if needed. 
+Cilium supports gateway api v1 from version 1.15, which is the one that I'm installing today. In particular I will install gateway api v1 experimental channel. This will allow to configure the underlying infrastructure (an azure load balancer) if needed. 
+
+<!-- truncate -->
 
 ## The repo
 
@@ -108,6 +108,15 @@ cilium install --version 1.15.2 \
     --set azure.resourceGroup="$rgName" \
     --set kubeProxyReplacement=true \
     --set gatewayAPI.enabled=true
+
+# sample output
+🔮 Auto-detected Kubernetes kind: AKS
+ℹ️  Using Cilium version 1.15.2
+🔮 Auto-detected cluster name: cilium-service-mesh-aks
+✅ Derived Azure subscription ID <subscription_id> from subscription Pay-As-You-Go
+✅ Detected Azure AKS cluster in BYOCNI mode (no CNI plugin pre-installed)
+🔮 Auto-detected kube-proxy has not been installed
+ℹ️  Cilium will fully replace all functionalities of kube-proxy
 ```
 
 Using `cilium status` we can monitor the progress of the deployment of cilium. Please be aware that it might take some time to have everything working. I was a bit worried to be honest because it took a long time, however in the end all worked as expected. I think the deployment time can be reduced having more powerful vms and possibly a standard load balancer.
@@ -116,8 +125,27 @@ When all the deployments are green validate that all is working correctly:
 
 ```bash title="Execute cilium test suite"
 cilium connectivity test
-
 ...
-
 ✅ All 43 tests (184 actions) successful, 18 tests skipped, 0 scenarios skipped.
 ```
+
+## Cilium service mesh gateway api HTTP sample
+
+As an additional validation we can run the [HTTP sample found on cilium docs](https://docs.cilium.io/en/stable/network/servicemesh/gateway-api/http/), I won't replicate the sample from cilium docs. A couple of commands will install everything that is needed, please check cilium docs to understand how to check that everything is working correctly.
+
+```bash title="Install sample app and gateway"
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.11/samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl apply -f https://raw.githubusercontent.com/cilium/cilium/1.15.2/examples/kubernetes/gateway/basic-http.yaml
+```
+
+### Some screenshots to display the outcome from the AKS dashboard point of view
+
+Note here the (obfuscated) public ip address automatically attached to the service  
+<img src="/img/services.png" alt="Kubernetes services created by the sample" />
+
+The useful CRD section in AKS dashboard showing all the resources installed by us (gateway api) and by cilium
+<img src="/img/crd.png" alt="Custom resource definitions" />
+
+Instances of the resources deployed by the `basic-http.yaml` file
+<img src="/img/gateway.png" alt="The deployed gateway" />
+<img src="/img/http-route.png" alt="The deployed http route" />
