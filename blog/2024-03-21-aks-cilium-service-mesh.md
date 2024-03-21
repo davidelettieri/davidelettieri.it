@@ -1,12 +1,12 @@
 ---
 title:  Use cilium service mesh on AKS
-date: 2024-03-31 18:00:00 +0100
-tags: [aks, cilium, gateway-api, k8s]
+date: 2024-03-21 18:00:00 +0100
+tags: [aks, cilium, gateway-api, k8s, service-mesh]
 ---
 
 Azure BYOCNI configuration allows the use of [cilium](https://cilium.io/) as CNI, in addition it is possible to configure [cilium service mesh](https://docs.cilium.io/en/stable/network/servicemesh/#servicemesh-root).
 
-Cilium service mesh has several functionalities such as ingress controller, gateway api, mtls etc... my objective here is to use [k8s gateway api](https://gateway-api.sigs.k8s.io/). In order to do so we need to enable the kube proxy configuration feature on aks, which is currently in preview.
+Cilium service mesh has several functionalities such as ingress controller, gateway api, mtls etc... my objective here is to use [k8s gateway api](https://gateway-api.sigs.k8s.io/). In order to enable cilium service mesh we have to replace kube-proxy with cilium itself, to do so we need to enable the kube proxy configuration feature on aks, which is currently in preview.
 
 Cilium supports gateway api v1 from version 1.15, which is the one that I'm installing today. In particular I will install gateway api v1 experimental channel. This will allow to configure the underlying infrastructure (an azure load balancer) if needed. 
 
@@ -49,11 +49,11 @@ What do want to see is
 
 ## Infrastructure deployment
 
-We need to deploy 2 resources, the resource group and the AKS cluster. The AKS cluster will create an additional resource group and some resources inside that. This is expected and it's not related to the kind of deployment we are doing. We could, if needed, create some resources instead of letting all of them be managed by AKS. One example is the vnet, we could deploy a vnet before deploying AKS and the have the cluster inside that vnet. That would give us much greater control, we could add a firewall, a NAT gateway etc... It is a supported scenario and it could be necessary to do so based on cluster requirements.
+We need to deploy 2 resources, the resource group and the AKS cluster. The AKS cluster will create an additional resource group and some resources inside that. This is expected and it's not related to the kind of deployment we are doing. We could, if needed, create some of the required resources instead of letting all of them be managed by AKS. One example is the vnet, we could deploy a vnet before deploying AKS and then have the cluster inside that vnet. That would give us much greater control, we could add a firewall, a NAT gateway, decide CIDR for nodes and pods, etc... This is a supported scenario and it could be necessary to do so based on cluster requirements.
 
 I'm deploying the minimum amount of resources needed to have cilium service mesh working, which is a resource group and an aks cluster. The cluster itself will manage the underlying network.
 
-There is a parameter file, you can tweak some names and sku of vm and load balancer. My objective here is to keep cost at a minimum. I wouldn't suggest to use those values for a production deployment.
+There is a parameter file, you can tweak some names and the sku of the vm and the load balancer. My objective here is to keep cost at a minimum. I wouldn't suggest to use those values for a production deployment.
 
 ```bash title="Deploy AKS"
 az deployment sub create \
@@ -149,3 +149,23 @@ The useful CRD section in AKS dashboard showing all the resources installed by u
 Instances of the resources deployed by the `basic-http.yaml` file
 <img src="/img/gateway.png" alt="The deployed gateway" />
 <img src="/img/http-route.png" alt="The deployed http route" />
+
+## Azure annotations
+
+Using the experimental channel of gateway API we can use the `infrastructure` object in the gateway definition to pass annotation to the load balancer service that is created. All the available annotations can be found [here](https://cloud-provider-azure.sigs.k8s.io/topics/loadbalancer/#loadbalancer-annotations).
+
+```yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: my-gateway
+spec:
+  ...
+  infrastructure:
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+```
+
+## Final remarks
+
+If you need to run a kubernetes cluster with restricted network at vnet level (not k8s network policies level) please be aware that cilium has some requirements https://docs.cilium.io/en/stable/operations/system_requirements/#firewall-rules, if you have any kind of connectivity world->aks or pod->pod you will need more than that. Be aware and test everything before making the decision of using cilium.
