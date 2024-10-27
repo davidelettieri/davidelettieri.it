@@ -9,7 +9,7 @@ tags: [linux, fedora, pipewire, wireplumber]
 The lua configuration files are valid only for wireplumber v\<0.5. Please [check here](2024-06-21-fedora-pipewire-switch-channels-wireplumber-0.5.md) for the configuration required on v=0.5. This post remains valid for what concerns retrieving the node name required in the config file. 
 
 :::
-I bought a pair <a target="_blank" href="https://www.amazon.it/dp/B09HGXDLX2?&_encoding=UTF8&tag=davidelettier-21&linkCode=ur2&linkId=a704b01f634642a6eaf02f1d538ef5e4&camp=3414&creative=21718">Creative Pebble V3</a>[^1] and given my desk setup and the cables of the 2 speakers, I needed to switch left and right audio channels in order to setup correctly the speakers.
+I bought a pair Creative Pebble V3 and given my desk setup and the cables of the 2 speakers, I needed to switch left and right audio channels in order to setup correctly the speakers.
 
 Now, I'm running Fedora Workstation and I never had to troubleshoot, manage, or change any audio settings besides adjusting volume when needed. I found out this task is not as easy as it seems, probably for a mixture of lack of documentation and lack of skills on my side.
 
@@ -143,5 +143,3 @@ systemctl --user restart wireplumber pipewire pipewire-pulse
 ```
 
 That should be enough to have your audio channel switched. If it is not working, double check that the file has the correct format and run `systemctl --user status pipewire*` to check for errors.
-
-[^1]: this is an affiliate link, I genuinely like Creative products and bought their stuff since my first pc 25+ years ago when I got my Sound Blaster Live 1024. I'm thinking if I should invest more time in the blog and this is part of this experiment.
