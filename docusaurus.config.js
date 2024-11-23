@@ -37,6 +37,7 @@ const config = {
           blogSidebarTitle: 'Latests posts',
           routeBasePath: '/',
           showReadingTime: true,
+          archiveBasePath: 'archive', 
         },
         theme: {
           customCss: './src/css/custom.css',
