@@ -4,7 +4,7 @@ date: 2024-03-21 18:00:00 +0100
 tags: [aks, cilium, gateway-api, k8s, service-mesh]
 ---
 
-Azure BYOCNI configuration allows the use of [cilium](https://cilium.io/) as CNI, in addition it is possible to configure [cilium service mesh](https://docs.cilium.io/en/stable/network/servicemesh/#servicemesh-root).
+Azure BYOCNI configuration allows the use of [cilium](https://cilium.io/) as CNI, in addition to that it is possible to configure [cilium service mesh](https://docs.cilium.io/en/stable/network/servicemesh/#servicemesh-root).
 
 Cilium service mesh has several functionalities such as ingress controller, gateway api, mtls etc... my objective here is to use [k8s gateway api](https://gateway-api.sigs.k8s.io/). In order to enable cilium service mesh we have to replace kube-proxy with cilium itself, to do so we need to enable the kube proxy configuration feature on aks, which is currently in preview.
 
@@ -27,6 +27,10 @@ Please login with `az` before performing any step.
 ## Enable preview feature
 
 We need to enable [kube proxy configuration](https://learn.microsoft.com/en-us/azure/aks/configure-kube-proxy). This step requires some time, I suggest to do this at the beginning and while we wait we can proceed with infrastructure deployment.
+
+```bash title="Install preview kube proxy configuration feature"
+az feature register --namespace "Microsoft.ContainerService" --name "KubeProxyConfigurationPreview"
+```
 
 To check progress on this run
 
@@ -53,7 +57,7 @@ We need to deploy 2 resources, the resource group and the AKS cluster. The AKS c
 
 I'm deploying the minimum amount of resources needed to have cilium service mesh working, which is a resource group and an aks cluster. The cluster itself will manage the underlying network.
 
-There is a parameter file, you can tweak some names and the sku of the vm and the load balancer. My objective here is to keep cost at a minimum. I wouldn't suggest to use those values for a production deployment.
+In the repo a parameter file is provided with some default option, you can tweak some names and the sku of the vm and the load balancer. My objective here is to keep cost at a minimum. I wouldn't suggest to use those values for a production deployment.
 
 ```bash title="Deploy AKS"
 az deployment sub create \
@@ -78,7 +82,7 @@ az feature show --namespace "Microsoft.ContainerService" --name "KubeProxyConfig
 If so proceed with 
 
 
-```bash title="Deploy AKS"
+```bash title="Disable kube proxy"
 az provider register --namespace Microsoft.ContainerService
 az aks update -g "$rgName" -n "$aksName" --kube-proxy-config kube-proxy.json
 ```
