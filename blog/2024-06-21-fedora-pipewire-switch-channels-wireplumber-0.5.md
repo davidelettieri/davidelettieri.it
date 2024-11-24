@@ -4,7 +4,7 @@ date: 2024-06-21 18:00:00 +0200
 tags: [linux, fedora, pipewire, wireplumber]
 ---
 
-Update on [this post](2024-02-04-fedora-pipewire-switch-channels.md), with the update to wireplumber v0.5 lua configuration files are not supported anymore. To switch channels on v0.5 you have to create the following file
+This is an update on [this post](2024-02-04-fedora-pipewire-switch-channels.md), on wireplumber v0.5 lua configuration files are not supported anymore. To switch channels on v0.5 you have to create the following file
 
 ```spa title=".config/wireplumber/wireplumber.conf.d/51-change-channels.conf"
 monitor.alsa.rules = [

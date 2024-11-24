@@ -23,7 +23,7 @@ After this I found the `wireplumber` tool and that indeed worked. This [Archlinu
 
 First off, be sure that wireplumber is installed and enabled in your system:
 
-```bash title="command"
+```bash title="Check wireplumber status"
 wpctl status
 ```
 
