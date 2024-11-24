@@ -74,7 +74,7 @@ const config = {
             href: '/archive', 
             label: 'Archive', 
             position: 'left', 
-          } 
+          }, 
           {
             href: 'https://github.com/davidelettieri',
             label: 'GitHub',
