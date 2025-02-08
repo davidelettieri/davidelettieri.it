@@ -39,7 +39,7 @@ print c; // expect: c
 
 I guess ditch the whole lex/yacc parser tools and implement a manual tokenizer and parser as it is done in the book itself. Doing this will remove complexity around the parser and might give more explicit control on the code. 
 
-Another point could be not using macros. Macros are cool, they are powerful and somehow they are a key advantage in lisps languages (if you can use them), I decided to use them to try to feel what it means to use them but for sure they add complexity to the code and it is one more thing to understand and control.
+Another point could be not using macros. Macros are cool, they are powerful and somehow they are a key advantage in lisps languages (if you can use them), I decided to use them to try to feel what it means to have this powerful compile time construct, as a .NET developer this is quite new, maybe source generators can play a similar role but with the same developer experience. What's certain about macros is that they add complexity to the code and it is one more thing to understand and control.
 
 Do not use the test infrastructure provided by the author of the book. That infrastructure is good and useful and I used it when building [my c# implementation](https://github.com/davidelettieri/Lox) which was more aligned in intent with the Java version of the book: building an interpreter. Given that a Racket language module is a different beast, I feel like this decision costed me more time that it saved.
 
