@@ -4,6 +4,12 @@ date: 2024-03-21 18:00:00 +0100
 tags: [aks, cilium, gateway-api, k8s, service-mesh]
 ---
 
+:::warning
+
+On 2025-08-02 I updated the repo corresponding to this post to use updated versions of Kubernetes, Cilium and Gateway API. The post is not updated accordingly. I did follow again the procedure explained here to confirm that everything is still working as expected. Most notable change is that we don't need experimental channel of Gateway API except for one resource, as described in Cilium v1.17.0 docs.
+
+:::
+
 Azure BYOCNI configuration allows the use of [cilium](https://cilium.io/) as CNI, in addition to that it is possible to configure [cilium service mesh](https://docs.cilium.io/en/stable/network/servicemesh/#servicemesh-root).
 
 Cilium service mesh has several functionalities such as ingress controller, gateway api, mtls etc... my objective here is to use [k8s gateway api](https://gateway-api.sigs.k8s.io/). In order to enable cilium service mesh we have to replace kube-proxy with cilium itself, to do so we need to enable the kube proxy configuration feature on aks, which is currently in preview.
