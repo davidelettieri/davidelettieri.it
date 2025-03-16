@@ -57,9 +57,18 @@ This two sets are fixed once we fix the player we want to train, in our case `X`
 
 While realizing this, I was wondering also: if we learn only when `X` moves, why do have the value function for state where `X` lose? We will never reach a losing state for `X` from a `X` move and a losing state for `X` is a grid with equal amount of `X` and `O`. Right? In my opinion that is not correct, so I amended the algorithm to learn from each non-random move of `X` and to learn, or "back-up" as the text put it, even when the `X` player is losing after a move from `O`. This change will allow us to use the zero valued states from the value function.
 
-So after this considerations and my proposed change for the "back-up" algorithm, we know that the only states used in learning are the states where `X` has moved or `X` lose. All the other states won't impact the learning process. If we train the `O` player the sets of couse change.
+So after this considerations and my proposed change for the "back-up" algorithm, we know that the only states used in learning are the states where `X` has moved or `X` lose. All the other states won't impact the learning process. If we train the `O` player the sets of course change accordingly.
 
-My only additional observation is that during training time, the `O` player is implemented as the `X` player only with more probability of choosing a random move. My implementation can be found [on github](https://github.com/davidelettieri/tic-tac-toe-rl).
+An additional observation is that during training time, the `O` player is implemented as the `X` player only with more probability of choosing a random move, according to the text the `O` player should play randomly, with my implementation this means passing `1` as exploration rate in the `QPlayer` constructor when instantiating the `O` player. My code can be found [on github](https://github.com/davidelettieri/tic-tac-toe-rl).
+
+I'm a bit confused about the first exercise of the Chapter 
+
+> Exercise 1.1: Self-Play Suppose, instead of playing against a random
+opponent, the reinforcement learning algorithm described above played against
+itself. What do you think would happen in this case? Would it learn a different
+way of playing?
+
+First we cannot make the same instance of the player play against itself. The initial values for the value function are based on the winning player (for example `X`), so if the player plays both `X` and `O` the value function for when it plays `O` will make the `O` lose. So maybe they want us to make two different reinforcement learning player to play against each other. The two player will use different starting value tables and they will use different state for their learning as I was observing before. So even if we are using the same algorithm, the starting point is different. In the end I did something like this, training two reinforcement learning players, I just made `O` to act a bit more randomly than `X`. The most interesting part is probably looking at the final value function in both cases and how it changes when we change the randomization level of the two players.
 
 
 
