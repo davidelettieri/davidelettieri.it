@@ -61,7 +61,7 @@ So after this considerations and my proposed change for the "back-up" algorithm,
 
 An additional observation is that during training time, the `O` player is implemented as the `X` player only with more probability of choosing a random move, according to the text the `O` player should play randomly, with my implementation this means passing `1` as exploration rate in the `QPlayer` constructor when instantiating the `O` player. My code can be found [on github](https://github.com/davidelettieri/tic-tac-toe-rl).
 
-I'm a bit confused about the first exercise of the Chapter 
+Last point is that I'm a bit confused about the first exercise of the Chapter:
 
 > Exercise 1.1: Self-Play Suppose, instead of playing against a random
 opponent, the reinforcement learning algorithm described above played against
