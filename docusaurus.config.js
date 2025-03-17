@@ -17,7 +17,10 @@ const config = {
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'throw',
-
+  themes: ['@docusaurus/theme-mermaid'],
+  markdown: {
+    mermaid: true
+  },
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
@@ -37,7 +40,7 @@ const config = {
           blogSidebarTitle: 'Latests posts',
           routeBasePath: '/',
           showReadingTime: true,
-          archiveBasePath: 'archive', 
+          archiveBasePath: 'archive',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -71,10 +74,10 @@ const config = {
             position: 'left',
           },
           {
-            href: '/archive', 
-            label: 'Archive', 
-            position: 'left', 
-          }, 
+            href: '/archive',
+            label: 'Archive',
+            position: 'left',
+          },
           {
             href: 'https://github.com/davidelettieri',
             label: 'GitHub',
@@ -106,7 +109,7 @@ const config = {
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
-        additionalLanguages: ['powershell','csharp','bicep','bash','lua','java','fsharp'],
+        additionalLanguages: ['powershell', 'csharp', 'bicep', 'bash', 'lua', 'java', 'fsharp'],
       },
     })
 };
