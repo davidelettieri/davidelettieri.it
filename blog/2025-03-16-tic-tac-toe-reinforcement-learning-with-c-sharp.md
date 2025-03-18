@@ -114,7 +114,6 @@ opponent, the reinforcement learning algorithm described above played against
 itself. What do you think would happen in this case? Would it learn a different
 way of playing?
 
-First we cannot make the same instance of the player play against itself. The initial values for the value function are based on the winning player (for example `X`), so if the player plays both `X` and `O` the value function for when it plays `O` will make the `O` lose. So maybe they want us to make two different reinforcement learning player to play against each other. The two player will use different starting value tables and they will use different state for their learning as I was observing before. So even if we are using the same algorithm, the starting point is different. In the end I did something like this, training two reinforcement learning players, I just made `O` to act a bit more randomly than `X`. The most interesting part is probably looking at the final value function in both cases and how it changes when we change the randomization level of the two players.
-
-
-
+I think there might be two different interpretations of this exercise:
+1. We make the reinforcement learning player play against itself, interpreted as the same **instance** of the player. In this case we are saying that we are going to play both `X` and `O` on a value function built for `X` winning. Should me make the instance learn or back-up values of both moves? I feel like this doesn't make much sense.
+2. We make two different instances of our reinforcement learning player with appropriate value functions for `X` and `O` and we make them play against each other. This is what I implemented, the `QPlayer` class accepts a parameter `explorationRate` that controls the randomization of the instance, with `1` it is fully random and it won't learn anything, with `0` it always choose the best move based on the value function (but no exploratory moves!). I played a bit with the randomization of the `O` player and I didn't notice much differences.  
