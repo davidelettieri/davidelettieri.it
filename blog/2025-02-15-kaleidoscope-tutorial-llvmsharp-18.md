@@ -8,6 +8,8 @@ A few years ago I worked on reproducing the Kaleidoscope tutorial using LLVMShar
 
 First, the newest version of LLVMSharp available on nuget is `16.0.0`, however the [corresponding repo](https://github.com/dotnet/LLVMSharp) is updated to support version `18.0.0` of llvm. Luckily for me, there is a nighly nuget feed where a release candidate of LLVMSharp supporting version `18.0.0` is available. Please note that at the time of writing the latest llvm version is `19`, LLVMSharp is updated inconsistently and it has been since the beginning for what I could see. 
 
+<!-- truncate -->
+
 Now, once I decided to go with llvm `18` and found the right source for the package, the next big issue was the removal of the `PassManagerBuilder.h` starting from version `17.0.0` as detailed in the [release notes](https://releases.llvm.org/17.0.1/docs/ReleaseNotes.html#changes-to-llvm-infrastructure). There is a documentation on how to use the new pass manager [here](https://llvm.org/docs/NewPassManager.html) using `C++` but LLVMSharp is exposing the `C` api of llvm. There is a point were `C` apis are mentioned in the new docs
 
 > The C API also supports most of this, see llvm-c/Transforms/PassBuilder.h.

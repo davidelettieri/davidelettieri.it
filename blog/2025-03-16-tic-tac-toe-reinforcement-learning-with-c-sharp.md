@@ -8,6 +8,8 @@ A couple of weeks ago I wanted to take a look at reinforcement learning and poss
 
 The book offers in the very first chapter, a tic-tac-toe example where an algorithm is described, albeit with not too much details. I decided to try to implement a C# version of that. Plenty of implementations are available online and the authors offer a `lisp` version on their website, so there is a wide range of option to explore and evaluate.
 
+<!-- truncate -->
+
 I will report part of the text of the example here to comment on it and provide some additional details that I think would helped me in understanding the example. In short the objective of the exercise is to implement a player, `QPlayer` in my case, that plays the `X` symbol and decides what move to play based on a function that assigns a value to each state of the game. This value function will be improved iteratively by making the `QPlayer` play against another automated player. The state of the game is a possible configuration of `X` and `O` on the 3x3 grid. The value function is a function that assigns a double value to each state of the game.
 
 From the book:
