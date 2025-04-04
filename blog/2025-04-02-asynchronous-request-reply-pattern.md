@@ -1,6 +1,6 @@
 ---
 title:  Asynchronous request reply pattern without polling
-date: 2025-04-02 16:00:00 +0200
+date: 2025-04-04 17:00:00 +0200
 tags: [c#, cloud-design-patterns]
 ---
 
@@ -92,11 +92,19 @@ evtSource.addEventListener("pending", (event) => {
 
 evtSource.addEventListener("completed", (event) => {
     // handle completed, shows notification/toast
+
+    // close the connection
+    evtSource.close();
 });
 
 evtSource.addEventListener("error", (event) => {
     // handle completed, shows notification/toast
+
+     // close the connection
+    evtSource.close();
 });
+
+
 ```
 
 I added samples for multiple events, at very least we need one to notify the completion of the operation. Since events can carry information in the `event.data` field the resource URI can be returned in the completed event payload. With this approach the interaction flow is the following:
@@ -112,3 +120,5 @@ sequenceDiagram
     api->>c: Send completed event
     c->>api: GET /operations/{id}
 ```
+
+I prepared a sample C# project with a simple html + javascript UI that shows a simple implementation of the three endpoints and how the frontend is receiving the updates and closing the connection when completed. The asynchronous work is represented by a Task that just waits before completing. The code is on [github](https://github.com/davidelettieri/asynchronous-request-reply-pattern).
