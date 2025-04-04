@@ -28,7 +28,7 @@ For example the `POST /operations` can return something like
 
 ```json
 {
-  "id":1,
+  "id": 1,
   "links": [
     {
       "rel":"status_check",
@@ -39,9 +39,9 @@ For example the `POST /operations` can return something like
 }
 ```
 
-This flow works and has low complexity. Of course a client can execute a lot of retries in a short amount of time and Microsoft suggests to provide a `Retry-After` header that the client **should** honor and wait for the indicated time. This pattern has a clear use case with browser based clients but a platform with a low tech maturity can implement this pattern even with a machine to machine interaction. I would prefer to have webhooks in place if the interaction is machine to machine but this is not always possible and whether you are on the client side or backend side you might not be able to dictate technical solutions for the other part.
+This flow allows the backend to perform the asynchronous/long running operation and any client can poll the status endpoint and notify the user when the operation is completed. The big advantage of this setup is that it is easy to implement, for example websockets could be an option but they are usually harder to use and you will probably need a third party library to use them. A downside of the polling approach is that a client can execute a lot of retries in a short amount of time, Microsoft suggests to provide a `Retry-After` header that the client **should** honor and wait for the indicated time, if you own the client this is an easy requirement to satisfy. While this pattern has a clear use case with browser based clients, for a machine to machine integration I would prefer implementing webhooks bot as a producer and as a consumer. However a company with a low tech maturity / capacity can implementing the polling approach very easily.
 
-I think there is another approach to this pattern, for a browser client, that avoids having the polling on the endpoint and doesn't require websockets. If you have a dedicated [BFF](https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends) for a client app this might be the solution for you.
+In my opinion there is another approach to this pattern, for a browser client, that avoids having the polling on the endpoint and doesn't require websockets. If you have a dedicated [BFF](https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends) for a client app this might be the solution for you.
 
 <!-- truncate -->
 
@@ -49,7 +49,7 @@ My proposal is based on 3 endpoints, like the Microsoft one, however the status 
 
 > Since January 2020, this feature works across the latest devices and major browser versions
 
-So the Server-sent event feature is supported enough to be used, of course less supported than http requests, however it is a viable options if we want to avoid polling and other more complex solutions like websockets. Before choosing this path some other limitations need to be taken into account, for example the [mdn web docs show this warning ](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)
+So the Server-sent event feature is supported enough to be used, of course less supported than http requests, however it is a viable options if we want to avoid polling and other more complex solutions like websockets. Before choosing this path, some other limitations need to be taken into account, for example the [mdn web docs show this warning ](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)
 
 > Warning: When not used over HTTP/2, SSE suffers from a limitation to the maximum number of open connections, which can be especially painful when opening multiple tabs, as the limit is per browser and is set to a very low number (6). The issue has been marked as "Won't fix" in Chrome and Firefox. This limit is per browser + domain, which means that you can open 6 SSE connections across all of the tabs to www.example1.com and another 6 SSE connections to www.example2.com (per Stack Overflow). When using HTTP/2, the maximum number of simultaneous HTTP streams is negotiated between the server and the client (defaults to 100).
 
