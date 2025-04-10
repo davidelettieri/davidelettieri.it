@@ -88,6 +88,11 @@ const config = {
             label: 'Linkedin',
             position: 'left',
           },
+          {
+            href: '/tags',
+            label: 'Tags',
+            position: 'left',
+          },
         ],
       },
       footer: {
