@@ -24,10 +24,10 @@ One source that I think is good quality but overall too complex for me was the s
 
 Finally, I found a working approach in the place were I should have looked first (but didn't!), the llvm project itself. [They have unit tests for the new PassManager](https://github.com/llvm/llvm-project/blob/3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff/llvm/unittests/Passes/PassBuilderBindings/PassBuilderBindingsTest.cpp), with that it was easy to get something working.
 
-The approach that I'm following now with llvm 18 is not exactly the same as the one with llvm 16, because before I had a function pass manager and I was applying the passes on each single function, now I'm applying the passes to the whole module. I don't know what's the status now (at version `19.0.x` of llvm) and I don't know if it was already possible to keep the old approach but I wasn't able to do it. For my scopes, it is enough what I have now.
+The approach that I'm following now with llvm 18 is not exactly the same as the one with llvm 16, because before I had a function pass manager and I was applying the passes on each single function, now I'm applying the passes to the whole module. I don't know what's the status now (at version `19.0.x` of llvm) and I don't know if it was possible to keep the old approach but I wasn't able to do it. For my scope, it is enough what I have now.
 
 The passes need to be passed as a comma separated string to the `LLVMRunPasses` function, [here](https://llvm.org/docs/Passes.html) the list of the current available passes. The code using llvm `16` was having both analysis passes and transform passes for no other reason that I was mimicking what was done in the original Kaleidoscope tutorial.
 
-The `LLVMRunPasses` didn't accept the only analysis pass I had `basic-aa` but accepted all the transforms. This is somehow understandable as the pass manager comes from `llvm-c/Transforms/PassBuilder.h`. I guess for analysis passes there is another infrastructure.
+The `LLVMRunPasses` didn't accept the only analysis pass I had, `basic-aa`, but accepted all the transforms. This is somehow understandable as the pass manager comes from `llvm-c/Transforms/PassBuilder.h`. I guess for analysis passes there is another infrastructure.
 
 Now my [kaleidoscope repo](https://github.com/davidelettieri/kaleidoscope/) is updated and functional, still able to run the mandelbrot example.
