@@ -44,7 +44,7 @@ We are at step 0, all estimates are 0 so we need to pick a random action between
 
 From this it's clear that if 0 is not optimal we might end up stuck with 0 for several steps until we are able to evaluate another action.
 
-An observation that we could make is that we could force the greedy strategy to test at least once each action by starting with a default estimate of 1. We know that the reward for all actions will be lower than 1 so at the first 10 steps all actions will be tested, afterwards we will continue with the action that performed the best on the first 10 steps.
+An observation that we could make is that we could force the greedy strategy to test at least once each action by starting with a default estimate of `double.MaxValue`. We know that the reward for all actions will be lower than `double.MaxValue` so at the first 10 steps all actions will be tested, afterwards we will continue with the action that performed the best on the first 10 steps.
 
 ### Epsilon-greedy strategy
 
@@ -76,7 +76,7 @@ the first action selected will change its estimate to a value greater than 0 and
 
 **So when the greedy strategy will indeed find the best arm in the stationary case?** One case is when the best arm is the only one with a positive reward. Another one is when all arms have negative reward because it will pick one by one all of them on the first steps. Since in case of ties there is some randomization at play, the greedy strategy can select the best arm in other cases.
 
-Different result can be obtained if we change the initial estimate of the actions. Again selecting 1 as default instead of 0 would force the greedy strategy to select at least once all the arm and then know exactly which one is the best and continue with that.
+Different result can be obtained if we change the initial estimate of the actions. Again selecting `double.MaxValue` as default instead of 0 would force the greedy strategy to select at least once all the arm and then know exactly which one is the best and continue with that.
 
 #### Code
 
