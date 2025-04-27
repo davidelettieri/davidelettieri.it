@@ -38,6 +38,7 @@ const config = {
         blog: {
           blogTitle: 'Davide Lettieri\'s blog',
           blogSidebarTitle: 'Latests posts',
+          blogDescription: 'Davide Lettieri\'s blog about C#, .NET, Azure and more.',
           routeBasePath: '/',
           showReadingTime: true,
           archiveBasePath: 'archive',
