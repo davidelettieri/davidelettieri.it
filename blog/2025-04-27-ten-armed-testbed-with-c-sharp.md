@@ -24,6 +24,10 @@ Once selected the value of `k=10`, we have to define the probability distributio
 
 Given that we don't know the probability distribution assigned to each action we have to base our strategies on estimates values. Each time we select an action, we get an actual reward value and we can improve our estimate for that action and we iterate this process trying to improve our estimates. We start with an estimate of zero for all actions. Each of these selection and update of estimates is called a **step**. A **round** comprises of multiple **steps**. In the example provided in the book, we found 2000 **rounds** of 1000 **step** each.
 
+To produce the graphs presented in the book we need to compute:
+- for each step, the average reward over the different rounds. For each round, we keep track of reward of step `i`. At the end we sum all rewards and we divide by the number of rounds.
+- for each step, the best arm selection rate. For each step of each round, we keep track of how many times we selected the best action. At the end we sum all values and we divide by the number of rounds. Please remember that we know which arm is best, because we are creating the distributions for each arm. This information cannot be used during the reinforcement learning but we can use it to evaluate performances on the testbed.
+
 One point that remains to define is how we select the action. It is evident that we would like to try all of them multiple times so that we can a reasonable estimate of the value of each action. For example we could select each action in a round-robin fashion and repeat until we complete all steps. This would give us a uniform approach for updating the estimated values, however the best action will be selected roughly `1/k` times, in our case corresponding to 10% of the times. That is not very good for the overall performance of the round.
 
 The books suggests three different strategies:
@@ -69,14 +73,14 @@ I want to comment on the bold section, because I don't fully agree with what is 
 
 Given that:
 - estimate won't change once updated
--  we start with all estimates equal to 0 
+-  we start with all estimates equal to `0` 
 -  we always select the best
 
-the first action selected will change its estimate to a value greater than 0 and it will always be selected without any further exploration. This is a rather artificial example however what is true is that the greedy strategy will always select an action with positive reward once it has found any. 
+the first action selected will change its estimate to a value greater than `0` and it will always be selected without any further exploration. This is a rather artificial example however what is true is that the greedy strategy will always select an action with positive reward once it has found any. 
 
 **So when the greedy strategy will indeed find the best arm in the stationary case?** One case is when the best arm is the only one with a positive reward. Another one is when all arms have negative reward because it will pick one by one all of them on the first steps. Since in case of ties there is some randomization at play, the greedy strategy can select the best arm in other cases.
 
-Different result can be obtained if we change the initial estimate of the actions. Again selecting `double.MaxValue` as default instead of 0 would force the greedy strategy to select at least once all the arm and then know exactly which one is the best and continue with that.
+Different result can be obtained if we change the initial estimate of the actions. Again selecting `double.MaxValue` as default instead of `0` would force the greedy strategy to select at least once all the arm and then know exactly which one is the best and continue with that.
 
 #### Code
 
@@ -94,4 +98,16 @@ The graphs are implemented using https://scottplot.net/ you might need to instal
     <figcaption>The best arm selection rate per step, per strategy</figcaption>
 </figure>
 
-My results are very similar to what is presented in the book for what concerns the average reward per step. It shows a bit different slope and lower values for the best arm selection rate. At the moment, it is not clear to me why.
+### Initializing default estimates to double.MaxValue
+
+As noted above a couple of times, setting the default estimate to `double.MaxValue` will force exploration at initial steps for all strategies. The performance of the average reward improves for all strategies, possibly excluding the initial exploration which is quite visible on the graph as brief (10 steps) almost horizontal progress on the three lines. It is noticeable also how the three strategies behave almost with the same performance on the average reward. The graph for the best arm selection rate is rather different from the previous case, showing again more similaties between the three strategies.
+
+<figure>
+    <img style={{ margin:'0 auto', display:'block' }} alt="The average reward per step, per strategy using double.MaxValue as default estimate" src="/img/average_reward_max_value.png" /> 
+  <figcaption>The average reward per step, per strategy using double.MaxValue as default estimate</figcaption>
+</figure>
+
+<figure>
+    <img style={{ margin:'0 auto', display:'block' }} alt="The best arm selection rate per step, per strategy using double.MaxValue as default estimate" src="/img/best_arm_selection_rate_max_value.png" /> 
+    <figcaption>The best arm selection rate per step, per strategy using double.MaxValue as default estimate</figcaption>
+</figure>
