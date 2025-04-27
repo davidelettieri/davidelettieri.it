@@ -105,7 +105,7 @@ graph TD;
     H==>|backup value|G;
 ```
 
-An additional observation is that during training time, the `O` player is implemented as the `X` player only with more probability of choosing a random move, according to the text the `O` player should play randomly, with my implementation this means passing `1` as exploration rate in the `QPlayer` constructor when instantiating the `O` player. My code can be found [on github](https://github.com/davidelettieri/tic-tac-toe-rl).
+An additional observation is that during training time, the `O` player is implemented as the `X` player only with more probability of choosing a random move, according to the text the `O` player should play randomly, with my implementation this means passing `1` as exploration rate in the `QPlayer` constructor when instantiating the `O` player. My code can be found [on github](https://github.com/davidelettieri/sutton-barto-reinforcement-learning).
 
 ## Exercise 1.1 about the tic-tac-toe example
 
