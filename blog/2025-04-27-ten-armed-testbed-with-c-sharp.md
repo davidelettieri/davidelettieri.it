@@ -22,13 +22,13 @@ One key point to understand to follow the ten armed (k=10) testbed is that the t
 
 Once selected the value of `k=10`, we have to define the probability distribution for each action. That is done by using a normal distribution with `mean=0` and `variance=1`, we pick 10 samples from this distribution and each sample will be the mean value of a normal distribution with `variable=1`. We end up with an array of 10 normal distributions, each time we select action `i` we will pick the `i-th` distribution and get a sample value from that distribution.
 
-Given that we don't know the probability distribution assigned to each action we have to base our strategies on estimates values. Each time we select an action, we get an actual reward value and we can improve our estimate for that action and we iterate this process trying to improve our estimates. We start with an estimate of zero for all actions. Each of these selection and update of estimates is called a **step**. A **round** comprises of multiple **steps**. In the example provided in the book, we found 2000 **rounds** of 1000 **step** each.
+Given that we don't know the probability distribution assigned to each action we have to base our strategies on estimates values. Each time we select an action, we get an actual reward value and we can improve our estimate for that action. We iterate this process trying to improve our estimates. We start with an estimate of zero for all actions. Each of these selection and update of estimates is called a **step**. A **round** comprises multiple **steps**. In the example provided in the book, we found 2000 **rounds** of 1000 **step** each.
 
 To produce the graphs presented in the book we need to compute:
 - for each step, the average reward over the different rounds. For each round, we keep track of reward of step `i`. At the end we sum all rewards and we divide by the number of rounds.
-- for each step, the best arm selection rate. For each step of each round, we keep track of how many times we selected the best action. At the end we sum all values and we divide by the number of rounds. Please remember that we know which arm is best, because we are creating the distributions for each arm. This information cannot be used during the reinforcement learning but we can use it to evaluate performances on the testbed.
+- for each step, the best arm selection rate. For each step of each round, we keep track of how many times we selected the best action. At the end we sum all values and we divide by the number of rounds. Please remember that we know which arm is best, because we are creating the distributions for each arm. This information cannot be used during the learning process but we can use it to evaluate performances on the testbed.
 
-One point that remains to define is how we select the action. It is evident that we would like to try all of them multiple times so that we can a reasonable estimate of the value of each action. For example we could select each action in a round-robin fashion and repeat until we complete all steps. This would give us a uniform approach for updating the estimated values, however the best action will be selected roughly `1/k` times, in our case corresponding to 10% of the times. That is not very good for the overall performance of the round.
+One point that remains to define is how we select the action. It is evident that we would like to try all of them multiple times so that we can build a reasonable estimate of the value of each action. For example we could select each action in a round-robin fashion and repeat until we complete all steps. This would give us a uniform approach for updating the estimated values, however the best action will be selected roughly `1/k` times, in our case corresponding to 10% of the times. That is not very good for the overall performance of the round.
 
 The books suggests three different strategies:
 - greedy: we always select the action with the best estimate
@@ -36,7 +36,7 @@ The books suggests three different strategies:
   - 10% of the selections is random (epsilon=0.1)
   - 1% of the selections is random (epsilon=0.01)
 
-Ties are resolved by picking any of the actions with the same expected reward. We already noted that on each step we perform a selection and an update of the estimates. This is true regardless of the strategy, in the tic-tac-toe example we saw that we learned only when the action was selected based on the value table but not when selected randomly. This is not the case here where learning even when selecting randomly is the very base for actual improvements.
+Ties are resolved by picking any of the actions with the same expected reward. We already noted that on each step we perform a selection and an update of the estimates. This is true regardless of the strategy, in the tic-tac-toe example we saw that we learned only when the action was selected based on the value table but not when selected randomly. This is not the case here where learning when selecting randomly is the very base for actual improvements.
 
 ### Greedy strategy
 
@@ -69,7 +69,7 @@ it once. In this case the greedy method might actually perform best because it w
 soon find the optimal action and then never explore.** But even in the deterministic case
 there is a large advantage to exploring if we weaken some of the other assumptions.
 
-I want to comment on the bold section, because I don't fully agree with what is said there. Let's consider for a moment a ten armed testbed which actions have mean rewards as `[0.05 0.1 0.2 0.3 0.4 0.5 0.7 0.8 0.9]` and let's think how the greedy performs. 
+I want to comment on the bold section, because I don't fully agree with what is said there. Let's consider for a moment a ten armed testbed which actions have stationary rewards as `[0.05 0.1 0.2 0.3 0.4 0.5 0.7 0.8 0.9]` and let's think how the greedy performs. 
 
 Given that:
 - estimate won't change once updated
@@ -86,7 +86,7 @@ Different result can be obtained if we change the initial estimate of the action
 
 I implemented of all this in the https://github.com/davidelettieri/sutton-barto-reinforcement-learning repo. I think I left enough comments to allow an easy read of the code, if that's not the case please contact me I'll be happy to add more or explain better if needed.
 
-The graphs are implemented using https://scottplot.net/ you might need to install additional packages, follow the documentation for more details. On my Fedora 42, at the time of writing, the code works as it is and produce the following graphs:
+The graphs are implemented using https://scottplot.net/, you might need to install additional packages, please follow the documentation for more details. On my Fedora 42, at the time of writing, the code works as it is and produce the following graphs:
 
 <figure>
     <img style={{ margin:'0 auto', display:'block' }} alt="The average reward per step, per strategy" src="/img/average_reward.png" /> 
