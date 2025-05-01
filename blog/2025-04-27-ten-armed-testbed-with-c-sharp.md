@@ -32,9 +32,9 @@ One point that remains to define is how we select the action. It is evident that
 
 The books suggests three different strategies:
 - greedy: we always select the action with the best estimate
-- epsilon-greedy: on a subset of cases we select a random action, on the remaining ones we select the best strategy:
-  - 10% of the selections is random (epsilon=0.1)
-  - 1% of the selections is random (epsilon=0.01)
+- $\epsilon$-greedy: on a subset of cases we select a random action, on the remaining ones we select the best strategy:
+  - 10% of the selections is random ($\epsilon$=0.1)
+  - 1% of the selections is random ($\epsilon$=0.01)
 
 Ties are resolved by picking any of the actions with the same expected reward. We already noted that on each step we perform a selection and an update of the estimates. This is true regardless of the strategy, in the tic-tac-toe example we saw that we learned only when the action was selected based on the value table but not when selected randomly. This is not the case here where learning when selecting randomly is the very base for actual improvements.
 
@@ -50,19 +50,19 @@ From this it's clear that if 0 is not optimal we might end up stuck with 0 for s
 
 An observation that we could make is that we could force the greedy strategy to test at least once each action by starting with a default estimate of `double.MaxValue`. We know that the reward for all actions will be lower than `double.MaxValue` so at the first 10 steps all actions will be tested, afterwards we will continue with the action that performed the best on the first 10 steps.
 
-### Epsilon-greedy strategy
+### $\epsilon$-greedy strategy
 
-With the epsilon-greedy strategy we are never sure if we are picking the best action, according to our current knowledge, or a random one. However then random one will give us opportunities to improve our estimates. 
+With the $\epsilon$-greedy strategy we are never sure if we are picking the best action, according to our current knowledge, or a random one. However then random one will give us opportunities to improve our estimates. 
 
-An improvement over this strategy could be to make epsilon smaller as we progress further into our round. The more steps we perform, the better the estimates we have, the lesser need for exploration we have.
+An improvement over this strategy could be to make $\epsilon$ smaller as we progress further into our round. The more steps we perform, the better the estimates we have, the lesser need for exploration we have.
 
 ### Some additional comments
 
 The book notes (bold is mine):
 
->The advantage of epsilon-greedy over greedy methods depends on the task. For example,
+>The advantage of $\epsilon$-greedy over greedy methods depends on the task. For example,
 suppose the reward variance had been larger, say 10 instead of 1. With noisier rewards
-it takes more exploration to find the optimal action, and epsilon-greedy methods should fare
+it takes more exploration to find the optimal action, and $\epsilon$-greedy methods should fare
 even better relative to the greedy method. **On the other hand, if the reward variances
 were zero, then the greedy method would know the true value of each action after trying
 it once. In this case the greedy method might actually perform best because it would
