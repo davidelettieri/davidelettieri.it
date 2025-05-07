@@ -96,17 +96,20 @@ resource aks 'Microsoft.ContainerService/managedClusters@2025-02-01' = {
     oidcIssuerProfile: {
       enabled: true
     }
+    # highlight-start
     securityProfile: {
       workloadIdentity: {
         enabled: true
       }
     }
+    # highlight-end
     networkProfile: {
       loadBalancerSku: 'basic'
     }
   }
 }
 
+# highlight-next-line
 output oidcIssuerURL string = aks.properties.oidcIssuerProfile.issuerURL
 ```
 
@@ -133,13 +136,17 @@ resource federatedCredentials 'Microsoft.ManagedIdentity/userAssignedIdentities/
     audiences: [
       'api://AzureADTokenExchange'
     ]
+    # highlight-start
     issuer: aksIssuerURL
     subject: 'system:serviceaccount:flux-system:kustomize-controller'
+    # highlight-end
   }
 }
 
 output objectId string = managedIdentity.properties.principalId
 ```
+
+The `subject` field for a federated credential for a Kubernetes service accounts always follow the same pattern: `system:serviceaccount:[namespace]:[service account name]`. Please also note that every namespace in Kubernetes as a default service account so you might not need to create a new one. In this particular case I'm using the namespace and the service account flux is creating.
 
 ## KeyVault - kv.bicep
 
