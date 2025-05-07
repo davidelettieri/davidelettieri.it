@@ -4,6 +4,12 @@ date: 2023-11-01 7:00:00 +0200
 tags: [kubernetes, aks, azure, flux, sops, gitops]
 ---
 
+:::info
+
+The post and the repository has been updated on 07-05-2025 to use latest versions of sops, kubectl, azure apis. The devcontainer is modified to be able to use it with podman.
+
+:::
+
 Setting up sops with flux and workload identity on AKS is not a complex procedure however there is a lack of proper documentation for some steps. 
 
 I was working on setting this up on Azure Kubernetes Service and getting stuck at the point where I had to actually decrypt a secret from a sample deployment. 
@@ -48,6 +54,8 @@ I will add some description for all the steps below and I will provide a repo wi
 
 A better approach would be to have two github repos, one for infrastructure, one for k8s deployment. However I want to keep things manageable for this post and I'll use just one repo. I structured the azure resources in 3 modules, described below. A `main.bicep` file put everything together.
 
+The `iac` folder contains a `deploy.sh` script that execute the bicep deployment.
+
 ## AKS with workload identity enabled - aks.bicep
 
 There are several options to deploy a workload enabled cluster on Azure. My preferred option is to go with `bicep`, since it has decent tooling and it is idempotent by default. 
@@ -61,7 +69,7 @@ This is my sample deployment.
 ```bicep title="aks.bicep"
 param location string
 
-resource aks 'Microsoft.ContainerService/managedClusters@2023-08-01' = {
+resource aks 'Microsoft.ContainerService/managedClusters@2025-02-01' = {
   name: 'my-aks'
   location: location
   identity: {
@@ -72,7 +80,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2023-08-01' = {
     tier: 'Free'
   }
   properties: {
-    kubernetesVersion: '1.26.6'
+    kubernetesVersion: '1.32'
     agentPoolProfiles: [
       {
         name: 'system'
@@ -113,13 +121,12 @@ param location string
 
 param aksIssuerURL string
 
-resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2024-11-30' = {
   name: 'kustomize-controller-mi'
   location: location
 }
 
-// we need to federate aks with azure ad
-resource federatedCredentials 'Microsoft.ManagedIdentity/userAssignedIdentities/federatedIdentityCredentials@2023-01-31' = {
+resource federatedCredentials 'Microsoft.ManagedIdentity/userAssignedIdentities/federatedIdentityCredentials@2024-11-30' = {
   name: 'aks-fc'
   parent: managedIdentity
   properties: {
@@ -139,11 +146,11 @@ output objectId string = managedIdentity.properties.principalId
 Deploy a key vault with bicep, adding an encryption key and relevant access policies.
 
 ```bicep title="kv.bicep"
-param location string
+pparam location string
 
 param managedIdentityObjectId string
 
-resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' = {
+resource keyVault 'Microsoft.KeyVault/vaults@2024-11-01' = {
   name: 'my-kv-${uniqueString(resourceGroup().id)}'
   location: location
   properties: {
@@ -167,7 +174,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' = {
   }
 }
 
-resource key 'Microsoft.KeyVault/vaults/keys@2023-02-01' = {
+resource key 'Microsoft.KeyVault/vaults/keys@2024-11-01' = {
   name: 'encryption-key'
   parent: keyVault
   properties: {
@@ -179,7 +186,6 @@ resource key 'Microsoft.KeyVault/vaults/keys@2023-02-01' = {
     keySize: 2048
   }
 }
-
 ```
 
 ## Github repo
@@ -193,6 +199,23 @@ In the `gitops` folder of the repo, the `setup-flux.sh` script I used to setup f
 Please update the script to refer to your github account or check Flux documentation for additional providers.
 
 If you will use GitHub then you will be prompted for a personal access token, create one with repo access. A short expiration date is fine, Flux will add a deploy key to the repo to access it in the future.
+
+[Flux documentation](https://fluxcd.io/flux/installation/bootstrap/github/#github-personal-account) states
+
+> Note that the GitHub PAT is stored in the cluster as a Kubernetes Secret named flux-system inside the flux-system namespace. If you want to avoid storing your PAT in the cluster, please see how to configure GitHub Deploy Keys.
+
+I'm checking today 07-05-2025 and, as I noticed before, the GitHub PAT is not stored into the `flux-system` secret as shown in the following screenshot. A newly created deploy key is contained in the secret.
+
+<figure>
+    <img style={{ margin:'0 auto', display:'block' }} alt="Flux system secret content" src="/img/flux-system-secret.png" /> 
+    <figcaption>Flux system secret content</figcaption>
+</figure>
+
+:::danger
+
+The token can have a very short expiration date and it will be used only during bootstrap phase. However you **cannot** delete the token after it is used or expired because doing so will invalidate the deploy key.
+
+:::
 
 When the command is complete the `aks` folder is populated with a `flux-system` sub-folder.
 
@@ -230,7 +253,7 @@ The `kustomize-controller-deployment.yaml` can be copied as it is, while for the
 
 You can use the following command, possibly updating the value of the resource group name.
 ```bash
-az identity list -g flux-workload-identity-post
+az identity list -g flux-workload-identity-post --query "[].{clientId: clientId, tenantId: tenantId }" --output table
 ```
 
 Update the yaml with the relevant values
