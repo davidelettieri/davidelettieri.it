@@ -50,7 +50,7 @@ emit e1, emit e2, evaluate e1, evaluate e2
 Maybe it's obvious but it wasn't for me.
 * Same as before, we want to evaluate `1+10;20*2;`. We need to define two functions but we have no name for them, at the beginning I passed an empty string in the `AddFunction` method. It turns out that LLVM is able to emit the code, it will name the function `@1` and the second one `@2` and so on. However when you evaluate the second function you get the result of the first one. I solved by calling the function `anon_expr` as in the official tutorial. You'll get `@anon_expr`, `@anon_expr.1`, `@anon_expr.3` and so on and evaluation will be correct. I have some C code to prove this point if needed.
 * At chapter 7 when implementing mutable variables the official tutorial uses the type `AllocaInst`, there is an `AllocaInst` in the C# library but I couldn't find out how to use it. Moreover the methods for allocating, storing and retrieving values in the C api works with `LLVMValueRef` in both the pointer val and in the actual val for example 
-```
+```csharp
 LLVMValueRef LLVMBuildLoad2(LLVMBuilderRef, LLVMTypeRef Ty, LLVMValueRef PointerVal, const char *Name)
 ```
 In the arguments we find a `LLVMValueRef` representing a pointer, the return value is a `LLVMValueRef` containing an actual value.
