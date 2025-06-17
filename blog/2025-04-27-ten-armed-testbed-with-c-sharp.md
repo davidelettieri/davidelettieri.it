@@ -100,6 +100,12 @@ The graphs are implemented using https://scottplot.net/, you might need to insta
 
 ### Initializing default estimates to double.MaxValue
 
+:::info
+
+When I wrote all of this, I didn't read paragraph 2.6 and I thought that the dependance on the default estimate should have been discussed already. The authors of the book disagree on this and discussed right afterwards in **2.6 Optimistic Initial Values**. I, of course, recommend to read the book which is available for free [here](http://www.incompleteideas.net/book/the-book-2nd.html).
+
+:::
+
 As noted above a couple of times, setting the default estimate to `double.MaxValue` will force exploration at initial steps for all strategies. The performance of the average reward improves for all strategies, possibly excluding the initial exploration which is quite visible on the graph as brief (10 steps) almost horizontal progress on the three lines. It is noticeable also how the three strategies behave almost with the same performance on the average reward. The graph for the best arm selection rate is rather different from the previous case, showing again more similaties between the three strategies.
 
 <figure>
