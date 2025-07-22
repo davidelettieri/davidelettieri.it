@@ -10,6 +10,10 @@ import rehypeKatex from 'rehype-katex';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
+  future: {
+    v4: true,
+    experimental_faster: true,
+  },
   title: 'Davide Lettieri',
   tagline: 'An average C# developer',
   favicon: 'img/favicon.svg',
