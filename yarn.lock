@@ -2265,7 +2265,7 @@
 
 "@rspack/binding-linux-x64-musl@1.4.9":
   version "1.4.9"
-  resolved "https://registry.npmjs.org/@rspack/binding-linux-x64-musl/-/binding-linux-x64-musl-1.4.9.tgz"
+  resolved "https://registry.yarnpkg.com/@rspack/binding-linux-x64-musl/-/binding-linux-x64-musl-1.4.9.tgz#8dfc324b66496810795c56ea73bc784249672620"
   integrity sha512-fdBLz3RPvEEaz91IHXP4pMDNh9Nfl6nkYDmmLBJRu4yHi97j1BEeymrq3lKssy/1kDR70t6T47ZjfRJIgM6nYg==
 
 "@rspack/binding-wasm32-wasi@1.4.9":
@@ -2499,7 +2499,7 @@
 
 "@swc/core-linux-x64-musl@1.13.1":
   version "1.13.1"
-  resolved "https://registry.npmjs.org/@swc/core-linux-x64-musl/-/core-linux-x64-musl-1.13.1.tgz"
+  resolved "https://registry.yarnpkg.com/@swc/core-linux-x64-musl/-/core-linux-x64-musl-1.13.1.tgz#6691322d5a2cfe5187d43370c07c7ceaaac045ed"
   integrity sha512-fSMwZOaG+3ukUucbEbzz9GhzGhUhXoCPqHe9qW0/Vc2IZRp538xalygKyZynYweH5d9EHux1aj3+IO8/xBaoiA==
 
 "@swc/core-win32-arm64-msvc@1.13.1":
@@ -2573,7 +2573,7 @@
 
 "@swc/html-linux-x64-musl@1.13.1":
   version "1.13.1"
-  resolved "https://registry.npmjs.org/@swc/html-linux-x64-musl/-/html-linux-x64-musl-1.13.1.tgz"
+  resolved "https://registry.yarnpkg.com/@swc/html-linux-x64-musl/-/html-linux-x64-musl-1.13.1.tgz#4be8428ae427c2230321977a4594ead5c361470c"
   integrity sha512-bWfR4BWq61BWdYU7dyrBfwND5OAUd03Z7Y3gsYHqj9sFxPz2VVMkJ6gqjmR9MJseHNj/2Z5Baqzutqlo+WtQjg==
 
 "@swc/html-win32-arm64-msvc@1.13.1":
@@ -6453,7 +6453,7 @@ lightningcss-linux-x64-gnu@1.30.1:
 
 lightningcss-linux-x64-musl@1.30.1:
   version "1.30.1"
-  resolved "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.30.1.tgz"
+  resolved "https://registry.yarnpkg.com/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.30.1.tgz#66dca2b159fd819ea832c44895d07e5b31d75f26"
   integrity sha512-rRomAK7eIkL+tHY0YPxbc5Dra2gXlI63HL+v1Pdi1a3sC+tJTcFrHX+E86sulgAXeI7rSzDYhPSeHHjqFhqfeQ==
 
 lightningcss-win32-arm64-msvc@1.30.1:

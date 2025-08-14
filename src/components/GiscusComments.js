@@ -1,23 +1,21 @@
 import React from 'react';
 import Giscus from '@giscus/react';
-import { useColorMode } from '@docusaurus/theme-common';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 
 function GiscusCommentsInternal() {
-  const { colorMode } = useColorMode();
-  
   return (
     <Giscus
       id="comments"
       repo="davidelettieri/davidelettieri.it"
-      repoId="R_kgDOHfVwxA"
-      category="General"
-      categoryId="DIC_kwDOHfVwxM4CZa_h"
+      repoId="MDEwOlJlcG9zaXRvcnkxMDMwNTcwMDM="
+      category="Announcements"
+      categoryId="DIC_kwDOBiSGa84CuIrP"
       mapping="pathname"
+      strict="0"
       reactionsEnabled="1"
       emitMetadata="0"
-      inputPosition="bottom"
-      theme={colorMode}
+      inputPosition="top"
+      theme="light"
       lang="en"
       loading="lazy"
     />
