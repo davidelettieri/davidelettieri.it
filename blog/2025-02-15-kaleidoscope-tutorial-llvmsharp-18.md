@@ -4,6 +4,14 @@ date: 2025-02-20 18:20:00 +0100
 tags: [c#, llvm, kaleidoscope]
 ---
 
+
+:::info
+
+Since writing this, LLVMSharp had a new stable v20 release. The code in the repo is updated to this package.
+
+:::
+
+
 A few years ago I worked on reproducing the Kaleidoscope tutorial using LLVMSharp, a library that exposes C# bindings for LLVM. I updated multiple times the project to support the latest versions of llvm and the LLVMSharp bindings. In the last week I was busy moving to llvm 18 and I encountered a few difficulties.
 
 First, the newest version of LLVMSharp available on nuget is `16.0.0`, however the [corresponding repo](https://github.com/dotnet/LLVMSharp) is updated to support version `18.0.0` of llvm. Luckily for me, there is a nighly nuget feed where a release candidate of LLVMSharp supporting version `18.0.0` is available. Please note that at the time of writing the latest llvm version is `19`, LLVMSharp is updated inconsistently and it has been since the beginning for what I could see. 
