@@ -1,7 +1,6 @@
 ---
 title: "Announcing the New Comment System"
 date: 2025-08-18
-author: Davide Lettieri
 description: "Introducing a new comment system, implemented with the help of GitHub Copilot."
 ---
 
@@ -12,3 +11,11 @@ After thinking about it for some time I decided to add a comment system to the b
 I decided all of this while on a beach, in Italy and I didn't have access to a coding environment. So I decided to treat myself with a copilot pro license and try to get it implemented by the copilot agent.
 
 Somehow it worked out, I realized quickly that I didn't give enough information to complete the task, but with some back-and-forth, we got there in the end.
+
+<!-- truncate -->
+
+### Caveats
+
+The system I chose is `[giscus](https://giscus.app/it)` which is a github-based comment system, so anyone who wants to add a comment will need a github account. I know this won't work for all people however I hope it will work for most people.
+
+Finally I can say: let me know what you think! In the comment box.
