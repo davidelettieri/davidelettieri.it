@@ -1,7 +1,6 @@
 ---
-title: "Announcing the New Comment System"
+title: "Announcing the new comment system"
 date: 2025-08-18
-description: "Introducing a new comment system, implemented with the help of GitHub Copilot."
 ---
 
 After thinking about it for some time I decided to add a comment system to the blog. What I hope is that I will get valuable feedback from readers, which will help me improve the content, my understanding of the topics I write about, and the overall quality of the blog.
