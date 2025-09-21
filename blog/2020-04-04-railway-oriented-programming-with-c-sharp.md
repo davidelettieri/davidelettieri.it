@@ -1,6 +1,6 @@
 ---
 title:  "Railway oriented programming with C#"
-date:   2020-04-04 17:00:00 +0100
+date:   2020-04-04
 tags: [rop, railway-oriented-programming, c#]
 ---
 

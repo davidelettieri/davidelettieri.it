@@ -1,6 +1,6 @@
 ---
 title: Implementing APIs with the visitor pattern
-date: 2023-06-16 10:00:00 +0200
+date: 2023-06-16
 tags: [c#, visitor-pattern, minimal-api]
 ---
 

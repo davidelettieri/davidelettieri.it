@@ -1,6 +1,6 @@
 ---
 title: TreeSitter C# bindings
-date: 2023-04-09 10:00:00 +0200
+date: 2023-04-09
 tags: [c#, tree-sitter, dotnet-bindings, c#-bindings]
 ---
 

@@ -1,6 +1,6 @@
 ---
 title:  Multi armed bandit exercise 2.5 with C#
-date: 2025-05-01 16:30:00 +0200
+date: 2025-05-01
 tags: [c#, reinforcement-learning, k-armed bandit problem]
 ---
 

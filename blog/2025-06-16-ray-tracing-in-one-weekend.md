@@ -1,6 +1,6 @@
 ---
 title:  Ray tracing in one weekend in go
-date: 2025-06-16 14:00:00 +0200
+date: 2025-06-16
 tags: [go, ray-tracing]
 ---
 

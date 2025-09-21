@@ -1,6 +1,6 @@
 ---
 title:  "Parsing polynomials with the Pratt algorithm"
-date:   2020-11-06 18:00:00 +0100
+date:   2020-11-06
 tags: [c#, pratt, polynomials]
 ---
 

@@ -1,6 +1,6 @@
 ---
 title:  "Railway oriented programming in ASP.NET Core"
-date:   2021-09-29 06:15:00 +0200
+date:   2021-09-29
 tags: [ROP, railway-oriented-programming, c#]
 ---
 

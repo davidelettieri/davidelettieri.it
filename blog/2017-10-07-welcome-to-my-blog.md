@@ -1,6 +1,6 @@
 ---
 title: Welcome to my Blog!
-date: 2017-10-07 14:00:00 +0200
+date: 2017-10-07
 ---
 
 ## Hello! I'm Davide

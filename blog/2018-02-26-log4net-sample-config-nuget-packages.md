@@ -1,6 +1,6 @@
 ---
 title:  "Sample log4net config nuget packages"
-date:   2018-02-26 21:30:00 +0200
+date:   2018-02-26
 tags: [log4net, nuget]
 ---
 ## Sample log4net config nuget packages

@@ -1,6 +1,6 @@
 ---
 title:  "Parsing polynomials with F# and FParsec"
-date:   2020-12-25 20:00:00 +0100
+date:   2020-12-25
 tags: [f#, fparsec, polynomials]
 ---
 

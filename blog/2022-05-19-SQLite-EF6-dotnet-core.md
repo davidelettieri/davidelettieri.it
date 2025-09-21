@@ -1,6 +1,6 @@
 ---
 title:  "Using EF6 with SQLite on dotnet core"
-date:   2022-05-19 19:00:00 +0200
+date:   2022-05-19
 tags: [EF6, SQLite, c#]
 ---
 

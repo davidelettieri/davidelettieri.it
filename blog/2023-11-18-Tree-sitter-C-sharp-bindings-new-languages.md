@@ -1,6 +1,6 @@
 ---
 title: TreeSitter C# bindings - new languages
-date: 2023-11-18 17:30:00 +0100
+date: 2023-11-18
 tags: [c#, tree-sitter, c#-bindings, tree-sitter-ruby, tree-sitter-html, tree-sitter-embedded-template]
 ---
 

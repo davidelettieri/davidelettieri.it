@@ -1,6 +1,6 @@
 ---
 title: Flux and SOPS on AKS with workload identity
-date: 2023-11-01 7:00:00 +0200
+date: 2023-11-01
 tags: [kubernetes, aks, azure, flux, sops, gitops]
 ---
 

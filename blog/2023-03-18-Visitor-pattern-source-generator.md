@@ -1,6 +1,6 @@
 ---
 title:  "Visitor pattern source generator"
-date:   2023-03-19 18:30:00 +0100
+date:   2023-03-19
 tags: [c#, visitor-pattern, source-generators, CQRS, event-sourcing]
 ---
 
