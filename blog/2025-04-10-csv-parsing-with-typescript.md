@@ -1,6 +1,6 @@
 ---
 title:  CSV parsing with typescript
-date: 2025-04-10 16:00:00 +0200
+date: 2025-04-10
 tags: [typescript, csv, parsers]
 ---
 

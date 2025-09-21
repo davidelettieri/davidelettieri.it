@@ -1,6 +1,6 @@
 ---
 title:  Kaleidoscope tutorial with C# using LLVMSharp and llvm 18
-date: 2025-02-20 18:20:00 +0100
+date: 2025-02-20
 tags: [c#, llvm, kaleidoscope]
 ---
 

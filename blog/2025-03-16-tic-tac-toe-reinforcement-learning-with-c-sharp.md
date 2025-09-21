@@ -1,6 +1,6 @@
 ---
 title:  Tic-tac-toe reinforcement learning with C#
-date: 2025-03-16 16:00:00 +0100
+date: 2025-03-16
 tags: [c#, reinforcement-learning]
 ---
 

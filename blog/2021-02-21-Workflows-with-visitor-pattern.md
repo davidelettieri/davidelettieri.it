@@ -1,6 +1,6 @@
 ---
 title:  "Workflows with the visitor pattern"
-date:   2021-02-21 11:00:00 +0100
+date:   2021-02-21
 tags: [c#, visitor-pattern, workflows]
 ---
 

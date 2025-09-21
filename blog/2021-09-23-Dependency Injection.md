@@ -1,6 +1,6 @@
 ---
 title:  "Downsides of Dependency Injection"
-date:   2021-09-23 23:15:00 +0200
+date:   2021-09-23
 tags: [patterns, di]
 ---
 

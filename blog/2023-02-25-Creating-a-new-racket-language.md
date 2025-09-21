@@ -1,6 +1,6 @@
 ---
 title:  "Creating a new Racket language"
-date:   2023-02-25 15:50:00 +0100
+date:   2023-02-25
 tags: [racket, programming-languages, parsers]
 ---
 

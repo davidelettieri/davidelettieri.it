@@ -1,6 +1,6 @@
 ---
 title:  "Attesa Bus Android App"
-date:   2018-11-04 15:00:00 +0000
+date:   2018-11-04
 tags: [android, dart, flux]
 ---
 Today I tried flux and the dart language from Google, it was easy and fast, I was able to develop a simple app with material UI in a couple of hours. The app fetch informations about bus waiting time using the bus stop id from Rome transportation operator ATAC. There is no API for that so the app just fetch the web page and parse it to retrieve the informations.

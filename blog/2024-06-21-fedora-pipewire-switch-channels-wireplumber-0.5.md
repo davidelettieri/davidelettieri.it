@@ -1,6 +1,6 @@
 ---
 title:  Fedora, switch audio channels with pipewire and wireplumber 0.5
-date: 2024-06-21 18:00:00 +0200
+date: 2024-06-21
 tags: [linux, fedora, pipewire, wireplumber]
 ---
 

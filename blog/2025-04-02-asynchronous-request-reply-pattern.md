@@ -1,6 +1,6 @@
 ---
 title:  Asynchronous request reply pattern without polling
-date: 2025-04-04 17:00:00 +0200
+date: 2025-04-04
 tags: [c#, cloud-design-patterns]
 ---
 

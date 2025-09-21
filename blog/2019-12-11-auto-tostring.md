@@ -1,6 +1,6 @@
 ---
 title:  "AutoToString Visual Studio Extension"
-date:   2019-12-11 21:00:00 +0100
+date:   2019-12-11
 tags: [.net, visual-studio, code-generation]
 ---
 More than a year ago I built my very first Visual Studio extension and published it on the Visual Studio Marketplace. I was working on a web service that passed around a lot of data and in order to log input and output of the endpoints whenever needed I often wrote code like this

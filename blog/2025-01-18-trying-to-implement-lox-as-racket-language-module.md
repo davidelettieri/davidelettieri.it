@@ -1,6 +1,6 @@
 ---
 title:  Trying to implement Lox as Racket language module
-date: 2025-01-18 16:30:00 +0100
+date: 2025-01-18
 tags: [racket, lox, lisp]
 ---
 

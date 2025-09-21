@@ -1,6 +1,6 @@
 ---
 title:  Use cilium service mesh on AKS
-date: 2024-03-21 18:00:00 +0100
+date: 2024-03-21
 tags: [aks, cilium, gateway-api, k8s, service-mesh]
 ---
 

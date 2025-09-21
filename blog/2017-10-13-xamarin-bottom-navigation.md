@@ -1,6 +1,6 @@
 ---
 title:  "Xamarin Bottom Navigation"
-date:   2017-10-13 21:00:07 +0200
+date:   2017-10-13
 tags: [xamarin, android, c#]
 ---
 

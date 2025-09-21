@@ -1,6 +1,6 @@
 ---
 title:  Ten armed testbed for the Bandit problem with C#
-date: 2025-04-27 17:40:00 +0200
+date: 2025-04-27
 tags: [c#, reinforcement-learning, k-armed bandit problem]
 ---
 

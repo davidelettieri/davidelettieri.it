@@ -1,6 +1,6 @@
 ---
 title:  "LLVM Kaleidoscope .NET"
-date:   2021-04-09 19:00:00 +0100
+date:   2021-04-09
 tags: [c#, llvm, kaleidoscope]
 ---
 
