@@ -41,7 +41,7 @@ $$
 v_{\pi}(s) = \frac{1}{4} \sum_{a} \sum_{s',r} p(s',r|s,a) [r + \gamma v_{\pi}(s')], \quad \forall s \in S
 $$
 
-Because the environment is deterministic, for each state-action pair there is exactly one next state s' and reward (probability 1). Therefore the update simplifies to:
+Because the environment is deterministic, for each state-action pair there is exactly one next state $s'$ and reward (probability 1). Therefore the update simplifies to:
 
 $$
 v_{\pi}(s) = \frac{1}{4} \sum_{a} [r + \gamma v_{\pi}(s')]
