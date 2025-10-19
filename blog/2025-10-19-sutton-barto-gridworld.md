@@ -141,4 +141,4 @@ To make the indexing clear, here's the 5x5 grid used in the example (rows increa
 | **Row 1** |  5 |  6 |  7 |  8 |  9 |
 | **Row 2** | 10 | 11 | 12 | 13 (B') | 14 |
 | **Row 3** | 15 | 16 | 17 | 18 | 19 |
-| **Row 4** | 20 | 21 (A')| 22 | 23 | 24 |
+| **Row 4** | 20 | 21 (A') | 22 | 23 | 24 |
