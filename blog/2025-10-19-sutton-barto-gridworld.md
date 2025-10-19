@@ -124,7 +124,7 @@ The rest of the implementation is almost a 1-1 mapping from the lisp code to C#.
 
 ## How to run the sample
 
-- Clone and run the utton-barto-reinforcement-learning repository:
+- Clone and run the sutton-barto-reinforcement-learning repository:
   - git clone https://github.com/davidelettieri/sutton-barto-reinforcement-learning.git
   - cd sutton-barto-reinforcement-learning/gridworld
   - dotnet run -c Release
