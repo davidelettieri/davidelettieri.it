@@ -109,7 +109,7 @@ const config = {
         links: [
           {
             href: 'https://davidelettieri.it/rss.xml',
-            label: 'rss feed',
+            label: 'RSS Feed',
             position: 'right',
           },
           {
