@@ -108,6 +108,11 @@ const config = {
         style: 'dark',
         links: [
           {
+            href: 'https://davidelettieri.it/rss.xml',
+            label: 'rss feed',
+            position: 'right',
+          },
+          {
             href: 'https://github.com/davidelettieri',
             label: 'GitHub',
             position: 'right',
