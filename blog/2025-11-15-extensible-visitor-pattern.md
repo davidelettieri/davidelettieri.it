@@ -20,9 +20,9 @@ They present 4 different implementations:
 - object oriented using the visitor pattern
 - object oriented using the extensible visitor pattern that is object of the paper
 
-The code samples are written in a language called "Pizza" which is "a parametrically polymorphic extension of Java", only exception for which they refer to `Haskell` and `SML`. Given that I'm a big fan of the visitor pattern, I wanted to go through the paper and reimplement everything using F# for the functional approach and C# for everything else. The porting will not be a 1-1 code, mostly because I don't know Pizza nor Java but also because they don't show all the code and I want to show a bit more than they did.
+The code samples are written in Java, a language called "Pizza" which is "a parametrically polymorphic extension of Java", and `SML` for the functional approach example. Given that I'm a big fan of the visitor pattern, I wanted to go through the paper and reimplement everything using F# for the functional approach and C# for everything else. The code will not be an exact port of the original, mostly because I don't know Pizza nor Java but also because they don't show all the code and I want to show a bit more than they did.
 
-The key point to observe in the presented problem is that the types are recursive, in other words shapes are defined using other shapes. For example translation of a shape, or a union of two shapes. This case cannot be ignored when we build a tree of types to represent some kind of domain and problem.
+The key point to observe in the presented problem is that the types are recursive, in other words shapes are defined using other shapes. For example the translation of a shape, or a union of two shapes. This case cannot be ignored when we build a tree of types to represent some kind of domain and problem.
 
 :::info
 
@@ -87,10 +87,152 @@ public static class Tools
         };
 }
 ```
-The highlighted line is key in correctly supporting the new shape. Since the `TranslatedShape` type is recursive, when we define a new tool to support a new shape, any instance of `TranslatedShape` could contain an instance of the `UnionShape`. This means that the recursive call needs to be done using the new tool definition. In this case `ContainsPointV2()`. This recursion is **the theme** of the paper and the extensible visitor pattern implements this exact behavior. 
+The highlighted line is key in correctly supporting the new shape. Since the `TranslatedShape` type is recursive, when we define a new tool to support a new shape, any instance of `TranslatedShape` could contain an instance of the `UnionShape`. This means that the recursive call needs to be done using the new tool definition. In this case `ContainsPointV2()`. This recursion is **the key** for understanding the approach of the paper and the extensible visitor pattern implements this exact behavior. 
 
 Of course with this approach we are accepting the fact that we might get runtime exceptions, for example if someone passes a `UnionShape` instance to `ContainsPoint()`. Not exactly safe.
 
-## Object oriented with interpreter pattern
+## Object oriented with the interpreter pattern
 
+Using the interpreter patterns means that each tool is a function on the data type, it is usuallly explained with grammars or expressions however it has a more generic applicability. Whenever we have a family of types which expose the same behavior, a method, it is effectively an instance of the interpreter pattern.
 
+The approach that is proposed is the following:
+1. we start with a set of types all extending a base abstract class with a method representing the initial tool supported by the types.
+2. we want to add a new shape. We define a new type that inherits the base abstract class and implement the method.
+3. we want to add a new tool. We cannot add a new method to the existing types because we don't want to modify existing code so we define new types that extend the original one implementing the new tool.
+
+Unfortunately existing clients of our code need to change the types they are using in order to leverage the new tool.
+
+### Remarks on the interpreter pattern and the provided implementation
+
+In the original GoF definition and in the code samples provided by the authors in the article the base type is an abstract class but there are some unclear points:
+- the base abstract class is having the `shrink` method but all the initial shapes implement `containsPt`, the authors probably wanted the base abstract class to have the `containsPt` method
+- the new union shape implements `containsPt`
+- the newly implemented types extending the original shapes to have the `shrink` method don't have a base type in common which is a requirement to be able to handle shapes in a polymorphic manner.
+
+The last point is why I decided to use interfaces for the C# code, imagine we define a new base abstract class for the shrinkable shapes. Then in order to allow code reuse we would have to inherit from multiple base types for example:
+
+```csharp
+abstract class Shape {...}
+abstract class ShrinkableShape {...}
+class Square : Shape {...}
+# highlight-next-line
+class ShrinkableSquare : Square, ShrinkableShape // Impossible!
+```
+
+As noted in the code listing and as probably every reader knows we cannot inherit multiple classes, however we can implement multiple interfaces.
+
+<figure>
+    <img style={{ margin:'0 auto', display:'block' }} alt="Fig 4-5-6 from Synthesizing Object-Oriented and Functional Design to Promote Re-Use" src="/img/Synthesizing Object-Oriented and Functional Design to Promote Re-Use fig4-5-6.png" /> 
+  <figcaption>Fig 4,5,6 from the article with some comments</figcaption>
+</figure>
+
+So, omitting most of the code, a shrinkable shape using the interpreter pattern in C# with interfaces instead of abstract base classes would look like this:
+
+```csharp
+public interface IShrinkableShape : IShape
+{
+    IShrinkableShape Shrink(double num);
+}
+
+public record ShrinkableSquare(double Length) : Square(Length), IShrinkableShape
+{
+    public IShrinkableShape Shrink(double num) => new ShrinkableSquare(Length / num);
+}
+```
+
+## Object oriented with the visitor pattern
+
+The visitor pattern is very much the same approach as the functional one. Adding a tool is the easy part because it only entails defining a new visitor type. The following is how we would approach in C#.
+
+```csharp
+public interface IShape
+{
+    T Process<T>(IShapeProcessor<T> processor);
+}
+
+public interface IShapeProcessor<T>
+{
+    T ForSquare(Square square);
+    T ForCircle(Circle circle);
+    T ForTranslatedShape(TranslatedShape translatedShape);
+}
+
+public sealed record Square(double Length) : IShape
+{
+    public T Process<T>(IShapeProcessor<T> processor) => processor.ForSquare(this);
+}
+
+// more shapes
+
+public class ContainsPoint(Point point) : IShapeProcessor<bool>
+{
+    public bool ForSquare(Square square) =>
+        point.X >= 0 && point.X <= square.Length &&
+        point.Y >= 0 && point.Y <= square.Length;
+
+    public bool ForCircle(Circle circle) =>
+        point.X * point.X + point.Y * point.Y <= circle.Radius * circle.Radius;
+
+    public bool ForTranslatedShape(TranslatedShape translatedShape) =>
+        translatedShape.Shape.Process(new ContainsPoint(
+            new Point(point.X - translatedShape.Point.X, point.Y - translatedShape.Point.Y)));
+}
+
+public sealed class Shrink(double num) : IShapeProcessor<IShape>
+{
+    // omitted
+}
+```
+
+Adding a new shape without modifying existing code is more challenging. As for the interpreter pattern we proceed by adding new code: the new shape type, a new visitor interface that inherits from the existing one and is able to process also the new shape and, lastly, the implementation of our tools.
+
+```csharp
+public interface IUnionShapeProcessor<T> : IShapeProcessor<T>
+{
+    T ForUnionShape(UnionShape unionShape);
+}
+
+public sealed record UnionShape(IShape Shape1, IShape Shape2) : IShape
+{
+    public T Process<T>(IShapeProcessor<T> processor)
+    {
+        if (processor is IUnionShapeProcessor<T> unionProcessor)
+        {
+            return unionProcessor.ForUnionShape(this);
+        }
+
+        throw new NotSupportedException($"Processor of type {processor.GetType().Name} does not support UnionShape");
+    }
+}
+
+public class UnionContainsPoint(Point point) : ContainsPoint(point), IUnionShapeProcessor<bool>
+{
+    public bool ForUnionShape(UnionShape unionShape) =>
+        unionShape.Shape1.Process(this) || unionShape.Shape2.Process(this);
+}
+```
+
+The obvious difference is that our original implementation is type sape while the new one is relying on runtime checks to validate that the visitor instance is able to handle the new shape. The less obvious difference that the authors point out is that all of this doesn't work. The issue is with the recursive type `TranslatedShape`, the `UnionContainsPoint` visitor is reusing the base implementation of `ContainsPoint`. This means that it is executing the following code
+
+```csharp
+public bool ForTranslatedShape(TranslatedShape translatedShape) =>
+    translatedShape.Shape.Process(new ContainsPoint(
+        new Point(point.X - translatedShape.Point.X, point.Y - translatedShape.Point.Y)));
+```
+
+Which is calling `Process` on the inner shape of the original object and it is passing a new instance of `ContainsPoint` (and not `UnionContainsPoint`!) so now we lost support for the `Union` shape.  
+
+```csharp
+[Fact]
+public void TestNestedTranslatedShapes()
+{
+    // Arrange
+    var circle = new Circle(10);
+    var square = new Square(10);
+    var t1 = new UnionShape(square, circle);
+    var t2 = new TranslatedShape(t1, new Point(5, 5));
+
+    // Act & Assert
+    Assert.Throws<NotSupportedException>(() => t2.Process(new UnionContainsPoint(new Point(0, 0))));
+}
+```
