@@ -141,7 +141,7 @@ It fails with
 
 > module: identifier already defined in: v
 
-This is an essential difference but there are others as well, for example "truthyness" and the `nil` object.
+This is an essential difference but there are others as well, for example "truthyness" and the `nil` object, the lack of a `return` statement in Racket to be used inside of functions' bodies. I will go through some parts of the Lox expansion module to explain how it works and the why when needed.
 
 ### Nil and truthyness
 
@@ -204,5 +204,20 @@ A rather big macro performs a "dispatch" to the function defining the binary ope
       [(_ left:expr AND right:expr) #'(lox-and left right)]
       [(_ left:expr OR right:expr) #'(lox-or left right)])))
 ```
+
+### Undefined variables
+
+Lox undefined variable behavior, a runtime error with a specific error code and message, is implemented partially here and partially in the main module. Racket default expansion, [whenever it encounters an undefined variable expand to a `#%top` form](https://docs.racket-lang.org/reference/syntax-model.html#%28part._expand-steps%29). In this module I defined a `lox-top` macro:
+```scheme
+(define-syntax (lox-top stx)
+  (syntax-parse stx
+    [(_ . id:id)
+     (with-syntax ([line (or (syntax-line #'id) (syntax-line stx) 0)]
+                   [str-id (symbol->string (syntax->datum #'id))])
+       #'(lox-runtime-error (format "Undefined variable '~a'." str-id) line))]))
+```
+This macro is used in the main module to override the default `#%top` form.
+
+### Return statement
 
 [^1]: More details on syntax coloring [here](https://docs.racket-lang.org/tools/lang-languages-customization.html#%28idx._%28gentag._0._%28lib._scribblings%2Ftools%2Ftools..scrbl%29%29%29)
