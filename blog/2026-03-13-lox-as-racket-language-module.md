@@ -17,7 +17,7 @@ The code is available on github [here](https://github.com/davidelettieri/racket-
 
 The scanner is essentially exposing the `scan-tokens` function and some custom structs. The `scan-tokens` function takes an [input-port](https://docs.racket-lang.org/guide/i_o.html) and use it to go through the source code. The result of the `scan-tokens` function is a `scanner-output` type, in the original implementation a scanner error was exposed to the interpreter through a static method called directly from the scanner. I don't have an interpreter and so I don't have a static field to set, so I resolved to return a pair `(tokens had-error)` to signal if an error occurred or not. All custom defined struct have the `#:transparent` struct option so that we get nice printing, extensively used during "printf-debugging" I did.
 
-Given the imperative style of the implementation, I also defined a `while` macro to use in loops and to closely mimic the book implementation. Nothing fancy, there are plenty of examples online about this.
+Given the imperative style of the implementation, I also defined a `while` macro to use in loops and to closely mimic the book implementation. This macro is re-used also in the expansion of language. Nothing fancy, there are plenty of examples online about this.
 
 Something that resembles functional programming or at least more in line with racket style, is the usage of [`for/list`](https://docs.racket-lang.org/reference/for.html#%28form._%28%28lib._racket%2Fprivate%2Fbase..rkt%29._for%2Flist%29%29) in conjuction with [`in-producer`](https://docs.racket-lang.org/reference/sequences.html#%28def._%28%28lib._racket%2Fprivate%2Fbase..rkt%29._in-producer%29%29). At the beginning I was using my `while` macro or a loop and using `cons` to build up lists of objects and then reversing the list to get the correct order. This was ugly as hell and doing the reverse at the end was painful. 
 
@@ -36,7 +36,7 @@ I don't have a proper syntax tree with pre-defined types, the parser is producin
 
 Thanks to the macro support, I was able to extract some repetitive logic that appear when parsing [expressions](https://craftinginterpreters.com/appendix-i.html#expressions):
 
-```
+``` title='Part of the Lox grammar referring to binary operations'
 logic_or       → logic_and ( "or" logic_and )* ;
 logic_and      → equality ( "and" equality )* ;
 equality       → comparison ( ( "!=" | "==" ) comparison )* ;
@@ -50,7 +50,7 @@ All these productions have a similar form, they are all binary expressions:
 2. They have a set of token for separating inner productions
 
 Understanding that I defined the following macro and all the expressions:
-```scheme
+```scheme title='Snipper for the parser for binary ops'
 (define-syntax-rule (iterative-production name production . token-types)
 (define (name)
     (define expr (production))
@@ -71,7 +71,7 @@ Understanding that I defined the following macro and all the expressions:
 As in other parts of the code, a lot of imperative pieces such as the `while` loop and the `set!` to "accumulate" the result into the `expr` variable.
 
 Another interesting part is the `assignment` parse, here my C# version:
-```csharp
+```csharp title='Assignment parsing in my C# implementation'
 private IExpr Assignment()
 {
     var expr = Or();
@@ -97,7 +97,7 @@ private IExpr Assignment()
 }
 ```
 In `C#` and in `Java` we can check if an object is of a specific type and cast it to the desired type. Given that I don't have any types but only racket expression produced by the parser I can't follow that approach. However, by knowing a bit of macros which are essentially functions with signature `syntax -> syntax` bound to a given name, we can define a `syntax -> syntax` function to understand what we have and react accordingly. The type check on the value variable is replaced with a `syntax-parse` that is able to recognize the shape of the syntax we are expecting and produce the desider output syntax (opposed to a new AST object from Lox original implementation). The `#:datum-literals (lox-variable lox-get)` is telling `syntax-parse` that those elements need to be matched literally. Those are not pattern variables as `name:expr` or `obj:expr`:
-```scheme
+```scheme title='Assignment syntax parser'
 (define (assignment)
 (define expression (or-syntax))
 (when (match 'EQUAL)
@@ -120,18 +120,20 @@ expression)
 
 ## Lox 
 
-The `lox.rkt` file replaces what is the interpreter in the book. We are not directly interpreting the language, being this a racket language module the final objective is to "translate" lox to racket. The syntax produced by the parser is something like:
-```scheme
+The `lox.rkt` file replaces what is the interpreter in the book. We are not directly interpreting the language, being this a racket language module the final objective is to "translate" lox to racket. The expanded syntax is going to be responsible to raise the runtime errors raised originally by the interpreter.
+
+The syntax produced by the parser is something like:
+```scheme title='Sample expanded syntax'
 (lox-var-declaration v (lox-literal "Hello World!"))
 (lox-print (lox-variable v))
 ```
 We need to translate this to racket standard forms and functions, with some attention because there are semantic differences between racket and Lox that we need to handle on our own. For example Lox allow the following code (re-declaring a variable in a top-level scope)
-```
+```text title='Lox variable re-definition'
 var v = "Hello World!";
 var v = "a";
 ```
 Racket does not behave the same:
-```scheme
+```scheme title='Racket variable re-definition'
 (define v "Hello World!")
 (define v "a")
 ```
@@ -140,5 +142,67 @@ It fails with
 > module: identifier already defined in: v
 
 This is an essential difference but there are others as well, for example "truthyness" and the `nil` object.
+
+### Nil and truthyness
+
+The Lox `nil` value is defined using a sentinel value `'lox-nil`. To support truthyness an helper function is defined and reused across other
+
+```scheme title='Truthyness'
+(define (lox-truthy? v)
+  (not (or (eq? v #f) (eq? v lox-nil))))
+  
+(define-syntax (lox-or stx)
+  (syntax-parse stx
+    [(_ left:expr right:expr) #'(let ([l-val left]) (if (lox-truthy? l-val) l-val right))]))
+
+(define-syntax (lox-and stx)
+  (syntax-parse stx
+    [(_ left:expr right:expr) #'(let ([l-val left]) (if (lox-truthy? l-val) right l-val))]))
+
+(define-syntax (lox-while stx)
+  (syntax-parse stx
+    [(_ cond:expr body:expr ...) #'(while (lox-truthy? cond) body ...)]))
+
+(define-syntax (lox-if stx)
+  (syntax-parse stx
+    [(_ cond then)
+     #'(when (lox-truthy? cond)
+         then)]
+    [(_ cond then else) #'(if (lox-truthy? cond) then else)]))
+
+(define-syntax (lox-unary stx)
+  (with-syntax ([line (syntax-line stx)])
+    (syntax-parse stx
+      #:datum-literals (BANG MINUS)
+      [(_ BANG v:expr) #'(not (lox-truthy? v))]
+      [(_ MINUS v:expr) #'(lox-negate-impl v line)])))
+```
+
+### Binary operations
+
+I already described the macro using during the parsing phase of the language module. Also during expansion, I used macros to remove some code duplication in addition to a function helper used to do arguments validation.
+
+A rather big macro performs a "dispatch" to the function defining the binary operations. When possible numbers binary operations are defined using the helper `lox-number-binary-with-validation`, some others like `lox-add-impl` are defined ad hoc.
+
+```scheme title='Binary expression expansion'
+(define-syntax (lox-binary stx)
+  (with-syntax ([line (syntax-line stx)])
+    (syntax-parse stx
+      #:datum-literals
+      (PLUS MINUS GREATER GREATER_EQUAL LESS LESS_EQUAL SLASH STAR BANG_EQUAL EQUAL_EQUAL AND OR)
+      [(_ left:expr PLUS right:expr) #'(lox-add-impl left right line)]
+      [(_ left:expr MINUS right:expr) #'(lox-number-binary-with-validation - left right line)]
+      [(_ left:expr GREATER right:expr) #'(lox-number-binary-with-validation > left right line)]
+      [(_ left:expr GREATER_EQUAL right:expr)
+       #'(lox-number-binary-with-validation >= left right line)]
+      [(_ left:expr LESS right:expr) #'(lox-number-binary-with-validation < left right line)]
+      [(_ left:expr LESS_EQUAL right:expr) #'(lox-number-binary-with-validation <= left right line)]
+      [(_ left:expr SLASH right:expr) #'(lox-divide-impl left right line)]
+      [(_ left:expr STAR right:expr) #'(lox-number-binary-with-validation * left right line)]
+      [(_ left:expr BANG_EQUAL right:expr) #'(not (lox-eqv? left right))]
+      [(_ left:expr EQUAL_EQUAL right:expr) #'(lox-eqv? left right)]
+      [(_ left:expr AND right:expr) #'(lox-and left right)]
+      [(_ left:expr OR right:expr) #'(lox-or left right)])))
+```
 
 [^1]: More details on syntax coloring [here](https://docs.racket-lang.org/tools/lang-languages-customization.html#%28idx._%28gentag._0._%28lib._scribblings%2Ftools%2Ftools..scrbl%29%29%29)
