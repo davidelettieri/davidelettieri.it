@@ -50,7 +50,7 @@ All these productions have a similar form, they are all binary expressions:
 2. They have a set of token for separating inner productions
 
 Understanding that I defined the following macro and all the expressions:
-```scheme title='Snipper for the parser for binary ops'
+```scheme title='Macro for parsing binary ops'
 (define-syntax-rule (iterative-production name production . token-types)
 (define (name)
     (define expr (production))
@@ -219,5 +219,48 @@ Lox undefined variable behavior, a runtime error with a specific error code and 
 This macro is used in the main module to override the default `#%top` form.
 
 ### Return statement
+
+Racket does not support a `return` statement in functions definitions by default but it offers all the machinery to implement one. I didn't come up with the approach I just found on internet, I can't find the original source but I think it's a common approach. Starting from scratch, without re-usability in mind, we can build an early exit in a function by using `let/ec`:
+
+```scheme title='Simple early exit from function'
+(define (foo)
+  (let/ec k
+    (displayln "inside function")
+    (k 1)
+    (displayln "post early return")
+    2))
+
+; sample execution
+(define v (foo))
+(displayln v)
+
+; output
+; inside function
+; 1
+```
+
+```scheme title='Return statement implementation'
+(define-syntax-parameter return-param
+  (lambda (stx) (raise-syntax-error #f "return used outside of function" stx)))
+
+(define-syntax (lox-return stx)
+  (syntax-parse stx
+    [(_ val) #'(return-param val)]))
+
+; lox-run-callable-body is used multiple times
+; otherwise it could have been included in the lox-function definition
+(define-syntax-rule (lox-run-callable-body ((param binding) ...) stmt ...)
+  (let/ec k
+    (syntax-parameterize ([return-param (make-rename-transformer #'k)]
+                          [param binding] ...)
+      (lox-block stmt ...))))
+
+(define-syntax (lox-function stx)
+  (syntax-parse stx
+    [(_ name:id (arg:id ...) (stmt ...))
+     #'(define (name arg ...)
+         (lox-run-callable-body () stmt ...))]))
+```
+
 
 [^1]: More details on syntax coloring [here](https://docs.racket-lang.org/tools/lang-languages-customization.html#%28idx._%28gentag._0._%28lib._scribblings%2Ftools%2Ftools..scrbl%29%29%29)
