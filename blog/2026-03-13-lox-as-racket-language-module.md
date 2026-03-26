@@ -4,24 +4,24 @@ date: 2026-03-13
 tags: [lox, racket]
 ---
 
-For a long time I wanted to implement a racket language module with a non-lispy surface syntax. An obvious candidate was the Lox programming language from the [Crafting Interpreters book](https://craftinginterpreters.com/) because I didn't want to invent a new syntax nor new semantics. My main objective was just to be able to leverage Racket language facilities, learn some Racket/Scheme, learn some macros.
+For a long time, I wanted to implement a Racket language module with a non-lispy surface syntax. Lox, from [Crafting Interpreters](https://craftinginterpreters.com/), was an obvious candidate: I didn't want to invent a new syntax nor new semantics. My main objective was to leverage Racket language-building facilities while learning Racket, Scheme, and macros.
 
-[I attempted this already a few years back with little success](2025-01-18-trying-to-implement-lox-as-racket-language-module.md), I decided to tackle it again ditching yacc/lex parsing libraries and mimicking more easily what was done in the book and what I did in C# replicating the book. It is noticeable that I didn't follow a functional programming style but more an imperative / oop style with mutations in particular in the scanning and parsing part where the code could be ported from existing implementations. 
-Another big help came from LLMs, I used copilot and it helped me gap some knowledge and troubleshoot issues that I honestly didn't have enough competencies to solve.
+[I attempted this already a few years ago, with little success](2025-01-18-trying-to-implement-lox-as-racket-language-module.md). This time I dropped yacc and lex libraries and instead followed the approach from the book more closely, along with the C# version I had written earlier. The result is not especially functional in style: the scanner and parser are fairly imperative and rely on mutation, mainly because that made the code easier to port from the earlier implementations.
+Another big help came from LLMs, I used GitHub Copilot and it helped me fill some gaps in my knowledge and troubleshoot issues that I honestly didn't have enough competencies to solve.
 
-I do not use copilot autocomplete because that removes all the fun from coding but I "chatted" extensively and I also used to fully generate parts I wasn't particularly interested in, such as the colorer[^1].
+I do not use GitHub Copilot autocomplete because that removes all the fun from coding but I "chatted" extensively and I also asked it to generate parts I was not particularly interested in, such as the colorer[^1].
 
-The code is available on github [here](https://github.com/davidelettieri/racket-lox). I'll go through the implementation, highlighting all the parts that I consider interesting or helpful, I want to follow my thought process as I worked on the implementation and the learnings I got.
+The code is available on GitHub [here](https://github.com/davidelettieri/racket-lox). In the post I'll go through the implementation, highlighting all the parts that I consider interesting or helpful.
 
 ## Scanner
 
-The scanner is essentially exposing the `scan-tokens` function and some custom structs. The `scan-tokens` function takes an [input-port](https://docs.racket-lang.org/guide/i_o.html) and use it to go through the source code. The result of the `scan-tokens` function is a `scanner-output` type, in the original implementation a scanner error was exposed to the interpreter through a static method called directly from the scanner. I don't have an interpreter and so I don't have a static field to set, so I resolved to return a pair `(tokens had-error)` to signal if an error occurred or not. All custom defined struct have the `#:transparent` struct option so that we get nice printing, extensively used during "printf-debugging" I did.
+The scanner mainly exposes the scan-tokens function and a few custom structs. scan-tokens takes an [input port](https://docs.racket-lang.org/guide/i_o.html) and walks through the source code. Its result is a scanner-output value containing both the tokens and an error flag. In the book’s implementation, scanner errors are reported through a static method on the interpreter. Since I do not have an interpreter here, I return that information explicitly instead.
 
-Given the imperative style of the implementation, I also defined a `while` macro to use in loops and to closely mimic the book implementation. This macro is re-used also in the expansion of language. Nothing fancy, there are plenty of examples online about this.
+Given the imperative style of the implementation, I also defined a `while` macro to use in loops and to closely mimic the book implementation. This macro is used also in the language expansion as well. Nothing fancy, there are plenty of examples online about this.
 
-Something that resembles functional programming or at least more in line with racket style, is the usage of [`for/list`](https://docs.racket-lang.org/reference/for.html#%28form._%28%28lib._racket%2Fprivate%2Fbase..rkt%29._for%2Flist%29%29) in conjuction with [`in-producer`](https://docs.racket-lang.org/reference/sequences.html#%28def._%28%28lib._racket%2Fprivate%2Fbase..rkt%29._in-producer%29%29). At the beginning I was using my `while` macro or a loop and using `cons` to build up lists of objects and then reversing the list to get the correct order. This was ugly as hell and doing the reverse at the end was painful. 
+Something that resembles functional programming or at least more in line with Racket style, is the usage of [`for/list`](https://docs.racket-lang.org/reference/for.html#%28form._%28%28lib._racket%2Fprivate%2Fbase..rkt%29._for%2Flist%29%29) in conjunction with [`in-producer`](https://docs.racket-lang.org/reference/sequences.html#%28def._%28%28lib._racket%2Fprivate%2Fbase..rkt%29._in-producer%29%29). At the beginning I was using my `while` macro or a loop and using `cons` to build up lists of objects and then reversing the list to get the correct order. This was ugly as hell and doing the reverse at the end was painful. 
 
-The `for/list` has options to stop the collection of items, skip items, etc. The `in-producer` is a lazily evaluated, possibly infinite, list of items provided by a `producer` function.
+The `for/list` has options to stop the collection of items, skip items, etc. The `in-producer` is a lazily evaluated, possibly infinite, sequence of items provided by a `producer` function.
 
 Overall the implementation is quite straightforward.
 
@@ -29,12 +29,12 @@ Overall the implementation is quite straightforward.
 
 The parser resembles, as the scanner, the source implementation. I didn't define a class to hold the state, so I had two options:
 1. Pass the state around as parameter.
-2. Use nested function definition and capture the state from the outer context.
-I chose the latter, it's behaving almost like having an instance of a object with some methods that access private fields to perform their actions, it allows simpler function signature since we don't have to pass the state all the times.
+2. Use nested function definitions and capture the state from the outer context.
+I chose the latter. It behaves almost like having an object instance whose methods access private fields, and it keeps the function signatures simpler because I do not have to pass the state around everywhere.
 
 I don't have a proper syntax tree with pre-defined types, the parser is producing a "lisped" version of Lox syntax. Style is mixed, I'm using `for/list` and `in-producer` like in the scanner but also more imperative constructs as my `while` macro, hand-written loops and such things.
 
-Thanks to the macro support, I was able to extract some repetitive logic that appear when parsing [expressions](https://craftinginterpreters.com/appendix-i.html#expressions):
+Thanks to the macro support, I was able to extract some repetitive logic that appears when parsing [expressions](https://craftinginterpreters.com/appendix-i.html#expressions):
 
 ``` title='Part of the Lox grammar referring to binary operations'
 logic_or       → logic_and ( "or" logic_and )* ;
@@ -47,9 +47,9 @@ factor         → unary ( ( "/" | "*" ) unary )* ;
 
 All these productions have a similar form, they are all binary expressions:
 1. They depend on another production 
-2. They have a set of token for separating inner productions
+2. They have a set of tokens for separating inner productions
 
-Understanding that I defined the following macro and all the expressions:
+With that in mind I defined the following macro and all the expressions:
 ```scheme title='Macro for parsing binary ops'
 (define-syntax-rule (iterative-production name production . token-types)
 (define (name)
@@ -70,7 +70,7 @@ Understanding that I defined the following macro and all the expressions:
 ```
 As in other parts of the code, a lot of imperative pieces such as the `while` loop and the `set!` to "accumulate" the result into the `expr` variable.
 
-Another interesting part is the `assignment` parse, here my C# version:
+Another interesting part is the `assignment` production, [here is my C# version](https://github.com/davidelettieri/Lox):
 ```csharp title='Assignment parsing in my C# implementation'
 private IExpr Assignment()
 {
@@ -96,7 +96,7 @@ private IExpr Assignment()
     return expr;
 }
 ```
-In `C#` and in `Java` we can check if an object is of a specific type and cast it to the desired type. Given that I don't have any types but only racket expression produced by the parser I can't follow that approach. However, by knowing a bit of macros which are essentially functions with signature `syntax -> syntax` bound to a given name, we can define a `syntax -> syntax` function to understand what we have and react accordingly. The type check on the value variable is replaced with a `syntax-parse` that is able to recognize the shape of the syntax we are expecting and produce the desider output syntax (opposed to a new AST object from Lox original implementation). The `#:datum-literals (lox-variable lox-get)` is telling `syntax-parse` that those elements need to be matched literally. Those are not pattern variables as `name:expr` or `obj:expr`:
+In `C#` and in `Java` we can check if an object is of a specific type and cast it to the desired type. Given that I don't have any types but only Racket expressions produced by the parser I can't follow that approach. However, by knowing a bit of macros which are essentially functions with signature `syntax -> syntax` bound to a given name, we can define a `syntax -> syntax` function to understand what we have and react accordingly. The type check on the `expr` variable is replaced with a `syntax-parse` that is able to recognize the shape of the syntax we are expecting and produce the desired output syntax (opposed to a new AST object from Lox original implementation). The `#:datum-literals (lox-variable lox-get)` is telling `syntax-parse` that those elements need to be matched literally. Those are not pattern variables as `name:expr` or `obj:expr`:
 ```scheme title='Assignment syntax parser'
 (define (assignment)
 (define expression (or-syntax))
@@ -120,14 +120,14 @@ expression)
 
 ## Lox 
 
-The `lox.rkt` file replaces what is the interpreter in the book. We are not directly interpreting the language, being this a racket language module the final objective is to "translate" lox to racket. The expanded syntax is going to be responsible to raise the runtime errors raised originally by the interpreter.
+The `lox.rkt` file takes the place of the interpreter from the book. Since this is a Racket language module, the goal is not to interpret Lox directly but to translate it into Racket. The expanded syntax is therefore responsible for reproducing the runtime errors that the interpreter would have raised.
 
 The syntax produced by the parser is something like:
 ```scheme title='Sample expanded syntax'
 (lox-var-declaration v (lox-literal "Hello World!"))
 (lox-print (lox-variable v))
 ```
-We need to translate this to racket standard forms and functions, with some attention because there are semantic differences between racket and Lox that we need to handle on our own. For example Lox allow the following code (re-declaring a variable in a top-level scope)
+We need to translate this to Racket standard forms and functions, with some attention because there are semantic differences between Racket and Lox that we need to handle on our own. For example Lox allows the following code (re-declaring a variable in a top-level scope)
 ```text title='Lox variable re-definition'
 var v = "Hello World!";
 var v = "a";
@@ -141,13 +141,13 @@ It fails with
 
 > module: identifier already defined in: v
 
-This is an essential difference but there are others as well, for example "truthyness" and the `nil` object, the lack of a `return` statement in Racket to be used inside of functions' bodies. I will go through some parts of the Lox expansion module to explain how it works and the why when needed.
+This is an essential difference but there are others as well, for example "truthiness" and the `nil` object, the lack of a `return` statement in Racket to be used inside of functions' bodies. I will go through some parts of the Lox expansion module to explain how it works.
 
-### Nil and truthyness
+### Nil and truthiness
 
-The Lox `nil` value is defined using a sentinel value `'lox-nil`. To support truthyness an helper function is defined and reused across other
+The Lox `nil` value is defined using a sentinel value `'lox-nil`. To support truthiness a helper function is defined and used to define other parts of the syntax interacting with boolean values.
 
-```scheme title='Truthyness'
+```scheme title='Truthiness'
 (define (lox-truthy? v)
   (not (or (eq? v #f) (eq? v lox-nil))))
   
@@ -180,9 +180,9 @@ The Lox `nil` value is defined using a sentinel value `'lox-nil`. To support tru
 
 ### Binary operations
 
-I already described the macro using during the parsing phase of the language module. Also during expansion, I used macros to remove some code duplication in addition to a function helper used to do arguments validation.
+I already described the macro used during the parsing phase of the language module. Also during expansion, I used macros to remove some code duplication in addition to a function helper used to do arguments validation.
 
-A rather big macro performs a "dispatch" to the function defining the binary operations. When possible numbers binary operations are defined using the helper `lox-number-binary-with-validation`, some others like `lox-add-impl` are defined ad hoc.
+A rather big macro performs a "dispatch" to the function defining the binary operations. When possible numeric binary operations are defined using the helper `lox-number-binary-with-validation`, some others like `lox-add-impl` are defined ad hoc.
 
 ```scheme title='Binary expression expansion'
 (define-syntax (lox-binary stx)
@@ -207,7 +207,7 @@ A rather big macro performs a "dispatch" to the function defining the binary ope
 
 ### Undefined variables
 
-Lox undefined variable behavior, a runtime error with a specific error code and message, is implemented partially here and partially in the main module. Racket default expansion, [whenever it encounters an undefined variable expand to a `#%top` form](https://docs.racket-lang.org/reference/syntax-model.html#%28part._expand-steps%29). In this module I defined a `lox-top` macro:
+Lox undefined variable behavior, a runtime error with a specific error code and message, is implemented partially here and partially in the main module. In Racket [any unbound identifier is expanded through a #%top form](https://docs.racket-lang.org/reference/syntax-model.html#%28part._expand-steps%29) which I'm overriding to get the desired behavior. So I defined a `lox-top` macro:
 ```scheme
 (define-syntax (lox-top stx)
   (syntax-parse stx
@@ -220,7 +220,7 @@ This macro is used in the main module to override the default `#%top` form.
 
 ### Return statement
 
-Racket does not support a `return` statement in functions definitions by default but it offers all the machinery to implement one. I didn't come up with the approach I just found on internet, I can't find the original source but I think it's a common approach. Starting from scratch, without re-usability in mind, we can build an early exit in a function by using `let/ec`:
+Racket does not have a built-in return statement for function bodies, but it provides the machinery needed to implement one. The core runtime piece is let/ec, which gives us an escape continuation. The macro-level piece is a syntax parameter: while expanding a function body, I rename return-param to that function’s escape continuation. This means that each function body expands with its own target for lox-return, so returns inside nested functions correctly exit the inner function rather than the outer one.
 
 ```scheme title='Simple early exit from function'
 (define (foo)
@@ -238,6 +238,12 @@ Racket does not support a `return` statement in functions definitions by default
 ; inside function
 ; 1
 ```
+
+The documentation on [racket docs for `let/ec` is pretty scarce](https://docs.racket-lang.org/reference/cont.html#%28form._%28%28lib._racket%2Fprivate%2Fletstx-scheme..rkt%29._let%2Fec%29%29) and I don't have much to add besides that the approach works and it is simple to use. 
+
+We can see that the `k` in `let/ec k` is a new binding that's being introduced because `(let/ec k body ...+)` is equivalent to `(call/ec (lambda (k) body ...))`. We would like to return whenever we encounter a `lox-return` either alone or with a following value/expression. Using `(let/ec lox-return ...)` wouldn't work because we are defining a new binding and not using our parsed syntax object.
+
+That is why I use a syntax parameter together with `syntax-parameterize` and `make-rename-transformer`: inside that expansion context, `lox-return` is rewritten to the escape continuation `k`. Nested function bodies are expanded under their own parameterization, so a return always targets the correct function.
 
 ```scheme title='Return statement implementation'
 (define-syntax-parameter return-param
