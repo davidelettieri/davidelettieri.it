@@ -145,7 +145,7 @@ This is an essential difference but there are others as well, for example "truth
 
 ### Nil and truthiness
 
-The Lox `nil` value is defined using a sentinel value `'lox-nil`. To support truthiness a helper function is defined and used to define other parts of the syntax interacting with boolean values.
+Lox nil is represented by the `lox-nil` binding, whose value is the symbol `nil`. To support truthiness a helper function is defined and used to define other parts of the syntax interacting with boolean values.
 
 ```scheme title='Truthiness'
 (define (lox-truthy? v)
@@ -267,6 +267,131 @@ That is why I use a syntax parameter together with `syntax-parameterize` and `ma
      #'(define (name arg ...)
          (lox-run-callable-body () stmt ...))]))
 ```
+
+The `lox-run-callable-body` indirection is useful to re-use the same code in function and in class methods. The `[param binding] ...` part is used in class methods to implement `this` and `super`, both are defined as `syntax-parameters`.
+
+### Classes
+
+Class definition is by far the most complex part of the project. As just mentioned we need to support `this` and `super`, but also methods, fields, printing of class definition, class instance, instance methods etc. It's really a lot of functionality for a single language construct. 
+
+My first attempt at defining a Lox class was using Racket class, it supports everything fields, methods, this and such. Possibly not everything with the same semantics and functionality required by Lox but it was worth to give it a try. 
+
+I tried, however the expansion of a very simple class is extremely complex. The following racket code
+
+```scheme title='Racket empty class definition'
+(define foo% (class object%))
+```
+
+expands to 
+
+```scheme title='Racket empty class expansion'
+(define-values
+ (foo%)
+ (#%app
+  compose-class
+  'foo%
+  object%
+  (#%app list)
+  (#%app current-inspector)
+  '#f
+  '#f
+  '0
+  '()
+  '()
+  '()
+  '()
+  '()
+  '()
+  '()
+  '()
+  '()
+  '()
+  '()
+  '()
+  '()
+  '()
+  '()
+  '()
+  '()
+  'normal
+  (lambda (local-accessor local-mutator)
+    (let-values ()
+      (let-values ()
+        (let-values ()
+          (let-values ()
+            (let-values ()
+              (let-values ()
+                (let-values ()
+                  (let-values ()
+                    (letrec-values ()
+                      (#%app
+                       values
+                       (#%app list)
+                       (#%app list)
+                       (#%app list)
+                       (lambda (self561
+                                super-go
+                                si_c
+                                si_inited?
+                                si_leftovers
+                                init-args)
+                         (let-values ()
+                           (let-values ()
+                             (let-values ()
+                               (let-values ()
+                                 (let-values ()
+                                   (#%app void)
+                                   '(declare-field-use-start))))))))))))))))))
+  '#f
+  '#f))
+```
+
+Troubleshooting my code scanner, parser and macros using this expansion for the class implementation was nearly impossible. I decided to follow an approach similar to the one used in the Crafting Intepreters book. I defined two types:
+
+```scheme
+(struct lox-class-constructor (base name method-table superclass)
+  #:property prop:procedure
+  (struct-field-index base))
+
+(struct lox-class-instance (class fields))
+```
+
+The first one, `lox-class-constructor`, is similar to `LoxClass` in Crafting Interpreters. The `#:property prop:procedure` makes the struct "callable", it is an procedure and, as the name suggest, an instance of `lox-class-constructor` once called will return an instance of the class it is defining. The `base` argument is the procedure that will be called when we call an instance of `lox-class-constructor`. The `lox-class-instance` is an instance of a given class.
+
+Now that we have the defining types we need a set of helper methods to properly implement Lox classes. We want `lox-class-constructor` to return `lox-class-instance` instance, sorry for the word play but `lox-class-instance` is a type that represent an instance of a Lox class, an instance of `lox-class-instance` is an instance of a Lox class, and we want all `lox-class-instance` of a given type to reference the same `lox-class-constructor` in the `class` field. So the instances of this types are mutually recursive, we define then:
+
+```scheme showLineNumbers
+(define (make-lox-class-constructor class-name-str superclass-value method-table)
+  (letrec ([class (lox-class-constructor
+                   (lambda ctor-args
+                     (define fields (make-hash))
+                     (define self (lox-class-instance class fields))
+                     (define maybe-init (lox-class-bind-method class 'init self))
+                     (when maybe-init
+                       (lox-call-impl maybe-init ctor-args (current-call-line)))
+                     (when (and (not maybe-init) (not (null? ctor-args)))
+                       (lox-runtime-error (format "Expected 0 arguments but got ~a."
+                                                  (length ctor-args))
+                                          (current-call-line)))
+                     self)
+                   class-name-str
+                   method-table
+                   superclass-value)])
+    class))
+```
+
+Let go line by line:
+- In line 1 we are definining an helper function `make-lox-class-constructor` that helps us build a lox-class-constructor instance for a given class.
+- In line 2 to define lox-class-constructor we need to define a function that returns an a lox-class-instance holding a reference to the lox-class-constructor. We use letrec to allow using class inside its own definition.
+- In line 3 not much to say, syntax to define the lambda
+- In line 4 initiating a hash table to hold the fields of the instance
+- In line 5 defining the instance. Notice the `class` value passed into the struct constructor.
+- In line 6 looking for a `init` method using our helper `lox-class-bind-method`
+- In lines 7-8 if there is a `init` method, we call it (line 8)
+- In lines 9-12 if there is no `init` but we got parameters we raise an error
+- In line 13 we use `self` as return value for the lambda we are defining and the lambda definition is done and so we have the first parameter for the `lox-class-constructor`
+- In lines 14-16 we pass the remaining parameters
+- In line 17 we use `class` as return value for the `make-lox-class-constructor` we are defining.
 
 
 [^1]: More details on syntax coloring [here](https://docs.racket-lang.org/tools/lang-languages-customization.html#%28idx._%28gentag._0._%28lib._scribblings%2Ftools%2Ftools..scrbl%29%29%29)
