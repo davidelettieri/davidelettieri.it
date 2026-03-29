@@ -13,6 +13,82 @@ I do not use GitHub Copilot autocomplete because that removes all the fun from c
 
 The code is available on GitHub [here](https://github.com/davidelettieri/racket-lox). In the post I'll go through the implementation, highlighting all the parts that I consider interesting or helpful.
 
+## Implementation strategy
+
+The objective of the project is to have a Lox implementation as a Racket language module. For me, that means passing all tests from the Crafting Interpreter repo up to Chapter 13. The original implementation repo provides a Dart script to execute the test suite against any interpreter:
+
+```bash
+dart tool/bin/test.dart chap13_inheritance --interpreter racket
+```
+
+In order to have this working I added the `#lang racket-lox` at the top of each test file and changed the expected line adding 1. This approach is effective once you have a "working" language module already in place. For this reasons, the first few steps of the implementation have been done without "validation". I wrote a stub of the scanner, the parser and the language expansion. Once I was able to run the tests the development loop was pretty nice. I added a few unit tests to confirm some behaviors and iterate quicker on some bits of the implementation.
+
+### Definining the racket-lox language
+
+Being Racket a language-oriented programming language has all the facilities to build custom programming languages. This means having to build 2 different pieces:
+- An expander module
+- A reader module
+
+ The expander moduleis the first module to be imported and it contains all the bindings that will be available. In particular there is an implicit form `#%module-begin` that must be provided, a few that can be provided such as `#%top` or `#%datum`. The reader module is responsible for getting the text of the program and convert it to racket code. If the surface syntax is lisp-like there are additional facilities to help with the definition of the language.
+
+ To make a comparison between Lox implementation pieces and racket-lox parts we can say:
+ - scanner, both Lox and racket-lox have a scanner. Behavior is almost the same, racket-lox reader returns a list of tokens.
+ - parser, both Lox and racket-lox have a parser. Bheavior is different, racket-lox parser returns racket syntax objects. There is no pre-defined AST with classes. 
+ - interpreter, racket-lox does not have an interpreter. The language is not interpreted, a `lox.rkt` file contains macros and functions that replicates Lox behavior in Racket.
+ - resolver, both Lox and racket-lox have a resolver. The behavior is different, Lox resolver is executed at runtime before passing the AST to the interpreter. In racket-lox, the resolver is executed at compile time before. Its responsibilities are to forbid:
+   - invalid top-level `return`
+   - returning a value from `init`
+   - invalid `this` usage
+   - invalid `super` usage
+   - class inheriting from itself
+   - reading a local variable in its own initializer
+   - duplicate local declarations in the same scope
+ - resolve-redefinitions. This is only in racket-lox, I used it to support variable re-definition in a top level scope.
+
+#### How to verify that resolver is executed at compile (expansion time)
+
+Execute the following code
+
+```text title='Source file proving that resolver is executed at compile time'
+#lang racket-lox
+print "before";
+this;
+```
+
+and the output will be:
+```text title='Output'
+[line 3] Error at 'this': Can't use 'this' outside of a class.
+```
+
+Since there is no `before` printed anywhere we know the resolver is executed before the code from the source file is executed.
+
+#### What is resolve-redefinitions
+
+Lox supports variable re-definition in a top level scope, in order to support that I defined a function to be executed at expansion time `resolve-redefinitions`. In order to have it available at expansion time I wrapped the definition in a `begin-for-syntax`. The function is going through all the top level statements received from the parser and:
+- it keeps track of defined variables
+- it replaces a `lox-var-declaration` with a `lox-assign` whenever we are re-defining an existing variable. 
+Please note that the function does not need to be recursive because we are interested in re-writing only the top level statements.
+
+#### The custom #%module-begin form
+
+The racket-lox language uses a custom `#%module-begin` form for multiple reason:
+- we want to execute `resolve-statements` to enforce Lox language scoping rules.
+- we want to execute `resolve-redefinitions` to allow top level variable re-declaration.
+- we want to use `#%plain-module-begin` because the default `#%module-begin` prints out expression values to the default output port.
+
+In order to make `resolve-statements` work we need to pass it the un-expanded syntax tree produced by the reader. However Racket might pre-expand some forms before passing it to the language custom module. To avoid that we wrap the list of statements produced by the reader with a `lox-module-wrapper` which is doing nothing, it wraps everthing in a `(begin ...)` and which we are removing in with the `unwrap-forms` function if we received it un-expanded. If racket is deciding to "pre-expand" something before passing it to our module, it will only expand the wrapper and not the inner forms. In this way the resolver will encounter the expected forms and work as intended.
+
+```scheme title='racket-lox custom #%module-begin'
+(define-syntax custom-module-begin
+  (syntax-parser
+    [(_ form ...)
+     (define raw-forms (unwrap-forms #'(form ...)))
+     (resolve-statements raw-forms)
+     (with-syntax ([(fixed-forms ...) (resolve-redefinitions raw-forms)])
+       #'(#%plain-module-begin ;; use module-begin to have expressions printed out
+          fixed-forms ...))]))
+```
+
 ## Scanner
 
 The scanner mainly exposes the scan-tokens function and a few custom structs. scan-tokens takes an [input port](https://docs.racket-lang.org/guide/i_o.html) and walks through the source code. Its result is a scanner-output value containing both the tokens and an error flag. In the book’s implementation, scanner errors are reported through a static method on the interpreter. Since I do not have an interpreter here, I return that information explicitly instead.
