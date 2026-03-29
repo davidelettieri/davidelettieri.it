@@ -469,5 +469,32 @@ Let go line by line:
 - In lines 14-16 we pass the remaining parameters
 - In line 17 we use `class` as return value for the `make-lox-class-constructor` we are defining.
 
+So we have now a helper function that helps us create a class constructor but what are the `superclass-value` and the `method-table`? Let's look at the actual `lox-class` syntax object and its expansion:
+
+```scheme title='lox-class expansion'
+(define-syntax (lox-class stx)
+  (syntax-parse stx
+    #:datum-literals (lox-function)
+    [(_ class-name:id superclass:expr ((lox-function m-name:id (m-arg:id ...) (m-body:expr ...)) ...))
+     (with-syntax ([class-line (or (syntax-line #'class-name) (syntax-line stx) 0)])
+       #'(define class-name
+           (let ([superclass-value superclass])
+             (lox-validate-superclass superclass-value class-line)
+             (define method-table
+               (make-hasheq
+                (list (cons 'm-name
+                            (lox-make-method-factory m-name superclass-value (m-arg ...) m-body ...))
+                      ...)))
+             (make-lox-class-constructor (symbol->string 'class-name)
+                                         superclass-value
+                                         method-table))))]))
+```
+
+First we notice that the `lox-class` expands to a `(define class-name ...)` binding `class-name` to the constructor of the class. The `superclass-value`, when available, will be the constructor of the super class. The method table is built some helper functions and macros:
+
+```scheme title='lox method table helpers`
+
+```
+
 
 [^1]: More details on syntax coloring [here](https://docs.racket-lang.org/tools/lang-languages-customization.html#%28idx._%28gentag._0._%28lib._scribblings%2Ftools%2Ftools..scrbl%29%29%29)
