@@ -32,8 +32,8 @@ Being Racket a language-oriented programming language has all the facilities to 
  The expander moduleis the first module to be imported and it contains all the bindings that will be available. In particular there is an implicit form `#%module-begin` that must be provided, a few that can be provided such as `#%top` or `#%datum`. The reader module is responsible for getting the text of the program and convert it to racket code. If the surface syntax is lisp-like there are additional facilities to help with the definition of the language.
 
  To make a comparison between Lox implementation pieces and racket-lox parts we can say:
- - scanner, both Lox and racket-lox have a scanner. Behavior is almost the same, racket-lox reader returns a list of tokens.
- - parser, both Lox and racket-lox have a parser. Bheavior is different, racket-lox parser returns racket syntax objects. There is no pre-defined AST with classes. 
+ - scanner, both Lox and racket-lox have a scanner. Behavior is almost the same, racket-lox scanner returns a list of tokens (plus errors if any).
+ - parser, both Lox and racket-lox have a parser. Behavior is different, racket-lox parser returns racket syntax objects. There is no pre-defined AST with classes. 
  - interpreter, racket-lox does not have an interpreter. The language is not interpreted, a `lox.rkt` file contains macros and functions that replicates Lox behavior in Racket.
  - resolver, both Lox and racket-lox have a resolver. The behavior is different, Lox resolver is executed at runtime before passing the AST to the interpreter. In racket-lox, the resolver is executed at compile time before. Its responsibilities are to forbid:
    - invalid top-level `return`
@@ -44,6 +44,7 @@ Being Racket a language-oriented programming language has all the facilities to 
    - reading a local variable in its own initializer
    - duplicate local declarations in the same scope
  - resolve-redefinitions. This is only in racket-lox, I used it to support variable re-definition in a top level scope.
+ - all "infrastructure" for supporting racket language modules like the reader, colorer, etc. is obviously only in racket-lox
 
 #### How to verify that resolver is executed at compile (expansion time)
 
@@ -482,18 +483,35 @@ So we have now a helper function that helps us create a class constructor but wh
              (lox-validate-superclass superclass-value class-line)
              (define method-table
                (make-hasheq
-                (list (cons 'm-name
-                            (lox-make-method-factory m-name superclass-value (m-arg ...) m-body ...))
-                      ...)))
+                (list (lox-make-method-entry m-name superclass-value (m-arg ...) m-body ...) ...)))
              (make-lox-class-constructor (symbol->string 'class-name)
                                          superclass-value
                                          method-table))))]))
 ```
 
-First we notice that the `lox-class` expands to a `(define class-name ...)` binding `class-name` to the constructor of the class. The `superclass-value`, when available, will be the constructor of the super class. The method table is built some helper functions and macros:
+First we notice that the `lox-class` expands to a `(define class-name ...)` binding `class-name` to the constructor of the class. The `superclass-value`, when available, will be the constructor of the super class. The method table is built some helper functions and macros.
 
-```scheme title='lox method table helpers`
+### Keywords `this` and `super` and instance methods
 
+The first helper we encounter to support instance methods is `lox-make-method-entry` which is a macro returning a pair of values: the method name and a method factory. The method factory is doing a lot of work:
+- it uses `procedure-rename` so that when we print a method we get the desired name.
+- it binds `this` to `receiver`, the `this` value is bound at runtime that's why we need to pass it to the method so that it points to the correct instance of the class.
+- it binds `super` to `superclass-value`, the superclass is defined at compile time and indeed it is an argument of the macro itself.
+- it defines the body of the method: `result` is set to be the value returned by `lox-run-callable-body`
+
+```scheme title='lox method table helpers'
+(define-syntax-rule (lox-make-method-entry m-name superclass-value (m-arg ...) m-body ...)
+  (cons 
+    'm-name 
+    (lambda (receiver) (procedure-rename (lambda (m-arg ...)
+                      (let ([this receiver]
+                            [super superclass-value])
+                        (define result
+                          (lox-run-callable-body ((this-param (make-rename-transformer #'this))
+                                                  (super-param (make-rename-transformer #'super)))
+                                                 m-body ...))
+                        (if (eq? 'm-name 'init) this result)))
+                    'm-name))))
 ```
 
 
