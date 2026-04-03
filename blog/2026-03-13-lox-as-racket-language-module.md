@@ -493,25 +493,28 @@ First we notice that the `lox-class` expands to a `(define class-name ...)` bind
 
 ### Keywords `this` and `super` and instance methods
 
-The first helper we encounter to support instance methods is `lox-make-method-entry` which is a macro returning a pair of values: the method name and a method factory. The method factory is doing a lot of work:
+In our lox class the methods are store as factories in a method table. The first helper we encounter to support this implementation is `lox-make-method-entry` which is a macro returning a pair of values: the method name and a method factory. The method factory is doing a lot of work:
 - it uses `procedure-rename` so that when we print a method we get the desired name.
 - it binds `this` to `receiver`, the `this` value is bound at runtime that's why we need to pass it to the method so that it points to the correct instance of the class.
 - it binds `super` to `superclass-value`, the superclass is defined at compile time and indeed it is an argument of the macro itself.
-- it defines the body of the method: `result` is set to be the value returned by `lox-run-callable-body`
+- it defines the body of the method: `result` is set to be the value returned by `lox-run-callable-body`.
+- it passes two new syntax parameter bindings so that `lox-this` and `lox-super` are correcty rewritten in the method body.
+- force the return of `this` if the method is `init`
 
 ```scheme title='lox method table helpers'
 (define-syntax-rule (lox-make-method-entry m-name superclass-value (m-arg ...) m-body ...)
-  (cons 
-    'm-name 
-    (lambda (receiver) (procedure-rename (lambda (m-arg ...)
-                      (let ([this receiver]
-                            [super superclass-value])
-                        (define result
-                          (lox-run-callable-body ((this-param (make-rename-transformer #'this))
-                                                  (super-param (make-rename-transformer #'super)))
-                                                 m-body ...))
-                        (if (eq? 'm-name 'init) this result)))
-                    'm-name))))
+  (cons 'm-name
+        (lambda (receiver)
+          (procedure-rename
+           (lambda (m-arg ...)
+             (let ([this receiver]
+                   [super superclass-value])
+               (define result
+                 (lox-run-callable-body ((this-param (make-rename-transformer #'this))
+                                         (super-param (make-rename-transformer #'super)))
+                                        m-body ...))
+               (if (eq? 'm-name 'init) this result)))
+           'm-name))))
 ```
 
 
