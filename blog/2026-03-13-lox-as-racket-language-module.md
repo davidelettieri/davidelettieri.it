@@ -4,7 +4,7 @@ date: 2026-03-13
 tags: [lox, racket]
 ---
 
-For a long time, I wanted to implement a Racket language module with a non-lispy surface syntax. Lox, from [Crafting Interpreters](https://craftinginterpreters.com/), was an obvious candidate: I didn't want to invent a new syntax nor new semantics. My main objective was to leverage Racket language-building facilities while learning Racket, Scheme, and macros.
+For a long time, I wanted to implement a Racket language module with a non-lispy surface syntax. Lox, from [Crafting Interpreters](https://craftinginterpreters.com/), was an obvious candidate: I didn't want to invent a new syntax nor new semantics and I already ported the project to C#. In this case, my main objective was to leverage Racket language-building facilities while learning Racket, Scheme, and macros.
 
 [I attempted this already a few years ago, with little success](2025-01-18-trying-to-implement-lox-as-racket-language-module.md). This time I dropped yacc and lex libraries and instead followed the approach from the book more closely, along with the C# version I had written earlier. The result is not especially functional in style: the scanner and parser are fairly imperative and rely on mutation, mainly because that made the code easier to port from the earlier implementations.
 Another big help came from LLMs, I used GitHub Copilot and it helped me fill some gaps in my knowledge and troubleshoot issues that I honestly didn't have enough competencies to solve.
@@ -23,6 +23,13 @@ dart tool/bin/test.dart chap13_inheritance --interpreter racket
 
 In order to have this working I added the `#lang racket-lox` at the top of each test file and changed the expected line adding 1. This approach is effective once you have a "working" language module already in place. For this reasons, the first few steps of the implementation have been done without "validation". I wrote a stub of the scanner, the parser and the language expansion. Once I was able to run the tests the development loop was pretty nice. I added a few unit tests to confirm some behaviors and iterate quicker on some bits of the implementation.
 
+The implementation is validated at multiple levels:
+- pass the `chap13_inheritance` test suite from the book
+- major part of the implementation, scanner, reader, parser have unit tests
+- there are a few runtime unit tests
+
+This doesn't exactly means that the implementation is 100% correct but it is correct for as much as I could validate.
+
 ### Definining the racket-lox language
 
 Being Racket a language-oriented programming language has all the facilities to build custom programming languages. This means having to build 2 different pieces:
@@ -35,7 +42,7 @@ Being Racket a language-oriented programming language has all the facilities to 
  - scanner, both Lox and racket-lox have a scanner. Behavior is almost the same, racket-lox scanner returns a list of tokens (plus errors if any).
  - parser, both Lox and racket-lox have a parser. Behavior is different, racket-lox parser returns racket syntax objects. There is no pre-defined AST with classes. 
  - interpreter, racket-lox does not have an interpreter. The language is not interpreted, a `lox.rkt` file contains macros and functions that replicates Lox behavior in Racket.
- - resolver, both Lox and racket-lox have a resolver. The behavior is different, Lox resolver is executed at runtime before passing the AST to the interpreter. In racket-lox, the resolver is executed at compile time before. Its responsibilities are to forbid:
+ - resolver, both Lox and racket-lox have a resolver. The behavior is different, Lox resolver is executed at runtime before passing the AST to the interpreter. In racket-lox, the resolver is executed at compile time. Its responsibilities are to forbid:
    - invalid top-level `return`
    - returning a value from `init`
    - invalid `this` usage
@@ -491,9 +498,9 @@ So we have now a helper function that helps us create a class constructor but wh
 
 First we notice that the `lox-class` expands to a `(define class-name ...)` binding `class-name` to the constructor of the class. The `superclass-value`, when available, will be the constructor of the super class. The method table is built some helper functions and macros.
 
-### Keywords `this` and `super` and instance methods
+### Keywords `this` and `super` and instance methods definition
 
-In our lox class the methods are store as factories in a method table. The first helper we encounter to support this implementation is `lox-make-method-entry` which is a macro returning a pair of values: the method name and a method factory. The method factory is doing a lot of work:
+In our lox class the methods are store as factories in a method table in the class definition and not in the instance. The first helper we encounter to support this implementation is `lox-make-method-entry` which is a macro returning a pair of values: the method name and a method factory. The method factory is doing a lot of work:
 - it uses `procedure-rename` so that when we print a method we get the desired name.
 - it binds `this` to `receiver`, the `this` value is bound at runtime that's why we need to pass it to the method so that it points to the correct instance of the class.
 - it binds `super` to `superclass-value`, the superclass is defined at compile time and indeed it is an argument of the macro itself.
@@ -517,5 +524,128 @@ In our lox class the methods are store as factories in a method table. The first
            'm-name))))
 ```
 
+### Instance method executions
+
+Calling a method on an instance is another complex part of the implementation. Let's start with a simple class definition with an empty method:
+
+```text title='Lox class with one empty method'
+class A {
+  method() {}
+}
+var a = A();
+a.method();
+```
+
+Let's look at the expansion of this simple code:
+```scheme title='Lox class with one empty method expansion'
+(lox-class A #f ((lox-function method () ()))) 
+(lox-var-declaration a (lox-call (lox-variable A))) 
+# highlight-next-line
+(lox-call (lox-get (lox-variable a) "method"))
+```
+We are interested in the last line where we have an interaction between `lox-call` and `lox-get`. I said already that the instances in racket-lox hold a method factory table and we need to pass the receiver at runtime to get the actual function to be called. All of this is done by the `lox-get` macro and the more interesting `lox-get-impl` function:
+
+```scheme title='lox-get definition'
+(define-syntax (lox-get stx)
+  (syntax-parse stx
+    [(_ obj method:str)
+     (with-syntax ([method-sym (string->symbol (syntax->datum #'method))]
+                   [line (or (syntax-line #'method) (syntax-line stx) 0)])
+       #'(lox-get-impl obj 'method-sym line))]))
+
+(define (lox-get-impl o symbol-name line)
+  (cond
+    [(lox-class-instance? o)
+     (hash-ref (lox-class-instance-fields o)
+               symbol-name
+               (lambda ()
+                 (define maybe-method
+                   (lox-class-bind-method (lox-class-instance-class o) symbol-name o))
+                 (if maybe-method
+                     maybe-method
+                     (lox-runtime-error (format "Undefined property '~a'." symbol-name) line))))]
+    [else (lox-runtime-error "Only instances have properties." line)]))
+```
+
+The macro is only extracting the original line in the source code and the method name and passing both to the function along with the instance of the class. The function checks if the instance contains a field with that `symbol-name` name and returns it if that's the case. Otherwise it tries to bind the method to the current instance of the class. The `lox-class-bind-method` receives the class `(lox-class-instance-class o)` as holder of the method factory table, the method name `symbol-name` and the instance `o` to be able to bind the method to the correct receiver. In order to work properly `lox-class-bind-method` needs to look recursively up to the inheritance tree to look for the method whenever it doesn't find it on the current class.
+
+### Property lookup
+
+There is not much to add here. We already discussed how `lox-get-impl` search for the symbol it receives inside the hashmap of the instance fields.
+
+### Super
+
+With all we have seen so far, `super` implementation is pretty straightforward. Let's start with the expansion:
+
+```text title='Two lox classes with inheritance and super usage'
+class A {
+  methodA()  {print "inside A";}
+}
+
+class B < A {
+  method() { super.methodA();}
+}
+```
+
+```scheme title='super expansion'
+(lox-class A #f ((lox-function methodA () ())))
+(lox-class B A ((lox-function method () ((lox-call (lox-super "methodA"))))))
+```
+
+The implementation is made of a macro and a function:
+
+```scheme title='lox-super implementation'
+(define-syntax (lox-super stx)
+  (syntax-parse stx
+    [(_ method:str)
+     (with-syntax ([method-sym (string->symbol (syntax->datum #'method))]
+                   [line (or (syntax-line #'method) (syntax-line stx) 0)])
+       #'(lox-super-impl super-param this-param 'method-sym line))]))
+
+(define (lox-super-impl superclass receiver method-sym line)
+  (if (lox-class-constructor? superclass)
+      (let ([method (lox-class-bind-method superclass method-sym receiver)])
+        (if method
+            method
+            (lox-runtime-error (format "Undefined property '~a'." method-sym) line)))
+      (lox-runtime-error "Superclass must be a class." line)))
+```
+
+The macro (again) is not doing much, it extracts line and method name and pass those to the `lox-super-impl` along with the `this` and `super` syntax parameters. The function `lox-super-impl` is passing the values to `lox-class-bind-method`, which we already discussed, starting the recursive lookup from the parent class instead of the current class like it is done in the method lookup flow.
+
+### Additional compatibility gaps between Lox and Racket
+
+Racket semantics differs from Lox semantics on a few additional points:
+
+#### Printing
+
+The `lox-print` implementation feels a bit "hacky" however it works correctly. A bunch of runtime checks allow to tailor the printed string to the Lox requirements. The `lox-class-constructor` and `lox-class-instance` custom structs help with the printing as well. Native types, such as booleans and numbers have their own helpers to support Lox-style printing
+
+```scheme title='lox-print implementation'
+(define (lox-print value)
+  (cond
+    [(boolean? value) (print-bool value)]
+    [(eqv? value 'nil) (displayln "nil")]
+    [(number? value) (displayln (lox-number->string value))]
+    [(lox-class-constructor? value) (displayln (lox-class-constructor-name value))]
+    [(lox-class-instance? value)
+     (displayln (format "~a instance" (lox-class-constructor-name (lox-class-instance-class value))))]
+    [(procedure? value)
+     (let ([function-name (object-name value)])
+       (if (eqv? function-name 'clock)
+           (displayln "<native fn>")
+           (displayln (format "<fn ~a>" function-name))))]
+    [else (displayln value)]))
+
+(define (lox-number->string value)
+  (cond
+    ;; Preserve negative zero so `print -0;` matches Crafting Interpreters output.
+    [(and (real? value) (inexact? value) (eqv? value -0.0)) "-0"]
+    ;; Lox prints whole-valued numbers without a trailing ".0".
+    [(and (real? value) (integer? value)) (number->string (inexact->exact value))]
+    [else (number->string value)]))
+```
+
+#### Numbers
 
 [^1]: More details on syntax coloring [here](https://docs.racket-lang.org/tools/lang-languages-customization.html#%28idx._%28gentag._0._%28lib._scribblings%2Ftools%2Ftools..scrbl%29%29%29)
