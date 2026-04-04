@@ -1,145 +1,150 @@
-# Revision Plan: Lox as racket language module
+# Review Recap: Lox as racket language module
 
-## Already fixed
+This file recaps the earlier review comments against the current draft of the post and the implementation in `davidelettieri/racket-lox`.
 
-These points from the earlier review are no longer blockers and should stay as they are unless you decide to rewrite those sections for style.
+## Overall status
 
-1. The `nil` wording is now correct.
+Most of the important technical comments from the earlier review are now addressed. The post is much stronger on the `#lang` pipeline, compile-time resolution, and class implementation details than it was before.
 
-   The post now says that Lox nil is represented by the `lox-nil` binding, whose value is the symbol `nil`, which matches the implementation.
+The main gaps that still remain are:
 
-2. The article now explains much more of the `#lang` pipeline.
+- a dedicated testing/conformance section
+- a compact section on semantic compatibility shims between Racket and Lox
+- a small contradictory comment in the `#%module-begin` snippet
 
-   The current draft covers the custom reader, the custom `#%module-begin`, compile-time resolution, and the top-level redeclaration rewrite. That was a major gap in the older draft and is now mostly resolved.
+## Addressed
 
-3. The wording around `this` and `super` is better.
+### 1. `nil` wording is now correct
 
-   The draft no longer frames them as future work and it does explain the syntax-parameter-based implementation in callable bodies.
+Addressed.
 
-4. The class terminology is more accurate.
+The post now says that Lox nil is represented by the `lox-nil` binding, whose value is the symbol `nil`, which matches the implementation.
 
-   The earlier `hashset` confusion is gone, and the post no longer suggests the implementation has a separate static/class-method feature.
+### 2. The `#lang` architecture is now explained
 
-5. The top-level redeclaration naming issue is fixed.
+Addressed.
 
-   The current draft consistently uses `resolve-redefinitions`, which now matches the repository.
+The article now explains that the language is split into an expander module and a reader module, describes the custom `#%module-begin`, explains why `lox-module-wrapper` exists, and shows that the resolver runs at expansion time.
 
-6. The resolver responsibilities are now listed explicitly.
+That was one of the biggest missing pieces in the earlier draft, and it is now covered well enough for readers to understand how the language is assembled.
 
-   The draft already gives readers a concise explanation of the semantic checks enforced at expansion time.
+### 3. `this` and `super` are no longer treated vaguely
 
-7. The initializer story is partly fixed.
+Addressed.
 
-   The post now explains that the constructor looks for `init`, and it also explains that methods named `init` force the return of the receiver.
+The draft now explains that `this` and `super` are implemented through syntax parameters and shows how callable bodies are expanded with the right bindings. That is a substantial improvement over the earlier version.
 
-## Remaining work
+### 4. Class terminology is now accurate
 
-### 1. Correct the scanner/parser/reader split
+Addressed.
 
-This is the one clear technical inaccuracy still present in the post.
+The earlier confusion around the runtime representation is gone. The post now correctly talks about `lox-class-constructor`, `lox-class-instance`, method tables, instances, fields, and methods without suggesting a separate unsupported static-method model.
 
-The draft currently says that the scanner in racket-lox returns a list of tokens, which is true as far as the scanner goes, but the surrounding paragraph is supposed to explain how the language is assembled. In the repository the actual pipeline is:
+### 5. Top-level redeclaration naming is fixed
 
-- scanner -> tokens
-- parser -> syntax objects
-- reader -> `(module anonymous-module racket-lox ...)` wrapping those parsed forms
+Addressed.
 
-Suggested replacement wording:
+The post consistently uses `resolve-redefinitions`, which matches the implementation.
 
-`The scanner produces tokens, the parser converts them to syntax objects, and the reader wraps the result into a module that uses #lang racket-lox.`
+### 6. Resolver responsibilities are listed clearly
 
-Priority: high
+Addressed.
 
-### 2. Extend the class runtime section one step further
+The draft now gives a concise and accurate list of the semantic checks performed during expansion, including top-level `return`, invalid `this`/`super`, self-inheritance, initializer rules, own-initializer reads, and duplicate local declarations.
 
-The class section is much better than before, but it still stops just short of the runtime mechanics that make inheritance and method calls work.
+### 7. Initializer behavior is now explained well enough
 
-What is still missing from the article:
+Addressed.
+
+The current class section explains both sides that mattered:
+
+- class construction looks for `init`
+- methods named `init` force the return of the receiver
+
+That closes the earlier gap around initializer semantics.
+
+### 8. Class runtime mechanics are now covered
+
+Addressed.
+
+This was one of the most important missing explanations before, and the current draft now covers it. The article explains that:
 
 - methods are stored as factories in a method table
-- property access binds a method to a receiver on demand
-- superclass lookup walks the inheritance chain recursively
-- `super` dispatch uses the superclass reference captured for the bound method
+- property access binds methods to the receiver on demand through `lox-get` and `lox-get-impl`
+- method lookup walks the inheritance chain recursively through helper functions such as `lox-class-find-method-factory` and `lox-class-bind-method`
+- `super` dispatch starts from the superclass reference captured for the method body
 
-This matters because the current text explains how classes are built, but not quite how method access and inherited dispatch behave at runtime.
+That is enough runtime detail for the class section to feel complete.
 
-Priority: high
+## Partially addressed
 
-### 3. Add a short testing and conformance section
+### 1. Scanner / parser / reader split
 
-The post mentions passing the Crafting Interpreters suite up to `chap13_inheritance` and briefly mentions some unit tests, but the repo gives you a stronger validation story than the article currently uses.
+Mostly addressed, with one small improvement still available.
 
-Worth stating explicitly:
+The current post now distinguishes the scanner from the parser correctly:
+
+- scanner produces tokens
+- parser produces syntax objects
+
+That removes the main technical confusion from the earlier draft.
+
+What is still only implicit, rather than stated cleanly in one sentence, is that the reader wraps the parsed forms into a module using `racket-lox`. The implementation does exactly that in `lang/reader.rkt`, where it builds:
+
+`(module anonymous-module racket-lox (lox-module-wrapper ...))`
+
+So this is no longer a major issue, but the post would still benefit from one short pipeline summary sentence.
+
+## Not yet addressed
+
+### 1. Add a dedicated testing and conformance section
+
+Still open.
+
+The post mentions the Crafting Interpreters test suite and says that some unit tests were added, but it still does not use the full validation story that exists in the implementation repository.
+
+The repo now gives concrete evidence you could summarize explicitly:
 
 - scanner tests
 - parser tests
 - resolver tests
 - runtime tests
-- integration execution against the Crafting Interpreters suite up to `chap13_inheritance`
+- integration execution against `chap13_inheritance`
 
-This is useful evidence for readers because the post is making a semantic-compatibility claim, not just describing an experiment.
+This is worth adding because the post is making a semantic-compatibility claim, not only describing an experiment.
 
-Priority: medium
+### 2. Add a compact semantic-compatibility section
 
-### 4. Add a short section on semantic compatibility shims
+Still open.
 
-Some of the most interesting implementation details in the repo are the places where Racket behavior differs from Lox and you handle that deliberately.
-
-Good candidates for a compact section:
+Some of the most interesting implementation details are still not discussed in the article even though they exist in the repo. Good candidates include:
 
 - negative zero printing
 - numeric equality across exact and inexact numbers
 - forcing division to produce inexact numbers
 - printing classes, instances, and native functions in Lox style
 - the native `clock` function
-- required exit codes and error messages, including the DrRacket tradeoff
+- required error behavior and exit codes, including the DrRacket tradeoff
 
-These are good article material because they show concrete host-language mismatches rather than only macro mechanics.
+These are valuable because they show where the host language differs from Lox and what had to be done to close the gap.
 
-Priority: medium
+### 3. Fix the contradictory `#%module-begin` snippet comment
 
-### 5. Fix the contradictory `#%module-begin` snippet comment
+Still open.
 
-The surrounding prose correctly says `#%plain-module-begin` is used to avoid printing expression results, but the inline comment in the snippet says the opposite.
+The surrounding prose correctly says `#%plain-module-begin` is used to avoid printing expression results, but the inline comment in the snippet still says:
 
-That comment should either be corrected or removed.
+`;; use module-begin to have expressions printed out`
 
-Priority: low
+That comment contradicts the explanation and should be corrected or removed.
 
-## Recommended edit order
+## Recommended next edits
 
-1. Fix the scanner/parser/reader description first.
-
-   That is the only clear technical error still in the post.
-
-2. Expand the class section with method binding, property lookup, and `super` dispatch.
-
-   This is the most important missing architectural explanation.
-
-3. Add the testing/conformance section.
-
-   This strengthens the article's credibility with relatively little text.
-
-4. Add the semantic compatibility section.
-
-   This improves the article's depth and makes it more interesting for readers who care about language-port details.
-
-5. Clean up the `#%module-begin` snippet comment.
-
-   This is a small fix, but it removes a visible contradiction.
-
-## Optional framing changes
-
-If you want the post to read more like an engineering write-up and less like an implementation diary, two additions would improve the structure:
-
-1. End the implementation-strategy section with a one-paragraph summary of the pipeline.
-
-   That would give readers a stable mental model before the article dives into scanner, parser, resolver, and runtime details.
-
-2. End the article with a short recap of where the complexity really is.
-
-   The strongest closing point is probably that the scanner and parser are fairly direct ports, while the interesting work is in expansion-time validation and runtime semantic compatibility.
+1. Add a short testing/conformance section.
+2. Add a short semantic-compatibility section.
+3. Fix the `#%plain-module-begin` inline comment.
+4. Optionally add one sentence summarizing the exact reader pipeline.
 
 ## Summary
 
-The draft has already fixed most of the larger issues from the earlier review. The next revision should focus on one remaining technical correction, then on filling the two most valuable omissions: class dispatch mechanics and the testing/compatibility story.
+The earlier review is now mostly resolved. The draft no longer has major architectural omissions around the `#lang` pipeline, compile-time resolution, or class dispatch. What remains is mostly about strengthening the post as an engineering write-up: better validation coverage, a clearer semantic-compatibility story, and one small cleanup in the module-begin snippet.
