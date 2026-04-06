@@ -1,6 +1,6 @@
 ---
 title: Lox as a Racket language module
-date: 2026-03-13
+date: 2026-04-06
 tags: [lox, racket]
 ---
 
