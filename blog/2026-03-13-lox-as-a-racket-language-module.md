@@ -1,5 +1,5 @@
 ---
-title: Lox as racket language module
+title: Lox as a Racket language module
 date: 2026-03-13
 tags: [lox, racket]
 ---
@@ -21,22 +21,22 @@ The objective of the project is to have a Lox implementation as a Racket languag
 dart tool/bin/test.dart chap13_inheritance --interpreter racket
 ```
 
-In order to have this working I added the `#lang racket-lox` at the top of each test file and changed the expected line adding 1. This approach is effective once you have a "working" language module already in place. For this reasons, the first few steps of the implementation have been done without "validation". I wrote a stub of the scanner, the parser and the language expansion. Once I was able to run the tests the development loop was pretty nice. I added a few unit tests to confirm some behaviors and iterate quicker on some bits of the implementation.
+In order to have this working I added the `#lang racket-lox` at the top of each test file and changed the expected line adding 1. This approach is effective once you have a "working" language module already in place. For this reason, the first few steps of the implementation have been done without "validation". I wrote a stub of the scanner, the parser and the language expansion. Once I was able to run the tests the development loop was pretty nice. I added a few unit tests to confirm some behaviors and iterate quicker on some bits of the implementation.
 
 The implementation is validated at multiple levels:
 - pass the `chap13_inheritance` test suite from the book
-- major part of the implementation, scanner, reader, parser have unit tests
+- major part of the implementation, scanner, parser and resolver have unit tests
 - there are a few runtime unit tests
 
-This doesn't exactly means that the implementation is 100% correct but it is correct for as much as I could validate.
+The final implementation passes all the relevant Lox tests and all the unit tests added to the repo. However, this doesn't mean that all edge case is necessarily correct. For example, a Gemini review surfaced an issue in the evaluation of -(-0.0) that neither the original Lox tests nor my own tests caught.
 
-### Definining the racket-lox language
+### Defining the racket-lox language
 
-Being Racket a language-oriented programming language has all the facilities to build custom programming languages. This means having to build 2 different pieces:
+As a language-oriented programming language, Racket provides all the facilities needed to build custom programming languages. This means having to build 2 different pieces:
 - An expander module
 - A reader module
 
- The expander moduleis the first module to be imported and it contains all the bindings that will be available. In particular there is an implicit form `#%module-begin` that must be provided, a few that can be provided such as `#%top` or `#%datum`. The reader module is responsible for getting the text of the program and convert it to racket code. If the surface syntax is lisp-like there are additional facilities to help with the definition of the language.
+ The expander module is the first module to be imported and it contains all the bindings that will be available. In particular there is an implicit form `#%module-begin` that must be provided, a few that can be provided such as `#%top` or `#%datum`. The reader module is responsible for reading the program text and converting it into Racket code. If the surface syntax is lisp-like there are additional facilities to help with the definition of the language.
 
  To make a comparison between Lox implementation pieces and racket-lox parts we can say:
  - scanner, both Lox and racket-lox have a scanner. Behavior is almost the same, racket-lox scanner returns a list of tokens (plus errors if any).
@@ -50,8 +50,8 @@ Being Racket a language-oriented programming language has all the facilities to 
    - class inheriting from itself
    - reading a local variable in its own initializer
    - duplicate local declarations in the same scope
- - resolve-redefinitions. This is only in racket-lox, I used it to support variable re-definition in a top level scope.
- - all "infrastructure" for supporting racket language modules like the reader, colorer, etc. is obviously only in racket-lox
+ - resolve-redefinitions. This is only in racket-lox, I used it to support variable re-definition in a top-level scope.
+ - all "infrastructure" for supporting racket language modules like the reader, colorer, etc. is obviously only in racket-lox. The reader is necessary 
 
 #### How to verify that resolver is executed at compile (expansion time)
 
@@ -72,19 +72,19 @@ Since there is no `before` printed anywhere we know the resolver is executed bef
 
 #### What is resolve-redefinitions
 
-Lox supports variable re-definition in a top level scope, in order to support that I defined a function to be executed at expansion time `resolve-redefinitions`. In order to have it available at expansion time I wrapped the definition in a `begin-for-syntax`. The function is going through all the top level statements received from the parser and:
+Lox supports variable re-definition in a top-level scope, in order to support that I defined a function to be executed at expansion time `resolve-redefinitions`. In order to have it available at expansion time I wrapped the definition in a `begin-for-syntax`. The function is going through all the top-level statements received from the parser and:
 - it keeps track of defined variables
 - it replaces a `lox-var-declaration` with a `lox-assign` whenever we are re-defining an existing variable. 
-Please note that the function does not need to be recursive because we are interested in re-writing only the top level statements.
+Please note that the function does not need to be recursive because we are interested in rewriting only the top-level statements.
 
 #### The custom #%module-begin form
 
-The racket-lox language uses a custom `#%module-begin` form for multiple reason:
+The racket-lox language uses a custom `#%module-begin` form for multiple reasons:
 - we want to execute `resolve-statements` to enforce Lox language scoping rules.
-- we want to execute `resolve-redefinitions` to allow top level variable re-declaration.
+- we want to execute `resolve-redefinitions` to allow top-level variable re-declaration.
 - we want to use `#%plain-module-begin` because the default `#%module-begin` prints out expression values to the default output port.
 
-In order to make `resolve-statements` work we need to pass it the un-expanded syntax tree produced by the reader. However Racket might pre-expand some forms before passing it to the language custom module. To avoid that we wrap the list of statements produced by the reader with a `lox-module-wrapper` which is doing nothing, it wraps everthing in a `(begin ...)` and which we are removing in with the `unwrap-forms` function if we received it un-expanded. If racket is deciding to "pre-expand" something before passing it to our module, it will only expand the wrapper and not the inner forms. In this way the resolver will encounter the expected forms and work as intended.
+In order to make `resolve-statements` work we need to pass it the un-expanded syntax tree produced by the reader. However Racket might pre-expand some forms before passing it to the language custom module. To avoid that we wrap the list of statements produced by the reader with a `lox-module-wrapper` which is doing nothing, it wraps everything in a `(begin ...)` and which we are removing in with the `unwrap-forms` function if we received it un-expanded. If racket is deciding to "pre-expand" something before passing it to our module, it will only expand the wrapper and not the inner forms. In this way the resolver will encounter the expected forms and work as intended.
 
 ```scheme title='racket-lox custom #%module-begin'
 (define-syntax custom-module-begin
@@ -93,9 +93,45 @@ In order to make `resolve-statements` work we need to pass it the un-expanded sy
      (define raw-forms (unwrap-forms #'(form ...)))
      (resolve-statements raw-forms)
      (with-syntax ([(fixed-forms ...) (resolve-redefinitions raw-forms)])
-       #'(#%plain-module-begin ;; use module-begin to have expressions printed out
+       #'(#%plain-module-begin
           fixed-forms ...))]))
 ```
+
+#### The reader
+
+The reader is a required part of a Racket custom language. Its job is to implement `read-syntax` and `read`, both functions are returning a Racket module. Quoting from [Racket documentation](https://docs.racket-lang.org/guide/Module_Syntax.html):
+
+> The `#lang` at the start of a module file begins a shorthand for a module form, much like ' is a shorthand for a quote form. 
+
+and
+
+> The longhand form of a module declaration, which works in a REPL as well as a file, is
+> ```scheme
+> (module name-id initial-module-path
+>  decl ...)
+> ```
+
+This is exactly what our reader is doing:
+
+```scheme
+(define (read-syntax src in)
+  (define source (or src (object-name in)))
+  (define tokens (scan-tokens in))
+  (define ast (parse tokens))
+  (define module-datum
+# highlight-next-line
+    `(module anonymous-module racket-lox
+# highlight-next-line
+       (lox-module-wrapper ,@ast)))
+  (datum->syntax #f module-datum (list source #f #f #f #f)))
+
+(define (read in)
+  (read-syntax #f in))
+```
+
+Let's briefly look at the highlighted lines:
+1. The module definition uses `racket-lox` as its initial module. This means that all exported definitions in the package are available to the final module. We need it because we want to use macros and functions defined in `lox.rkt`
+2. We introduce here the `lox-module-wrapper`, as discussed previously we need it so that our resolver works correctly. 
 
 ## Scanner
 
@@ -323,7 +359,7 @@ Racket does not have a built-in return statement for function bodies, but it pro
 ; 1
 ```
 
-The documentation on [racket docs for `let/ec` is pretty scarce](https://docs.racket-lang.org/reference/cont.html#%28form._%28%28lib._racket%2Fprivate%2Fletstx-scheme..rkt%29._let%2Fec%29%29) and I don't have much to add besides that the approach works and it is simple to use. 
+The documentation on [Racket docs for `let/ec` is pretty scarce](https://docs.racket-lang.org/reference/cont.html#%28form._%28%28lib._racket%2Fprivate%2Fletstx-scheme..rkt%29._let%2Fec%29%29) and I don't have much to add besides that the approach works and it is simple to use. 
 
 We can see that the `k` in `let/ec k` is a new binding that's being introduced because `(let/ec k body ...+)` is equivalent to `(call/ec (lambda (k) body ...))`. We would like to return whenever we encounter a `lox-return` either alone or with a following value/expression. Using `(let/ec lox-return ...)` wouldn't work because we are defining a new binding and not using our parsed syntax object.
 
@@ -358,7 +394,7 @@ The `lox-run-callable-body` indirection is useful to re-use the same code in fun
 
 Class definition is by far the most complex part of the project. As just mentioned we need to support `this` and `super`, but also methods, fields, printing of class definition, class instance, instance methods etc. It's really a lot of functionality for a single language construct. 
 
-My first attempt at defining a Lox class was using Racket class, it supports everything fields, methods, this and such. Possibly not everything with the same semantics and functionality required by Lox but it was worth to give it a try. 
+My first attempt at defining a Lox class used Racket’s class system, since it already supports fields, methods, `this`, and related features. Possibly not everything with the same semantics and functionality required by Lox but it was worth to give it a try. 
 
 I tried, however the expansion of a very simple class is extremely complex. The following racket code
 
@@ -430,7 +466,7 @@ expands to
   '#f))
 ```
 
-Troubleshooting my code scanner, parser and macros using this expansion for the class implementation was nearly impossible. I decided to follow an approach similar to the one used in the Crafting Intepreters book. I defined two types:
+Troubleshooting my code scanner, parser and macros using this expansion for the class implementation was nearly impossible. I decided to follow an approach similar to the one used in the Crafting Interpreters book. I defined two types:
 
 ```scheme
 (struct lox-class-constructor (base name method-table superclass)
@@ -440,9 +476,9 @@ Troubleshooting my code scanner, parser and macros using this expansion for the 
 (struct lox-class-instance (class fields))
 ```
 
-The first one, `lox-class-constructor`, is similar to `LoxClass` in Crafting Interpreters. The `#:property prop:procedure` makes the struct "callable", it is an procedure and, as the name suggest, an instance of `lox-class-constructor` once called will return an instance of the class it is defining. The `base` argument is the procedure that will be called when we call an instance of `lox-class-constructor`. The `lox-class-instance` is an instance of a given class.
+The first one, `lox-class-constructor`, is similar to `LoxClass` in Crafting Interpreters. The `#:property prop:procedure` makes the struct "callable", it is a procedure and, as the name suggests, an instance of `lox-class-constructor` once called will return an instance of the class it is defining. The `base` argument is the procedure that will be called when we call an instance of `lox-class-constructor`. The `lox-class-instance` is an instance of a given class.
 
-Now that we have the defining types we need a set of helper methods to properly implement Lox classes. We want `lox-class-constructor` to return `lox-class-instance` instance, sorry for the word play but `lox-class-instance` is a type that represent an instance of a Lox class, an instance of `lox-class-instance` is an instance of a Lox class, and we want all `lox-class-instance` of a given type to reference the same `lox-class-constructor` in the `class` field. So the instances of this types are mutually recursive, we define then:
+Besides these custom types, the implementation needs several additional functions and macros. We want a `lox-class-constructor` to return a `lox-class-instance`. In practice, `lox-class-instance` is the runtime type representing an instance of a Lox class, and each instance must keep a reference to the `lox-class-constructor` that created it through its class field. Since these values refer to each other, their definitions are mutually recursive, so we use:
 
 ```scheme showLineNumbers
 (define (make-lox-class-constructor class-name-str superclass-value method-table)
@@ -464,9 +500,9 @@ Now that we have the defining types we need a set of helper methods to properly 
     class))
 ```
 
-Let go line by line:
-- In line 1 we are definining an helper function `make-lox-class-constructor` that helps us build a lox-class-constructor instance for a given class.
-- In line 2 to define lox-class-constructor we need to define a function that returns an a lox-class-instance holding a reference to the lox-class-constructor. We use letrec to allow using class inside its own definition.
+Let's go line by line:
+- In line 1 we are defining a helper function `make-lox-class-constructor` that helps us build a `lox-class-constructor` instance for a given class.
+- In line 2 to define `lox-class-constructor` we need to define a function that returns a `lox-class-instance` holding a reference to the `lox-class-constructor`. We use letrec to allow using class inside its own definition.
 - In line 3 not much to say, syntax to define the lambda
 - In line 4 initiating a hash table to hold the fields of the instance
 - In line 5 defining the instance. Notice the `class` value passed into the struct constructor.
@@ -500,12 +536,12 @@ First we notice that the `lox-class` expands to a `(define class-name ...)` bind
 
 ### Keywords `this` and `super` and instance methods definition
 
-In our lox class the methods are store as factories in a method table in the class definition and not in the instance. The first helper we encounter to support this implementation is `lox-make-method-entry` which is a macro returning a pair of values: the method name and a method factory. The method factory is doing a lot of work:
+In our lox class the methods are stored as factories in a method table in the class definition and not in the instance. The first helper we encounter to support this implementation is `lox-make-method-entry` which is a macro returning a pair of values: the method name and a method factory. The method factory is doing a lot of work:
 - it uses `procedure-rename` so that when we print a method we get the desired name.
 - it binds `this` to `receiver`, the `this` value is bound at runtime that's why we need to pass it to the method so that it points to the correct instance of the class.
 - it binds `super` to `superclass-value`, the superclass is defined at compile time and indeed it is an argument of the macro itself.
 - it defines the body of the method: `result` is set to be the value returned by `lox-run-callable-body`.
-- it passes two new syntax parameter bindings so that `lox-this` and `lox-super` are correcty rewritten in the method body.
+- it passes two new syntax parameter bindings so that `lox-this` and `lox-super` are correctly rewritten in the method body.
 - force the return of `this` if the method is `init`
 
 ```scheme title='lox method table helpers'
@@ -571,7 +607,7 @@ The macro is only extracting the original line in the source code and the method
 
 ### Property lookup
 
-There is not much to add here. We already discussed how `lox-get-impl` search for the symbol it receives inside the hashmap of the instance fields.
+There is not much to add here. We already discussed how `lox-get-impl` searches for the symbol it receives inside the hashmap of the instance fields.
 
 ### Super
 
@@ -611,7 +647,7 @@ The implementation is made of a macro and a function:
       (lox-runtime-error "Superclass must be a class." line)))
 ```
 
-The macro (again) is not doing much, it extracts line and method name and pass those to the `lox-super-impl` along with the `this` and `super` syntax parameters. The function `lox-super-impl` is passing the values to `lox-class-bind-method`, which we already discussed, starting the recursive lookup from the parent class instead of the current class like it is done in the method lookup flow.
+The macro (again) is not doing much, it extracts the line number and method name and passes them to the `lox-super-impl` along with the `this` and `super` syntax parameters. The function `lox-super-impl` is passing the values to `lox-class-bind-method`, which we already discussed, starting the recursive lookup from the parent class instead of the current class like it is done in the method lookup flow.
 
 ### Additional compatibility gaps between Lox and Racket
 
@@ -619,7 +655,7 @@ Racket semantics differs from Lox semantics on a few additional points:
 
 #### Printing
 
-The `lox-print` implementation feels a bit "hacky" however it works correctly. A bunch of runtime checks allow to tailor the printed string to the Lox requirements. The `lox-class-constructor` and `lox-class-instance` custom structs help with the printing as well. Native types, such as booleans and numbers have their own helpers to support Lox-style printing
+The `lox-print` implementation feels a bit "hacky" however it works correctly. A bunch of runtime checks allow to tailor the printed string to the Lox requirements. The `lox-class-constructor` and `lox-class-instance` custom structs help with the printing as well. Native types, such as booleans and numbers have their own helpers to support Lox-style printing.
 
 ```scheme title='lox-print implementation'
 (define (lox-print value)
@@ -647,5 +683,31 @@ The `lox-print` implementation feels a bit "hacky" however it works correctly. A
 ```
 
 #### Numbers
+
+There are a few differences between how Racket handles and prints numbers and how Lox does it. The previous section showcases the snippet that handles printing of `-0.0` and printing of `1.0` as `1`. Division in Lox is implemented using Java double division. Similarly we are using inexact numbers. Number equality requires some extra handling for numbers as well.
+
+```scheme title='Division implementation in racket-lox'
+(define (lox-divide-impl av bv line)
+  (if (and (number? av) (number? bv))
+      (/ (exact->inexact av) (exact->inexact bv))
+      (lox-runtime-error "Operands must be numbers." line)))
+
+(define (lox-eqv? a b)
+  (cond
+    [(and (real? a) (nan? a)) #f]
+    [(and (real? b) (nan? b)) #f]
+    [(and (number? a) (number? b)) (= a b)]
+    [else (eqv? a b)]))
+```
+
+
+
+#### The clock function
+
+The `clock` function is defined and exported in the `main.rkt` file. That makes it available to racket-lox programs.
+
+#### DrRacket not supported properly
+
+In order to implement Lox exit codes on failure, racket-lox has dedicated errors and errors handlers and doesn't raise syntax errors that would make syntax error highlighting work with DrRacket. The colorer, fully AI generated, gives racket-lox a decent aspect in DrRacket without being perfect. Indentation is wrong for example. I didn't invest much time in this I just wanted code and comments to be colored correctly.
 
 [^1]: More details on syntax coloring [here](https://docs.racket-lang.org/tools/lang-languages-customization.html#%28idx._%28gentag._0._%28lib._scribblings%2Ftools%2Ftools..scrbl%29%29%29)
