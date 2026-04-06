@@ -13,6 +13,8 @@ I do not use GitHub Copilot autocomplete because that removes all the fun from c
 
 The code is available on GitHub [here](https://github.com/davidelettieri/racket-lox). In the post I'll go through the implementation, highlighting all the parts that I consider interesting or helpful.
 
+<!-- truncate -->
+
 ## Implementation strategy
 
 The objective of the project is to have a Lox implementation as a Racket language module. For me, that means passing all tests from the Crafting Interpreter repo up to Chapter 13. The original implementation repo provides a Dart script to execute the test suite against any interpreter:
