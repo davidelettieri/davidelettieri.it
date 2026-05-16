@@ -12,7 +12,7 @@ import rehypeKatex from 'rehype-katex';
 const config = {
   future: {
     v4: true,
-    experimental_faster: true,
+    faster: true
   },
   title: 'Davide Lettieri',
   tagline: 'An average C# developer',
